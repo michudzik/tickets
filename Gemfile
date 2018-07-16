@@ -3,6 +3,10 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.1'
 
+# Boostrap
+gem 'bootstrap', '~> 4.1.1'
+# JQuery for bootstrap
+gem 'jquery-rails'
 # User authentication and registration
 gem 'devise'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
