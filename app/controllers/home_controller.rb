@@ -1,9 +1,11 @@
 class HomeController < ApplicationController
 
   def home
-    # if current_user redirect to User show page
-    # else
-    # render template with login form
+    if current_user
+      # redirect_to user_show_url
+    else
+      redirect_to new_user_session_url
+    end
   end
 
 end
