@@ -1,4 +1,5 @@
 <% if current_user %>
+  <%= render 'layouts/navbar' %>
 <% else %>
  <%= render 'devise/sessions/form_new' %>
 <% end %>
