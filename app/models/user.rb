@@ -6,7 +6,7 @@ class User < ApplicationRecord
 
   validates :first_name,  presence: true
   validates :last_name,   presence: true
-  belongs_to :role, optional: true
+  belongs_to :role
   has_many :comments
 
   before_validation :default_role, on: :create

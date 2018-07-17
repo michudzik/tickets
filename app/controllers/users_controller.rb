@@ -11,7 +11,7 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
-    if @user.update_attribute(:role_id, params[:user][:role_id])
+    if @user.update(role_id: params[:user][:role_id])
       redirect_to users_url
     else
       render :index
