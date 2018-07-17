@@ -8,4 +8,8 @@ class User < ApplicationRecord
   validates :last_name,   presence: true
 
   has_many :comments
+
+  def fullname
+  	"#{first_name} #{last_name}"
+  end
 end
