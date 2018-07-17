@@ -6,7 +6,8 @@ class User < ApplicationRecord
 
   validates :first_name,  presence: true
   validates :last_name,   presence: true
-  belongs_to :role
+  belongs_to :role, optional: true
+  has_many :comments
 
   before_validation :default_role, on: :create
 
@@ -26,10 +27,13 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def fullname
+    "#{first_name} #{last_name}"
+  end
+
   private
 
     def default_role
       self.role ||= Role.find_by(name: 'none')
     end
-
 end
