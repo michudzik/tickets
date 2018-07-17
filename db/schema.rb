@@ -12,8 +12,21 @@
 
 ActiveRecord::Schema.define(version: 2018_07_17_102413) do
 
+  create_table "comments", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+  end
+
   create_table "departments", force: :cascade do |t|
     t.string "department_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "statuses", force: :cascade do |t|
+    t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
