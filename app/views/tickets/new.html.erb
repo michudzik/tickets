@@ -1,0 +1,25 @@
+<h1> Report new ticket </>
+
+<% if @ticket.errors.any? %>
+  <ul>
+    <% @ticket.errors.full_messages.each do |msg| %>
+      <li>
+        <%= msg %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+<%= form_for @ticket do |f| %>
+  <select department="department_id" id="department_id">
+    <option value="1">IT</option>
+    <option value="2">Office Menagmnet</option>
+  </select>
+  <hr />
+  <%= f.label :title %>
+  <%= f.text_field :title %>
+  <hr />
+  <%= f.label :note %>
+  <%= f.text_field :note %>
+  <hr />
+  <%= f.submit 'Save ' %>
+<% end %>
