@@ -3,10 +3,11 @@ Rails.application.routes.draw do
   devise_for :users
   get '/user_dashboard', to: 'users#show'
   resources :users, only: [:index, :update] do
+    resources :comments, only: [:create, :destroy]
     member do
       put :deactivate_account
     end
   end
-  resources :comments, only: [:create, :destroy]
+  
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
