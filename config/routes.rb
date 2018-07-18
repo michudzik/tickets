@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  #root 'tickets#index'
   root 'home#home'
   devise_for :users
   get '/user_dashboard', to: 'users#show'
@@ -9,7 +8,6 @@ Rails.application.routes.draw do
       put :deactivate_account
     end
   end
-
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :tickets
 end
