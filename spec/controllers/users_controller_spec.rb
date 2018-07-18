@@ -15,7 +15,7 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe '#index' do
-    let(:admin) { create(:admin_user) }
+    let(:admin) { create(:user, :admin) }
     before do 
       sign_in admin
       get :index
@@ -38,9 +38,9 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe '#update' do
-    let(:admin)             { create(:admin_user) }
+    let(:admin)             { create(:user, :admin) }
     let(:user)              { create(:user) }
-    let(:none_role)         { create(:none) }
+    let(:none_role)         { create(:role, :none) }
     let(:valid_params)      { { id: user.id, user: { role_id: none_role.id } } }
     let(:invalid_params)    { { id: user.id, user: { role_id: 100 } } }
 
@@ -77,7 +77,7 @@ RSpec.describe UsersController, type: :controller do
 
 
   describe '#deactivate_user' do
-    let(:admin) { create(:admin_user) }
+    let(:admin) { create(:user, :admin) }
     let(:user)  { create(:user) }
     subject { put :deactivate_account, params: { id: user.id } } 
     before { sign_in admin }
