@@ -28,7 +28,7 @@ class TicketsController < ApplicationController
           format.html { redirect_to user_dashboard_url, notice: 'New ticket has been reported' }
         else
           #render :new
-          format.html { redirect_to new_ticket_url, alert: 'There was an error, try again' }
+          format.html { redirect_to request.referrer, alert: 'There was an error, try again' }
         end
       end
     end
