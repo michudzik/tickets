@@ -5,9 +5,14 @@ class ApplicationController < ActionController::Base
 
   protected
 
+    def ensure_admin
+      unless current_user.admin?
+        redirect_to root_url, alert: 'No access'
+      end
+    end
+
     def configure_permitted_parameters
       devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name])
-
       devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :password, :password_confirmation, :current_password])
     end
 
