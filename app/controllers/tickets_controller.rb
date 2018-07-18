@@ -50,6 +50,7 @@ class TicketsController < ApplicationController
     end
 
     def ensure_related_to_ticket
+      ticket = Ticket.find(params[:id])
       unless (ticket.user == current_user || 
                             current_user.admin? ||
                             (current_user.it_support? && ticket.department.name == 'IT') ||
