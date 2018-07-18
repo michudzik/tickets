@@ -15,10 +15,13 @@ class CommentsController < ApplicationController
 
 	def destroy
 		@comment = Comment.find(params[:id])
-		if @comment.destroy
-			redirect_to request.referrer, notice: 'Comment was deleted'
-		else
-			redirect_to request.referrer, alert: 'There was an error while deleting comment'
+		respond_to do |format|
+			if @comment.destroy
+				format.html { redirect_to request.referrer, notice: 'Comment was deleted' }
+				format.js
+			else
+				format.html { redirect_to request.referrer, alert: 'There was an error while deleting comment' }
+			end
 		end
 	end
 
