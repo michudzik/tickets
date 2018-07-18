@@ -9,18 +9,17 @@
     <% end %>
   </ul>
 <% end %>
+<div class="container">
 <%= form_for [current_user, current_user.tickets.build] do |f| %>
-  <select department="department_id" id="department_id">
-    <option value="1">IT</option>
-    <option value="2">Office Menagmnet</option>
-  </select>
+  <%= f.select :department_id, @departments, {}, class: 'custom-select' %>
   <hr />
   <%= f.label :title %>
-  <%= f.text_field :title %>
+  <%= f.text_field :title, class: 'form-control' %>
   <hr />
   <%= f.label :note %>
-  <%= f.text_field :note %>
+  <%= f.text_field :note, class: 'form-control' %>
   <hr />
  
-  <%= f.submit 'Save ' %>
+  <%= f.submit 'Save', class: 'btn btn-primary' %>
 <% end %>
+</div>
