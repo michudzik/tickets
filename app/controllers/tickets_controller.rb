@@ -12,10 +12,12 @@ class TicketsController < ApplicationController
     end
 
     def create
+        @user = User.find(params[:user_id])
         @ticket = Ticket.new(ticket_params)
         if @ticket.save
-            redirect_to tickets_path, notice: 'New ticket has been reported'
+            format.html { redirect_to request.referrer, notice: 'New ticket has been reported' }
         else
+            format.html { redirect_to request.referrer, alert: 'There was an error, try create new ticket again' }
             render :new
         end
     end
@@ -27,6 +29,6 @@ class TicketsController < ApplicationController
     private
 
     def ticket_params
-        params.require(:ticket).permit(:title, :note, :status, :user)
+        params.require(:ticket).permit(:title, :note, :status, :user_id, :ticket_id)
     end
 end

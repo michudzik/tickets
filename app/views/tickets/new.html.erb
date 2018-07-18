@@ -9,7 +9,7 @@
     <% end %>
   </ul>
 <% end %>
-<%= form_for @ticket do |f| %>
+<%= form_for [current_user, current_user.tickets.build] do |f| %>
   <select department="department_id" id="department_id">
     <option value="1">IT</option>
     <option value="2">Office Menagmnet</option>
@@ -21,5 +21,6 @@
   <%= f.label :note %>
   <%= f.text_field :note %>
   <hr />
+ 
   <%= f.submit 'Save ' %>
 <% end %>

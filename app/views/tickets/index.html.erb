@@ -1,8 +1,8 @@
 <h1>All Tickets</h1>
 <ul>
-    <% @tickets.each do |tickets| %>
+    <% @tickets.each do |ticket| %>
         <li>
-            <%= link_to ticket.fullticket %>
+            <%= link_to ticket.fullticket, show_tickets_path(ticket.id) %>
         </li>
     <% end %>
 </ul>

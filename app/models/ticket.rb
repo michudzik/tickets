@@ -6,7 +6,7 @@ class Ticket < ActiveRecord::Base
     validates :title, presence: true, length: { in: 10..30}
 
     def fullticket
-        " #{user} #{title} #{note} #{department} #{status} "
+        " #{user_id} #{title} #{note} #{department} #{status} "
     end
 
 end

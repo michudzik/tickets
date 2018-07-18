@@ -8,6 +8,7 @@ class User < ApplicationRecord
   validates :last_name,   presence: true
   belongs_to :role
   has_many :comments
+  has_many :tickets
 
   before_validation :default_role, on: :create
 
