@@ -31,7 +31,7 @@ RSpec.describe UsersController, type: :controller do
       let!(:user_2) { create(:user) }
 
       it 'should return all users' do
-        expect(assigns(:users)).to match_array([admin, user_1, user_2])
+        expect(assigns(:users)).to match_array([user_1, user_2])
       end
     end
     
@@ -85,6 +85,18 @@ RSpec.describe UsersController, type: :controller do
     it 'should deactivate user' do
       subject
       expect(user.reload.confirmed_at).to eq(nil)
+    end
+
+    context 'callback' do
+      subject { put :deactivate_account, params: { id: admin.id } }
+      it 'should redirect to index when admin wants to deactivate himself' do
+        expect(subject).to redirect_to(users_url)
+      end
+
+      it 'should redirect with an alert' do
+        subject
+        expect(flash[:alert]).to be_present
+      end
     end
 
   end

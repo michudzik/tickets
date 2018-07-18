@@ -32,7 +32,11 @@
             Active
           <% end %>            
         </td>
-        <td><%= button_to 'Deactivate', deactivate_account_user_path(user.id), method: :put, class: 'btn btn-danger' %></td>
+        <td>
+          <% unless user.confirmed_at.nil? %>
+            <%= render 'deactivate_account_modal', user: user %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

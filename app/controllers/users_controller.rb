@@ -1,11 +1,12 @@
 class UsersController < ApplicationController
   before_action :ensure_admin, only: [:index, :update, :deactivate_account]
+  before_action :ensure_not_same_user, only: [:deactivate_account]
 
   def show
   end
 
   def index
-    @users = User.all
+    @users = User.where.not(id: current_user.id)
     @roles = Role.all.map { |role| [role.name, role.id] }
   end
 
@@ -35,4 +36,9 @@ class UsersController < ApplicationController
       end
     end
 
+    def ensure_not_same_user
+      if current_user == User.find(params[:id])
+        redirect_to users_url, alert: 'You can not deactivate yourself'
+      end
+    end
 end
