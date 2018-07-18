@@ -1,0 +1,58 @@
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Account settings
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <%= link_to 'Edit profile', edit_user_registration_path, class: 'dropdown-item' %> 
+    <div class="dropdown-divider"></div>
+    <%= link_to 'Log out', destroy_user_session_path, method: :delete, class: 'dropdown-item' %>
+  </div>
+</div>
+<% if current_user.admin? %>
+  <%= link_to 'Users', users_path, class: 'btn btn-primary' %>
+<% end %>
+
+<div class="jumbotron">
+	<h2><%= current_user.fullname %></h2>
+</div>
+
+<div class="containter authors-display">
+	<p>
+		<strong>Email:</strong>		
+		<%= current_user.email %>
+		<hr />
+		<strong>Name:</strong>		
+		<%= current_user.first_name %>
+		<hr />
+		<strong>Lastname:</strong>		
+		<%= current_user.last_name %>
+		<hr />
+		<strong>Created at:</strong>		
+		<%= current_user.created_at %>
+		<hr />
+		<strong>Updated at:</strong>		
+		<%= current_user.updated_at %>
+	</p>
+</div>
+
+<div class="jumbotron">
+	<h2>Comments</h2>
+</div>
+<div>
+	<% current_user.comments.each do |comment| %>
+		<p>
+		<strong>Body:</strong>
+		<%= comment.body %>
+		<br />
+		<%= link_to 'Destroy', [comment.user, comment], method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+		</p>
+	<% end %>
+</div>
+
+<div class="jumbotron">
+	<h2>Add new comment</h2>
+</div>
+
+<div>
+	<%= render 'comments/form' %>
+</div>
