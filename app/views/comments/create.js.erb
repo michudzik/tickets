@@ -1,0 +1,8 @@
+<% if @comment.persisted? %>
+	$('.comments').append('<%= j render 'comment', comment: @comment %>');
+<% else %>
+	alert('Ogarnij sie!')
+	alert('<%= j @comment.errors.full_messages.join(',') %>');
+<% end %>
+
+$('.new-comment').find('input[type="text"]').val('');

@@ -1,4 +1,4 @@
-<%= form_for([current_user, current_user.comments.build]) do |f| %>
+<%= form_for [current_user, current_user.comments.build], remote: true, html: {class: 'new-comment'} do |f| %>
 	<%= f.label :body %>
 	<%= f.text_field :body %>
 	<hr />

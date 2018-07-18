@@ -38,14 +38,9 @@
 <div class="jumbotron">
 	<h2>Comments</h2>
 </div>
-<div>
+<div class="comments">
 	<% current_user.comments.each do |comment| %>
-		<p>
-		<strong>Body:</strong>
-		<%= comment.body %>
-		<br />
-		<%= link_to 'Destroy', [comment.user, comment], method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-		</p>
+		<%= render 'comments/comment', comment: comment %>
 	<% end %>
 </div>
 

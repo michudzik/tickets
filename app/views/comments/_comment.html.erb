@@ -1,0 +1,6 @@
+<p>
+	<strong>Body:</strong>
+	<%= comment.body %>
+	<br />
+	<%= link_to 'Destroy', [comment.user, comment], method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+</p>
