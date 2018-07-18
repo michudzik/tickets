@@ -1,0 +1,43 @@
+<h1>Users</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Role</th>
+      <th>Change role</th>
+      <th colspan="2">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.full_name %></td>
+        <td><%= user.email %></td>
+        <td><%= user.role.name.humanize.to_s %></td>
+        <td>
+          <%= form_for(user, url: user_path(user.id), method: :put) do |f| %>
+            <div class="input-group">
+              <div class="input-group-btn">
+                 <%= f.select :role_id, @roles, {}, class: 'custom-select' %>
+              </div>
+              <%= f.submit 'Save', class: 'btn btn-primary' %>
+            </div>
+          <% end %>
+        </td>
+        <td>Status:
+          <% if user.confirmed_at.nil? %>
+            Inactive
+          <% else %>
+            Active
+          <% end %>            
+        </td>
+        <td>
+          <% unless user.confirmed_at.nil? %>
+            <%= render 'deactivate_account_modal', user: user %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

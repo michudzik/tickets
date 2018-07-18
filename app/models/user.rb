@@ -6,10 +6,34 @@ class User < ApplicationRecord
 
   validates :first_name,  presence: true
   validates :last_name,   presence: true
-
+  belongs_to :role
   has_many :comments
 
-  def fullname
-  	"#{first_name} #{last_name}"
+  before_validation :default_role, on: :create
+
+  def admin?
+    self.role.name == 'admin'
   end
+
+  def it_support?
+    self.role.name == 'it_support'
+  end
+
+  def om_support?
+    self.role.name == 'om_support'
+  end
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
+  def fullname
+    "#{first_name} #{last_name}"
+  end
+
+  private
+
+    def default_role
+      self.role ||= Role.find_by(name: 'none')
+    end
 end
