@@ -13,6 +13,10 @@ end
 admin_role = Role.find_by(name: 'admin')
 User.create(first_name: 'admin', last_name: 'admin', email: 'admin@admin.com', password: 'secret', confirmed_at: DateTime.now, role_id: admin_role.id)
 
+['IT', 'OM'].each do |department|
+  Department.find_or_create_by({department_name: department})
+end
+
 # ['it', 'office_management'].each do |department|
 #   Department.find_or_create_by({ name: department })
 # end
