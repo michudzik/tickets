@@ -10,6 +10,7 @@ class User < ApplicationRecord
   validates :email, format: { with: VALID_EMAIL_REGEX }
   belongs_to :role
   has_many :comments
+  has_many :tickets
 
   before_validation :default_role, on: :create
 
