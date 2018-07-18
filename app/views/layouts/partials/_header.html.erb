@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Tickets App</a>
+  <%= link_to 'Tickets App', root_url, class: 'navbar-brand' %>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -22,10 +22,10 @@
           Your account
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <%= link_to 'Dashboard', user_dashboard_path, class: 'dropdown-item' %>
           <%= link_to 'Edit profile', edit_user_registration_path, class: 'dropdown-item' %>
-          <%= link_to 'Log out', destroy_user_session_path, method: :delete, class: 'dropdown-item' %>
           <div class="dropdown-divider"></div>
-          <%= link_to 'Show', user_dashboard_path, class: 'dropdown-item' %>
+          <%= link_to 'Log out', destroy_user_session_path, method: :delete, class: 'dropdown-item' %>
         </div>
       </li>
     </ul>
