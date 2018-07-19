@@ -4,8 +4,10 @@ class Ticket < ActiveRecord::Base
     belongs_to :department
     belongs_to :status
 
-    validates :note, presence: true, length: { in: 30..500}
-    validates :title, presence: true, length: { in: 10..30}
+    validates :note, presence: true, length: { in: 20..500}
+    validates :title, presence: true, length: { in: 5..30}
+    validates :user_id, presence: true
+    validates :department, presence: true
 
     before_validation :default_status, on: :create
 
