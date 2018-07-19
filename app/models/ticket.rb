@@ -18,11 +18,11 @@ class Ticket < ActiveRecord::Base
     end
 
     def user_response
-        self.status.status = self.find_status('user_response')
+        self.status = find_status('user_response')
     end
 
     def support_response
-        self.status.status = self.find_status('support_response')
+        self.status = find_status('support_response')
     end
 
     def closed?
@@ -32,7 +32,7 @@ class Ticket < ActiveRecord::Base
     private
 
       def default_status
-        self.status ||= self.find_status('open')
+        self.status ||= find_status('open')
       end
 
       def find_status(name)
