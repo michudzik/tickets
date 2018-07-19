@@ -67,6 +67,34 @@ RSpec.describe User, type: :model do
       end
     end
 
+    describe '#support?' do
+      context 'it support' do
+        it 'should return true' do
+          user.role = it_support_role
+          expect(user.support?).to eq(true)
+        end
+      end
+
+      context 'om support' do
+        it 'should return true' do
+          user.role = om_support_role
+          expect(user.support?).to eq(true)
+        end
+      end
+
+      context 'admin' do
+        let(:admin) { create(:user, :admin) }
+        it 'should return true' do
+          expect(admin.support?).to eq(true)
+        end
+      end
+
+      it 'should return false' do
+        user.role = none_role
+        expect(user.support?).to eq(false)
+      end
+    end
+
     describe '#full_name' do
       it 'should return full name' do
         expect(user.full_name).to eq("#{user.first_name} #{user.last_name}")

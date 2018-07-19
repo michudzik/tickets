@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Ticket, type: :model do
-    let!(:ticket) {Ticket.create(title: 'test ticket', note: 'example ticket note with some words without sense', department: 'IT', status: 'open', user_id: 1)}
     describe 'validations' do
         it { should validate_presence_of(:title) }
         it { should validate_presence_of(:note) }
@@ -23,8 +22,35 @@ RSpec.describe Ticket, type: :model do
     end
 
     describe '#fullticket' do
+        let!(:ticket) {Ticket.create(title: 'test ticket', note: 'example ticket note with some words without sense', department: 'IT', status: 'open', user_id: 1)}
         it 'should have working #fullticket method' do
             expect(ticket.fullticket).to eq('1 test ticket example ticket note with some words without sense IT open ')
+        end
+    end
+
+    describe '#closed?' do
+        let(:ticket) { create(:ticket) }
+        let(:status) { create(:status, :closed) }
+
+        it 'should return false' do
+            expect(ticket.closed?).to eq(false)
+        end
+
+        it 'should return true' do
+            ticket.status = status
+            expect(ticket.closed?).to eq(true)
+        end
+    end
+
+    describe 'callbacks' do
+        let(:ticket)             { create(:ticket, status_id: nil) }
+        let!(:open)              { create(:status, :open) }
+        let!(:closed)            { create(:status, :closed) }
+        let!(:user_response)     { create(:status, :user_response) }
+        let!(:support_response)  { create(:status, :support_response) }
+
+        it 'should set status to open' do
+            expect(ticket.status.status).to eq('open')
         end
     end
 end

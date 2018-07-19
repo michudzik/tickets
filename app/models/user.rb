@@ -26,6 +26,10 @@ class User < ApplicationRecord
     self.role.name == 'om_support'
   end
 
+  def support?
+    self.om_support? || self.it_support? || self.admin?
+  end
+
   def full_name
     "#{first_name} #{last_name}"
   end

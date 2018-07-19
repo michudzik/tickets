@@ -5,7 +5,6 @@ RSpec.describe CommentsController, type: :controller do
 	describe '#create' do
 
 		let(:ticket) { create(:ticket) }
-		# { user.ticket.create(valid_attributes) }
 		let(:valid_attributes) { { comment: { user_id: ticket.user.id, ticket_id: ticket.id, body: 'a'*20 } } }
 		subject { post :create, params: valid_attributes }
 		let(:status) { create(:status, :closed) }
@@ -19,11 +18,15 @@ RSpec.describe CommentsController, type: :controller do
 		it 'should not create comment when ticket is closed' do
 			ticket.status = status
 			ticket.save
-
 			sign_in ticket.user
 			expect{subject}.not_to change{Comment.count}
 		end
 
+		it 'should change ticket status to user response' do
+		end
+
+		it 'should change ticket status to support response' do
+		end
 
 	end
 

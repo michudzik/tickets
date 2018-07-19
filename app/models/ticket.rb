@@ -17,10 +17,25 @@ class Ticket < ActiveRecord::Base
         " #{user_id} #{title} #{note} #{department} #{status} "
     end
 
+    def user_response
+        self.status.status = self.find_status('user_response')
+    end
+
+    def support_response
+        self.status.status = self.find_status('support_response')
+    end
+
+    def closed?
+      self.status.status == 'closed'
+    end
 
     private
 
       def default_status
-        self.status ||= Status.find_by(status: 'open')
+        self.status ||= self.find_status('open')
+      end
+
+      def find_status(name)
+        Status.find_by(status: name)
       end
 end

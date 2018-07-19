@@ -3,8 +3,10 @@ class CommentsController < ApplicationController
 
 	def create
 		@comment = Comment.create(comment_params)
+		is_support = @comment.user.support?
 		respond_to do |format|
 			if @comment.save
+				is_support ? @comment.ticket.support_response : @comment.ticket.user_response
 				format.html { redirect_to user_dashboard_path, notice: 'Comment was created' }
 				format.js
 			else
