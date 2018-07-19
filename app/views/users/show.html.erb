@@ -1,3 +1,6 @@
+<% if current_user.admin? %>
+  <%= link_to 'Users', users_path, class: 'btn btn-primary' %>
+<% end %>
 <div class="jumbotron">
 	<h2><%= current_user.fullname %></h2>
 </div>

@@ -1,48 +1,35 @@
 <% if user_signed_in? %>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <%= link_to 'Tickets App', root_url, class: 'navbar-brand' %>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <%= link_to 'Tickets App', root_url, class: 'navbar-brand' %>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-       <%= link_to 'New Ticket', new_ticket_path, class: 'nav-link' %>
-      </li>
-      <% if current_user.admin? || current_user.it_support? || current_user.om_support? %>
-        <li class="nav-item">
-          <%= link_to 'Tickets', show_tickets_path, class: 'nav-link' %>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+         <%= link_to 'New Ticket', new_ticket_path, class: 'nav-link' %>
         </li>
-        <li class="nav-item">
-          <%= link_to 'Users', users_path, class: 'nav-link' %>
-        </li>
-      <% end %>
-      <li class="nav-item active dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Tickets
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <%= link_to 'Dashboard', user_dashboard_path, class: 'dropdown-item' %>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" >
-            <% Ticket.all.each do |ticket| %>
-            <%= link_to ticket.title, ticket_path(ticket.id), class: 'dropdown-item', "data-ticket-id": ticket.id  %>
-            <% end %>
+        <% if current_user.admin? || current_user.it_support? || current_user.om_support? %>
+          <li class="nav-item">
+            <%= link_to 'Tickets', show_tickets_path, class: 'nav-link' %>
+          </li>
+          <li class="nav-item">
+            <%= link_to 'Users', users_path, class: 'nav-link' %>
+          </li>
+        <% end %>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Your account
           </a>
-        </div>
-      </li>
-      <li class="nav-item active dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Your account
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <%= link_to 'Edit profile', edit_user_registration_path, class: 'dropdown-item' %>
-          <div class="dropdown-divider"></div>
-          <%= link_to 'Log out', destroy_user_session_path, method: :delete, class: 'dropdown-item' %>
-        </div>
-      </li>
-    </ul>
-  </div>
-</nav>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <%= link_to 'Dashboard', user_dashboard_path, class: 'dropdown-item' %>
+            <%= link_to 'Edit profile', edit_user_registration_path, class: 'dropdown-item' %>
+            <div class="dropdown-divider"></div>
+            <%= link_to 'Log out', destroy_user_session_path, method: :delete, class: 'dropdown-item' %>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
 <% end %>
