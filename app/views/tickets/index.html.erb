@@ -1,8 +1,23 @@
 <h1>All Tickets</h1>
-<ul>
+<table class="table">
+  <thead>
+    <th>Author</th>
+    <th>Title</th>
+    <th>Note</th>
+    <th>Department</th>
+    <th>Status</th>
+  </thead>
+  <tbody>
     <% @tickets.each do |ticket| %>
-        <li>
-            <%= link_to ticket.fullticket, show_tickets_path(ticket.id) %>
-        </li>
+      <tr>
+        <td><%= ticket.user.full_name %></td>
+        <td><%= truncate(ticket.title) %></td>
+        <td><%= truncate(ticket.note) %></td>
+        <td><%= ticket.department.department_name %></td>
+        <td><%= ticket.status %></td>
+        <td><%= link_to 'Show', ticket_path(ticket.id), role: 'button', class: 'btn btn-primary' %></td>
+      </tr>
     <% end %>
-</ul>
+  </tbody>
+</table>
+<%= link_to 'Back', users_path, class: 'btn btn-primary' %>

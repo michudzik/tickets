@@ -1,6 +1,7 @@
 class Ticket < ActiveRecord::Base
     
     belongs_to :user
+    belongs_to :department
 
     validates :note, presence: true, length: { in: 30..500}
     validates :title, presence: true, length: { in: 10..30}

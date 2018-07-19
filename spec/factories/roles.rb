@@ -1,17 +1,20 @@
 FactoryBot.define do
-  factory :none, class: Role do
-    name 'none'
-  end
+  factory :role do
 
-  factory :it_support, class: Role do
-    name 'it_support'
-  end
+    trait :none do
+      name 'none'
+    end
 
-  factory :om_support, class: Role do
-    name 'om_support'
-  end
+    trait :it_support do
+      name 'it_support'
+    end
 
-  factory :admin, class: Role do
-    name 'admin'
+    trait :om_support do
+      name 'om_support'
+    end
+
+    trait :admin do
+      name 'admin'
+    end
   end
 end
