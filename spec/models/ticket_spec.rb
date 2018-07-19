@@ -11,7 +11,7 @@ RSpec.describe Ticket, type: :model do
 
     describe 'attributes' do
         it 'should have proper attributes' do
-            expect(subject.attributes).to include('title', 'note', 'status', 'user_id', 'department') 
+            expect(subject.attributes).to include('title', 'note', 'status_id', 'user_id', 'department_id') 
         end
     end
 
@@ -22,13 +22,13 @@ RSpec.describe Ticket, type: :model do
     end
 
     describe 'methods' do
-        
+
         let(:ticket) { create(:ticket) }
 
         describe '#fullticket' do
-            let!(:ticket) {Ticket.create(title: 'test ticket', note: 'example ticket note with some words without sense', department: 'IT', status: 'open', user_id: 1)}
+            let!(:ticket) { create(:ticket) }
             it 'should have working #fullticket method' do
-                expect(ticket.fullticket).to eq('1 test ticket example ticket note with some words without sense IT open ')
+                expect(ticket.fullticket).to eq(" #{ticket.user_id} #{ticket.title} #{ticket.note} #{ticket.department} #{ticket.status} ")
             end
         end
 
