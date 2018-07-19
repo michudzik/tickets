@@ -45,8 +45,4 @@
 	<%= render 'comments/form' %>
 </div>
 
-<h1>
-    <%= link_to @ticket.fullticket %>
-</h1>
-
 <%= button_to 'Close', user_ticket_path(@ticket.id), method: :put, class: 'btn btn-danger' %>
