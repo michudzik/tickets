@@ -9,7 +9,7 @@
       <li class="nav-item active">
        <%= link_to 'New Ticket', new_ticket_path, class: 'nav-link' %>
       </li>
-      <% if current_user.admin? || current_user.im_support? || current_user.om_support? %>
+      <% if current_user.admin? || current_user.it_support? || current_user.om_support? %>
         <li class="nav-item">
           <%= link_to 'Tickets', show_tickets_path, class: 'nav-link' %>
         </li>
