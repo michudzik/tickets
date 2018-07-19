@@ -24,11 +24,6 @@
   <div class="authors-tickets">
     <h2>Tickets</h2>
     <table class="table">
-      <thead>
-        <th>Title</th>
-        <th>Status</th>
-        <th>Updated at</th>
-      </thead>
       <tbody>
         <% current_user.tickets.each do |ticket| %>
           <%= render 'tickets/ticket', ticket: ticket %>
@@ -37,25 +32,3 @@
     </table>
   </div>
 <% end %>
-
-<div class="jumbotron">
-	<h2>Comments</h2>
-</div>
-<div>
-	<% current_user.comments.each do |comment| %>
-		<p>
-		<strong>Body:</strong>
-		<%= comment.body %>
-		<br />
-		<%= link_to 'Destroy', [comment.user, comment], method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-		</p>
-	<% end %>
-</div>
-
-<div class="jumbotron">
-	<h2>Add new comment</h2>
-</div>
-
-<div>
-	<%= render 'comments/form' %>
-</div>
