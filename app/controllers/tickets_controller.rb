@@ -27,15 +27,22 @@ class TicketsController < ApplicationController
         if @ticket.save
           format.html { redirect_to user_dashboard_url, notice: 'New ticket has been reported' }
         else
-          #render :new
           format.html { redirect_to request.referrer, alert: 'There was an error, try again' }
         end
       end
     end
 
-    # def close
-    #     @ticket = Ticket.find(params[:id])
-    # end
+    def update
+      @ticket = Ticket.find(params[:id])
+      status_closed = Status.find_by(status: 'closed')
+      respond_to do |format|
+        if @ticket.update(status_id: status_closed.id)
+          format.html { redirect_to user_dashboard_url, notice: 'Ticket closed' }
+        else
+          format.html { redirect_to user_dashboard_url, alert: 'Could not close the ticket' }
+        end
+      end 
+    end
 
     private
 
