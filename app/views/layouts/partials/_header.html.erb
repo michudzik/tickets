@@ -1,12 +1,4 @@
-
-
-
-
-
-
-
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <a class="navbar-brand" href="#">Tickets App</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -15,10 +7,10 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-       <%= link_to 'New Ticket', new_ticket_path, class: 'btn-dark' %>
+        <%= link_to 'New Ticket', new_ticket_path, class: 'nav-link' %>
       </li>
       <li class="nav-item">
-        <%= link_to 'Tickets List', show_tickets_path, class: 'btn-dark' %>
+        <%= link_to 'Tickets List', show_tickets_path, class: 'nav-link' %>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -1,4 +1,4 @@
-<h1> Report new ticket </>
+<h1> Report new ticket </h1>
 
 <% if @ticket.errors.any? %>
   <ul>
@@ -10,17 +10,16 @@
   </ul>
 <% end %>
 <%= form_for [current_user, current_user.tickets.build] do |f| %>
+  <hr />
   <select department="department_id" id="department_id">
     <option value="1">IT</option>
     <option value="2">Office Menagmnet</option>
   </select>
   <hr />
   <%= f.label :title %>
-  <%= f.text_field :title %>
+  <%= f.text_field :title, :size => 50 %>
   <hr />
   <%= f.label :note %>
-  <%= f.text_field :note %>
-  <hr />
- 
+  <%= f.text_field :note, :size => 80 %>
   <%= f.submit 'Save ' %>
 <% end %>
