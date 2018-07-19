@@ -1,3 +1,45 @@
-<h1>
-    <%= link_to @ticket.fullticket %>
-</h1>
+<div class="jumbotron">
+	<h1><%= @ticket.title %></h1>
+</div>
+<div class="tickets-display">
+	<p>
+	<strong>ID:</strong>	
+	<%= @ticket.id %>
+	<hr />
+	<strong>Title:</strong>	
+	<%= @ticket.title %>
+	<hr />
+	<strong>Content:</strong>	
+	<%= @ticket.note %>
+	<hr />
+	<strong>Author name:</strong>	
+	<%= link_to @ticket.user.fullname, user_path(@ticket.user_id) %>
+	<hr />
+	<strong>Created at</strong>	:
+	<%= @ticket.created_at %>
+	<hr />
+	<strong>Updated at:</strong>	
+	<%= @ticket.updated_at %>
+	</p>
+</div>
+
+
+<div class="jumbotron">
+	<h2>Comments</h2>
+</div>
+<div class="tickets-display">
+	<% @ticket.comments.each do |comment| %>
+		<p>
+		<strong>Body:</strong>
+		<%= comment.body %>
+		<br />
+	<% end %>
+</div>
+
+<div class="jumbotron">
+	<h2>Add new comment</h2>
+</div>
+
+<div class="tickets-display">
+	<%= render 'comments/form' %>
+</div>

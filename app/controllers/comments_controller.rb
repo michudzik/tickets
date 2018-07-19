@@ -1,6 +1,6 @@
 class CommentsController < ApplicationController
 	def create
-		@comment = current_user.comments.create(comment_params)
+		@comment = Comment.create(comment_params)
 		respond_to do |format|
 			if @comment.save
 				format.html { redirect_to user_dashboard_path, notice: 'Comment was created' }
@@ -13,7 +13,7 @@ class CommentsController < ApplicationController
 
 	private
 	def comment_params
-		params.require(:comment).permit(:body)
+		params.require(:comment).permit(:body, :ticket_id).merge(user_id: current_user.id)
 	end
 
 end

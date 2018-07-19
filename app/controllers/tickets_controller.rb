@@ -7,13 +7,14 @@ class TicketsController < ApplicationController
         @tickets = Ticket.all
       elsif current_user.om_support?
         @tickets = Ticket.joins(:department).where('departments.department_name' => 'OM')
-      elsif current_user.im_support?
+      elsif current_user.it_support?
         @tickets = Ticket.joins(:department).where('departments.department_name' => 'IT')
       end
     end
 
     def show
       @ticket = Ticket.find(params[:id])
+      @comment = Comment.new(ticket_id: @ticket.id)
     end
 
     def new
