@@ -6,7 +6,7 @@ FactoryBot.define do
     end
 
     trait :om do
-      department_name 'IT'
+      department_name 'OM'
     end
 
   end
