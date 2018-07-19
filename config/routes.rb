@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get '/show_tickets', to: 'tickets#index'
   get '/user_dashboard', to: 'users#show'
   resources :users, only: [:index, :update] do
-    resources :comments, only: [:create, :destroy]
+    resources :comments, only: :create
     resources :tickets
     member do
       put :deactivate_account
