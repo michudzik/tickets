@@ -14,7 +14,7 @@
         <td><%= truncate(ticket.title) %></td>
         <td><%= truncate(ticket.note) %></td>
         <td><%= ticket.department.department_name %></td>
-        <td><%= ticket.status %></td>
+        <td><%= ticket.status.status.humanize.to_s %></td>
         <td><%= link_to 'Show', ticket_path(ticket.id), role: 'button', class: 'btn btn-primary' %></td>
       </tr>
     <% end %>
