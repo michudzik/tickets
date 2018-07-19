@@ -1,4 +1,6 @@
 class CommentsController < ApplicationController
+	before_action :ensure_ticket_not_closed
+
 	def create
 		@comment = Comment.create(comment_params)
 		respond_to do |format|
@@ -14,6 +16,13 @@ class CommentsController < ApplicationController
 	private
 	def comment_params
 		params.require(:comment).permit(:body, :ticket_id).merge(user_id: current_user.id)
+	end
+
+	def ensure_ticket_not_closed
+		@ticket = Ticket.find(params[:comment][:ticket_id])
+		if @ticket.status.status == 'closed'
+			redirect_to ticket_path(@ticket.id), alert: 'This ticket is closed'
+		end
 	end
 
 end
