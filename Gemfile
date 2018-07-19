@@ -3,6 +3,8 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.1'
 
+# Recaptcha
+gem 'recaptcha'
 # Boostrap
 gem 'bootstrap', '~> 4.1.1'
 # JQuery for bootstrap
