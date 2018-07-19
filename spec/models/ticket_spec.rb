@@ -18,6 +18,8 @@ RSpec.describe Ticket, type: :model do
 
     describe 'relations' do
         it { should belong_to(:user) }
+        it { should belong_to(:department) }
+        it { should belong_to(:status) }
     end
 
     describe '#fullticket' do
