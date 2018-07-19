@@ -7,6 +7,7 @@ RSpec.describe Ticket, type: :model do
         it { should validate_presence_of(:note) }
         it { should validate_presence_of(:user) }
         it { should validate_presence_of(:department) }
+        it { should belong_to(:department) }
     end
 
     describe 'attributes' do

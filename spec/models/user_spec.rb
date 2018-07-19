@@ -28,10 +28,10 @@ RSpec.describe User, type: :model do
   end
 
   describe 'methods' do
-    let!(:admin_role)        { create(:admin) }
-    let!(:none_role)         { create(:none) }
-    let!(:it_support_role)   { create(:it_support) }
-    let!(:om_support_role)   { create(:om_support) }
+    let!(:admin_role)        { create(:role, :admin) }
+    let!(:none_role)         { create(:role, :none) }
+    let!(:it_support_role)   { create(:role, :it_support) }
+    let!(:om_support_role)   { create(:role, :om_support) }
     let(:user) { create(:user) }
 
     describe '#admin?' do
