@@ -3,7 +3,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   private
     def check_captcha
-      unless verify_recaptcha secret_key: '6Ldf4GQUAAAAACvUmzRKHTdR8CTw07aVMhIJ8JH0'
+      unless verify_recaptcha
         self.resource = resource_class.new sign_up_params
         resource.validate
         set_minimum_password_length
