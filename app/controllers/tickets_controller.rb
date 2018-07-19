@@ -1,25 +1,36 @@
 class TicketsController < ApplicationController
+    before_action :ensure_authorized, only: :index
+    before_action :ensure_related_to_ticket, only: :show
+
     def index
+      if current_user.admin? 
         @tickets = Ticket.all
+      elsif current_user.om_support?
+        @tickets = Ticket.joins(:department).where('departments.department_name' => 'OM')
+      elsif current_user.im_support?
+        @tickets = Ticket.joins(:department).where('departments.department_name' => 'IT')
+      end
     end
 
     def show
-        @ticket = Ticket.find(params[:id])
+      @ticket = Ticket.find(params[:id])
     end
 
     def new
-        @ticket = Ticket.new
+      @ticket = Ticket.new
+      @departments = Department.all.map { |department| [department.department_name, department.id]}
     end
 
     def create
-        @user = User.find(params[:user_id])
-        @ticket = Ticket.new(ticket_params)
+      @ticket = current_user.tickets.build(ticket_params)
+      respond_to do |format|
         if @ticket.save
-            format.html { redirect_to request.referrer, notice: 'New ticket has been reported' }
+          format.html { redirect_to user_dashboard_url, notice: 'New ticket has been reported' }
         else
-            format.html { redirect_to request.referrer, alert: 'There was an error, try create new ticket again' }
-            render :new
+          #render :new
+          format.html { redirect_to request.referrer, alert: 'There was an error, try again' }
         end
+      end
     end
 
     # def close
@@ -29,6 +40,23 @@ class TicketsController < ApplicationController
     private
 
     def ticket_params
-        params.require(:ticket).permit(:title, :note, :status, :user_id, :ticket_id)
+      params.require(:ticket).permit(:title, :note, :status, :department_id)
     end
+
+    def ensure_authorized 
+      unless current_user.admin? || current_user.it_support? || current_user.om_support?
+        redirect_to user_dashboard_url, alert: 'Forbidden access'
+      end
+    end
+
+    def ensure_related_to_ticket
+      ticket = Ticket.find(params[:id])
+      unless (ticket.user == current_user || 
+                            current_user.admin? ||
+                            (current_user.it_support? && ticket.department.name == 'IT') ||
+                            (current_user.om_support? && ticket.department.name == 'OM'))
+          redirect_to user_dashboard_url, alert: 'Forbidden access'
+      end
+    end
+
 end

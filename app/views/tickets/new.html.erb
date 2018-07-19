@@ -1,5 +1,3 @@
-<h1> Report new ticket </h1>
-
 <% if @ticket.errors.any? %>
   <ul>
     <% @ticket.errors.full_messages.each do |msg| %>
@@ -9,17 +7,24 @@
     <% end %>
   </ul>
 <% end %>
-<%= form_for [current_user, current_user.tickets.build] do |f| %>
-  <hr />
-  <select department="department_id" id="department_id">
-    <option value="1">IT</option>
-    <option value="2">Office Menagmnet</option>
-  </select>
-  <hr />
-  <%= f.label :title %>
-  <%= f.text_field :title, :size => 50 %>
-  <hr />
-  <%= f.label :note %>
-  <%= f.text_field :note, :size => 80 %>
-  <%= f.submit 'Save ' %>
-<% end %>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h1> Create new ticket </h1>
+      <%= form_for [current_user, current_user.tickets.build] do |f| %>
+        <%= f.label :department_id %>
+        <%= f.select :department_id, @departments, {}, class: 'custom-select' %>
+        <hr />
+        <%= f.label :title %>
+        <%= f.text_field :title, class: 'form-control' %>
+        <hr />
+        <%= f.label :note %>
+        <%= f.text_area :note, class: 'form-control', cols: '16', rows: '6' %>
+        <hr />
+       
+        <%= f.submit 'Create', class: 'btn btn-primary' %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
