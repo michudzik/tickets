@@ -61,8 +61,8 @@ class TicketsController < ApplicationController
       ticket = Ticket.find(params[:id])
       unless (ticket.user == current_user || 
                             current_user.admin? ||
-                            (current_user.it_support? && ticket.department.name == 'IT') ||
-                            (current_user.om_support? && ticket.department.name == 'OM'))
+                            (current_user.it_support? && ticket.department.department_name == 'IT') ||
+                            (current_user.om_support? && ticket.department.department_name == 'OM'))
           redirect_to user_dashboard_url, alert: 'Forbidden access'
       end
     end
