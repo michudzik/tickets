@@ -1,7 +1,11 @@
 <h2>Sign up</h2>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= devise_error_messages! %>
+  <% if flash[:recaptcha_error] %>
+    <%= flash[:recaptcha_error] %>
+  <% else %>
+    <%= devise_error_messages! %>
+  <% end %>
 
   <div class="field">
     <%= f.label :first_name %><br />
@@ -30,6 +34,8 @@
     <%= f.label :password_confirmation %><br />
     <%= f.password_field :password_confirmation, class: 'form-control', autocomplete: "off" %>
   </div>
+
+  <%= recaptcha_tags %>
 
   <div class="actions">
     <%= f.submit "Sign up", class: 'btn btn-primary' %>

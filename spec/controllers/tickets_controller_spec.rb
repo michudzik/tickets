@@ -5,17 +5,16 @@ RSpec.describe TicketsController, type: :controller do
   let(:admin) { create(:user, :admin) }
   let(:itsupport) { create(:user, :it_support) }
   let(:omsupport) { create(:user, :om_support) }
-  let!(:user) { create(:user, :none) }
-  let!(:ticket1) {Ticket.create(title: 'test', note: 'example ticket', department: 1, status: 1, user_id: user.id)}
-  let!(:ticket2) {Ticket.create(title: 'test', note: 'example ticket', department: 1, status: 1, user_id: user.id)}
-  let!(:ticket3) {Ticket.create(title: 'test', note: 'example ticket', department: 1, status: 1, user_id: admin.id)}
-
+  let!(:user) { create(:user) }
+  let!(:ticket1) {Ticket.create()}
+  let!(:ticket2) {Ticket.create()}
+  let!(:ticket3) {Ticket.create()}
 
   describe '#index' do
 
     before do 
       sign_in user
-      get :index
+      get :index 
     end
     
     describe 'successful view of tickets list' do
