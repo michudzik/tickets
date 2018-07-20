@@ -1,31 +1,48 @@
 <div class="container">
   <div class="login row">
-    <div class="login-form col-md-6 offset-md-3">
-      <h2>Log in</h2>
+ 
+      <div class="col-md-6 offset-md-3">
+        <h2 class="login-header">Log in</h2>
 
-      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-     
-          <%= f.label :email %>
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "binarapps@example.com", class: 'form-control' %>
+        <div class="login-form">
+          <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+         
+              <div class="login-field">
+                <%= f.label :email, class: 'login-label' %>
+                <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "binarapps@example.com", class: 'form-control' %>
+              </div>
+        
+              <div class="login-field">
+                <%= f.label :password, class: 'login-label' %>
+                <%= link_to '(Forgotten password?)', new_password_path(resource_name) %>
+                <%= f.password_field :password, autocomplete: "off", placeholder: '*'*8 , class: 'form-control' %>
+              </div>
 
-    
-          <%= f.label :password %>
-          <%= link_to '(Forgotten password?)', new_password_path(resource_name) %>
-          <%= f.password_field :password, autocomplete: "off", placeholder: '*'*8 , class: 'form-control' %>
-     
+              <div class="login-field">
+                <% if devise_mapping.rememberable? -%>
+                  <div class="form-group form-check">
+                    <%= f.check_box :remember_me, class: 'form-check-input' %>
+                    <%= f.label :remember_me, class: 'form-check-label' %>
+                  </div>
+                <% end -%>
+              </div>
 
-        <% if devise_mapping.rememberable? -%>
-          <div class="form-group form-check">
-            <%= f.check_box :remember_me, class: 'form-check-input' %>
-            <%= f.label :remember_me, class: 'form-check-label' %>
-          </div>
-        <% end -%>
+            <%= f.submit "Log in", class: 'login-button btn btn-primary btn-block' %>
+          <% end %>
+        </div>
 
+        <div class="login-link">
+          <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+            <%= link_to "Sign up", new_registration_path(resource_name) %><br />
+          <% end -%>
+        </div>
 
-        <%= f.submit "Log in", class: 'btn btn-primary btn-lg btn-block' %>
-      <% end %>
+        <div class="login-link">
+          <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
+            <%= link_to "Didn't receive confirmation instructions?", new_confirmation_path(resource_name) %><br />
+          <% end -%>
+        </div>
 
-      <%= render "devise/shared/links" %>
-    </div>
+      </div>
   </div>
 </div>
