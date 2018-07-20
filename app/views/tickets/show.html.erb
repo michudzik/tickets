@@ -27,14 +27,32 @@
 <div class="jumbotron">
 	<h2>Comments</h2>
 </div>
-<div class="tickets-display">
-	<% @ticket.comments.each do |comment| %>
-		<p>
-		<strong>Body:</strong>
-		<%= comment.body %>
-		<br />
-	<% end %>
-</div>
+
+<% @ticket.comments.each do |comment| %>
+	<div>
+		<% if comment.user.role.name == 'none' %>
+			<div class="container">
+				<%= image_tag("user_avatar.png", :alt => "Avatar", :class => "right") %>
+				<h5 class="commenter-name"><%= comment.user.fullname %></h5>
+				<br />
+				<h5><%= comment.body %></h5>
+				<br />
+				<span class="time-right"><%= comment.created_at.strftime("%I:%M%p") %></span>				
+			</div>
+
+		<% elsif comment.user.role.name == 'it_support' || current_user.role.name == 'om_support' %>
+			<div class="container darker">
+				<%= image_tag("support_avatar.png", :alt => "Avatar") %>				
+				<h5 class="commenter-name"><%= comment.user.fullname %></h5>
+				<br />					
+				<h5><%= comment.body %></h5>					
+				<br />
+				<span class="time-left"><%= comment.created_at.strftime("%I:%M%p") %></span>
+			</div>
+		<% end %>
+	</div>
+<% end %>
+
 
 <% unless @ticket.closed? %>
 	<div class="jumbotron">
