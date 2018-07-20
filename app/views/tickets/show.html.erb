@@ -39,8 +39,7 @@
 				<br />
 				<span class="time-right"><%= comment.created_at.strftime("%I:%M%p") %></span>				
 			</div>
-
-		<% elsif comment.user.support? %>
+		<% elsif comment.user.role.name == 'it_support' || current_user.role.name == 'om_support' || comment.user.role.name == 'admin' %>
 			<div class="container darker">
 				<%= image_tag("support_avatar.png", :alt => "Avatar") %>				
 				<h5 class="commenter-name"><%= comment.user.fullname %></h5>
