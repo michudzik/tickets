@@ -7,7 +7,7 @@ class UsersController < ApplicationController
 
   def index
     @users = User.where.not(id: current_user.id)
-    @roles = Role.all.map { |role| [role.name, role.id] }
+    @roles = Role.all.map { |role| [role.name.humanize.to_s, role.id] }
   end
 
   def update
@@ -35,12 +35,6 @@ class UsersController < ApplicationController
   end
 
   private
-
-    def ensure_admin
-      unless current_user.admin?
-        redirect_to root_url, alert: 'No access'
-      end
-    end
 
     def ensure_not_same_user
       if current_user == User.find(params[:id])
