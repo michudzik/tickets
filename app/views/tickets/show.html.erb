@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <div class="jumbotron">
 	<h1><%= @ticket.title %></h1>
 </div>
@@ -14,7 +13,7 @@
 	<%= @ticket.note %>
 	<hr />
 	<strong>Author name:</strong>	
-	<%= link_to @ticket.user.fullname, user_path(@ticket.user_id) %>
+	<%= @ticket.user.fullname %>
 	<hr />
 	<strong>Created at</strong>	:
 	<%= @ticket.created_at %>
