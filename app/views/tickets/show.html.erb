@@ -36,12 +36,14 @@
 	<% end %>
 </div>
 
-<div class="jumbotron">
-	<h2>Add new comment</h2>
-</div>
+<% unless ticket.closed? %>
+	<div class="jumbotron">
+		<h2>Add new comment</h2>
+	</div>
 
-<div class="tickets-display">
-	<%= render 'comments/form' %>
-</div>
+	<div class="tickets-display">
+		<%= render 'comments/form' %>
+	</div>
+<% end %>
 
 <%= button_to 'Close', user_ticket_path(@ticket.id), method: :put, class: 'btn btn-danger' %>

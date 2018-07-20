@@ -68,6 +68,10 @@ group :development do
   gem 'capistrano-rails'
   gem 'capistrano-bundler'
   gem 'capistrano-rvm'
+
+  gem 'brakeman'
+  gem 'rubocop', require: false
+  gem 'bundler-audit'
 end
 
 group :test do

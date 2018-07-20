@@ -3,8 +3,11 @@ class CommentsController < ApplicationController
 
 	def create
 		@comment = Comment.create(comment_params)
+		ticket_creator = @comment.ticket.user == @comment.user
 		respond_to do |format|
 			if @comment.save
+				ticket_creator ? @comment.ticket.user_response : @comment.ticket.support_response
+				@comment.ticket.save
 				format.html { redirect_to user_dashboard_path, notice: 'Comment was created' }
 				format.js
 			else
