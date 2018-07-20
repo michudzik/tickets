@@ -70,7 +70,7 @@ namespace :deploy do
  desc 'Restart application'
  task :restart do
    on roles(:app), in: :sequence, wait: 10 do
-     execute 'sudo systemctl restart $tickets-unicorn.service'
+     execute 'sudo systemctl restart $USER-unicorn.service'
    end
  end
 
