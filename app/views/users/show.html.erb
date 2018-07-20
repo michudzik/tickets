@@ -20,24 +20,6 @@
 	</p>
 </div>
 
-<!-- <<<<<<< HEAD
-<div class="jumbotron">
-	<h2>Comments</h2>
-</div>
-<div class="comments">
-	<% current_user.comments.each do |comment| %>
-		<%= render 'comments/comment', comment: comment %>
-	<% end %>
-</div>
-
-<div class="jumbotron">
-	<h2>Add new comment</h2>
-</div>
-
-<div>
-	<%= render 'comments/form' %>
-</div>
-======= -->
 <% if current_user.tickets.any? %>
   <div class="authors-tickets">
     <h2>Tickets</h2>
@@ -50,4 +32,3 @@
     </table>
   </div>
 <% end %>
-<!-- >>>>>>> staging -->

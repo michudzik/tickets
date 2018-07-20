@@ -1,8 +1,5 @@
 class CommentsController < ApplicationController
-# <<<<<<< HEAD
-# =======
 	before_action :ensure_ticket_not_closed
-# >>>>>>> staging
 
 	def create
 		@comment = Comment.create(comment_params)
@@ -19,21 +16,6 @@ class CommentsController < ApplicationController
 		end
 	end
 
-# <<<<<<< HEAD
-# 	def destroy
-# 		@comment = Comment.find(params[:id])
-# 		respond_to do |format|
-# 			if @comment.destroy
-# 				format.html { redirect_to request.referrer, notice: 'Comment was deleted' }
-# 				format.js
-# 			else
-# 				format.html { redirect_to request.referrer, alert: 'There was an error while deleting comment' }
-# 			end
-# 		end
-# 	end
-
-# =======
-# >>>>>>> staging
 	private
 	def comment_params
 		params.require(:comment).permit(:body, :ticket_id).merge(user_id: current_user.id)
