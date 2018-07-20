@@ -11,19 +11,36 @@
          <%= link_to 'New Ticket', new_ticket_path, class: 'nav-link' %>
         </li>
         <% if current_user.admin? || current_user.it_support? || current_user.om_support? %>
-          <li class="nav-item">
+          <li class="nav-item active">
             <%= link_to 'Tickets', show_tickets_path, class: 'nav-link' %>
           </li>
           <li class="nav-item">
             <%= link_to 'Users', users_path, class: 'nav-link' %>
           </li>
         <% end %>
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown active">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Your account
+            Tickets
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <%= link_to 'Dashboard', user_dashboard_path, class: 'dropdown-item' %>
+          <% if current_user.tickets.any? %>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" >
+              <% Ticket.all.each do |ticket| %>
+              <%= link_to ticket.title, ticket_path(ticket.id), class: 'dropdown-item', "data-ticket-id": ticket.id  %>
+              <% end %>
+            </a>
+          <% end %>
+          </div>
+        </li>
+      </ul>
+      <ul class="navbar-nav mr-sm-2">
+        <li class="nav-item dropdown active">
+          <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Your account
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <%= link_to 'Edit profile', edit_user_registration_path, class: 'dropdown-item' %>
             <div class="dropdown-divider"></div>
             <%= link_to 'Log out', destroy_user_session_path, method: :delete, class: 'dropdown-item' %>
