@@ -6,6 +6,7 @@
 }
 
  /* Chat containers */
+ /*
 .container {
 	text-align: left;
 	word-wrap: break-word;
@@ -15,7 +16,7 @@
     padding: 10px;
     margin: 5px 0;
 }
-
+*/
 /* Darker chat container */
 .darker {
 	text-align: right;
@@ -23,7 +24,7 @@
     border-color: #ccc;
     background-color: #ddd;
 }
-
+/*
 .container::after {
     content: "";
     clear: both;
@@ -55,4 +56,4 @@
 }
 .commenter-name {
 	color: #999
-}
+}*/
