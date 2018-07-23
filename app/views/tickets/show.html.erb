@@ -1,66 +1,64 @@
-<div class="jumbotron">
-	<h1><%= @ticket.title %></h1>
+<div class="container">
+  <div class="jumbotron">
+    <h1><%= @ticket.title %></h1>
+  </div>
+
+  <div class="tickets-display">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Content:</th>
+          <th>Author:</th>
+          <th>Created at:</th>
+          <th>Updated at:</th>
+        </tr>   
+      </thead>
+      <tbody>
+        <tr>
+          <th><%= @ticket.note %></th>
+          <th><%= @ticket.user.fullname %></th>
+          <th><%= @ticket.created_at.strftime("%c") %></th>
+          <th><%= @ticket.updated_at.strftime("%c") %></th>   
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="jumbotron">
+    <h2>Comments</h2>
+  </div>
+
+  <% @ticket.comments.each do |comment| %>
+    <div>
+      <% if comment.user.role.name == 'none' %>
+        <div class="comments-section">
+          <h5 class="commenter-name"><%= comment.user.fullname + ' ' + comment.user.role.name%></h5>
+          <br />
+          <h5><%= comment.body %></h5>
+          <br />
+          <span class="time-right"><%= comment.created_at.strftime("%k:%M%p") %></span>       
+        </div>
+      <% elsif comment.user.role.name == 'it_support' || current_user.role.name == 'om_support' || comment.user.role.name == 'admin' %>
+        <div class="comments-section darker">
+          <h5 class="commenter-name"><%= comment.user.fullname + ' ' + comment.user.role.name %></h5>
+          <br />          
+          <h5><%= comment.body %></h5>          
+          <br />
+          <span class="time-left"><%= comment.created_at.strftime("%I:%M%p") %></span>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% unless @ticket.closed? %>
+    <div class="jumbotron">
+      <h2>Add new comment</h2>
+    </div>
+
+    <div class="tickets-display">
+      <%= render 'comments/form' %>
+    </div>
+  <% end %>
+
+  <%= button_to 'Close', user_ticket_path(@ticket.id), method: :put, class: 'btn btn-danger' %>
 </div>
-<div class="tickets-display">
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Content:</th>
-				<th>Author:</th>
-				<th>Created at:</th>
-				<th>Updated at:</th>
-			</tr>		
-		</thead>
-		<tbody>
-			<tr>
-				<th><%= @ticket.note %></th>
-				<th><%= @ticket.user.fullname %></th>
-				<th><%= @ticket.created_at.strftime("%c") %></th>
-				<th><%= @ticket.updated_at.strftime("%c") %></th>		
-			</tr>
-		</tbody>
-	</table>
-</div>
-
-<div class="jumbotron">
-	<h2>Comments</h2>
-</div>
-
-<% @ticket.comments.each do |comment| %>
-	<div class="comments-container">
-		<% if comment.user.role.name == 'none' %>
-			<div>
-				<h5 class="commenter-name"><%= comment.user.fullname %></h5>
-				<br />
-				<h5><%= comment.body %></h5>
-				<br />
-				<span class="time-right"><%= comment.created_at.strftime("%k:%M%p") %></span>				
-			</div>
-		<% elsif comment.user.role.name == 'it_support' || current_user.role.name == 'om_support' || comment.user.role.name == 'admin' %>
-			<div class="container darker">
-				<h5 class="commenter-name"><%= comment.user.fullname %></h5>
-				<br />					
-				<h5><%= comment.body %></h5>					
-				<br />
-				<span class="time-left"><%= comment.created_at.strftime("%I:%M%p") %></span>
-			</div>
-		<% end %>
-	</div>
-<% end %>
-
-
-<div class="jumbotron">
-	<h2>Add new comment</h2>
-</div>
-
-<% unless @ticket.closed? %>
-	<div class="jumbotron">
-		<h2>Add new comment</h2>
-	</div>
-
-	<div class="tickets-display">
-		<%= render 'comments/form' %>
-	</div>
-<% end %>
-
-<%= button_to 'Close', user_ticket_path(@ticket.id), method: :put, class: 'btn btn-danger' %>
