@@ -14,12 +14,12 @@
   <% if user.access_locked? %>
     <td status-user-id="<%= user.id %>">Status: Inactive</td>
     <td>
-      <%= link_to 'Activate', activate_account_user_path(user.id), method: :put, class: 'btn btn-primary' %>
+      <%= link_to 'Unlock', activate_account_user_path(user.id), method: :put, class: 'btn btn-primary' %>
     </td>
   <% else %>
     <td status-user-id="<%= user.id %>">Status: Active</td>
     <td>
-        <%= render 'deactivate_account_modal', user: user %>
+        <%= render 'lock_account_modal', user: user %>
     </td>
   <% end %>
 </tr>
