@@ -6,9 +6,7 @@
 }
 
  /* Chat containers */
- /* Please change name of those classes, you are overriding standard bootstrap library
-    Proposition: commentSection-container */
-.container {
+.comments-container {
 	text-align: left;
 	word-wrap: break-word;
     border: 2px solid #dedede;
@@ -30,20 +28,6 @@
     content: "";
     clear: both;
     display: table;
-}
-
-.container img {
-    float: left;
-    max-width: 60px;
-    width: 100%;
-    margin-right: 20px;
-    border-radius: 50%;
-}
-
-.container img.right {
-    float: right;
-    margin-left: 20px;
-    margin-right:0;
 }
 
 .time-right {

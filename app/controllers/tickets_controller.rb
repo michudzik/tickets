@@ -1,4 +1,5 @@
 class TicketsController < ApplicationController
+
     before_action :ensure_authorized, only: :index
     before_action :ensure_related_to_ticket, only: :show
 
@@ -66,5 +67,4 @@ class TicketsController < ApplicationController
           redirect_to user_dashboard_url, alert: 'Forbidden access'
       end
     end
-
 end

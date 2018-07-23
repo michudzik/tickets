@@ -2,10 +2,10 @@
 	<h2><%= current_user.fullname %></h2>
 </div>
 
-<div class="container authors-display">
+<div class="containter authors-display">
 	<p>
 		<strong>Email:</strong>		
-  		<%= current_user.email %><br />
+  	<%= current_user.email %><br />
 		<strong>Name:</strong>		
 		<%= current_user.first_name %><br />
 		<strong>Lastname:</strong>		
@@ -18,14 +18,15 @@
 </div>
 
 <% if current_user.tickets.any? %>
-  <div class="authors-tickets">
-    <h2>Tickets</h2>
-    <table class="table">
-      <tbody>
-        <% current_user.tickets.each do |ticket| %>
-          <%= render 'tickets/ticket', ticket: ticket %>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+  <% current_user.tickets.each do |ticket| %>
+	  <div class="authors-tickets">
+	    <table class="table">
+	      <tbody>
+	      	<tr>
+	      		<th><%= render 'tickets/ticket', ticket: ticket %></th>
+	      	</tr>	        
+	      </tbody>
+	    </table>
+	  </div>
+  	<% end %>
 <% end %>
