@@ -1,12 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe Ticket, type: :model do
+
+    let(:admin) { create(:user, :admin) }
+    let!(:user) { create(:user) }
+    let!(:ticket) { Ticket.create() }
+    
     describe 'validations' do
         it { should validate_presence_of(:title) }
         it { should validate_presence_of(:note) }
         it { should validate_presence_of(:user_id) }
         it { should validate_presence_of(:department) }
-        it { should belong_to(:department) }
     end
 
     describe 'attributes' do
@@ -62,7 +66,6 @@ RSpec.describe Ticket, type: :model do
                 expect(ticket.status.status).to eq('support_response')
             end
         end
-
     end
 
     describe 'callbacks' do

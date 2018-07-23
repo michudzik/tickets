@@ -1,8 +1,8 @@
-<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">
+<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter<%= user.id %>">
   Deactivate
 </button>
 
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="exampleModalCenter<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -16,7 +16,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <%= button_to 'Deactivate', deactivate_account_user_path(user.id), method: :put, class: 'btn btn-danger' %>
+        <%= button_to 'Deactivate', deactivate_account_user_path(user.id), method: :put, remote: true,  user: user, class: 'btn btn-danger' %>
       </div>
     </div>
   </div>
