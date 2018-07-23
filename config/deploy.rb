@@ -1,7 +1,7 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.11.0"
 
-set :application, "my_app_name"
+set :application, "tickets"
 set :repo_url, "git@github.com:michudzik/internship_project.git"
 
 # Default branch is :master
@@ -22,7 +22,7 @@ set :repo_url, "git@github.com:michudzik/internship_project.git"
 
 # Default value for :linked_files is []
 # append :linked_files, "config/database.yml"
-append :linked_files, "config/unicorn.rb", "config/database.yml"
+append :linked_files, "config/unicorn.rb", "config/database.yml", "config/master.key"
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
 

@@ -36,7 +36,6 @@
 				<br />
 				<span class="time-right"><%= comment.created_at.strftime("%k:%M%p") %></span>				
 			</div>
-
 		<% elsif comment.user.role.name == 'it_support' || current_user.role.name == 'om_support' || comment.user.role.name == 'admin' %>
 			<div class="container darker">
 				<h5 class="commenter-name"><%= comment.user.fullname %></h5>
@@ -49,12 +48,26 @@
 	</div>
 <% end %>
 
+<<<<<<< HEAD
 <div class="jumbotron">
 	<h2>Add new comment</h2>
 </div>
+||||||| merged common ancestors
 
-<div class="tickets-display">
-	<%= render 'comments/form' %>
+<div class="jumbotron">
+	<h2>Add new comment</h2>
 </div>
+=======
+
+<% unless @ticket.closed? %>
+	<div class="jumbotron">
+		<h2>Add new comment</h2>
+	</div>
+>>>>>>> staging
+
+	<div class="tickets-display">
+		<%= render 'comments/form' %>
+	</div>
+<% end %>
 
 <%= button_to 'Close', user_ticket_path(@ticket.id), method: :put, class: 'btn btn-danger' %>

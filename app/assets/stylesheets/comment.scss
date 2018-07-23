@@ -6,7 +6,15 @@
 }
 
  /* Chat containers */
+<<<<<<< HEAD
 .comments-container {
+||||||| merged common ancestors
+.container {
+=======
+ /* Please change name of those classes, you are overriding standard bootstrap library
+    Proposition: commentSection-container */
+.container {
+>>>>>>> staging
 	text-align: left;
 	word-wrap: break-word;
     border: 2px solid #dedede;

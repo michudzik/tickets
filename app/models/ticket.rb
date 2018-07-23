@@ -7,7 +7,6 @@ class Ticket < ActiveRecord::Base
 
     validates :note, presence: true, length: { maximum: 500}
     validates :title, presence: true, length: { maximum: 30}
-    validates :user_id, presence: true
     validates :department, presence: true
 
     before_validation :default_status, on: :create
@@ -16,9 +15,30 @@ class Ticket < ActiveRecord::Base
         " #{user_id} #{title} #{note} #{department} #{status} "
     end
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+
+=======
+    def user_response
+        self.status = find_status('user_response')
+    end
+
+    def support_response
+        self.status = find_status('support_response')
+    end
+
+    def closed?
+      self.status.status == 'closed'
+    end
+
+>>>>>>> staging
     private
 
       def default_status
-        self.status ||= Status.find_by(status: 'open')
+        self.status ||= find_status('open')
+      end
+
+      def find_status(name)
+        Status.find_by(status: name)
       end
 end

@@ -4,26 +4,43 @@ RSpec.describe CommentsController, type: :controller do
 
 	describe '#create' do
 
-		let(:ticket) { create(:ticket) }
-		# { user.ticket.create(valid_attributes) }
-		let(:valid_attributes) { { comment: { user_id: ticket.user.id, ticket_id: ticket.id, body: 'a'*20 } } }
-		subject { post :create, params: valid_attributes }
-		let(:status) { create(:status, :closed) }
+		let(:ticket) 							{ create(:ticket) }
+		let(:user)								{ create(:user, :it_support) }
+		let(:valid_attributes) 		{ { comment: { user_id: ticket.user.id, ticket_id: ticket.id, body: 'a'*20 } } }
+		let!(:closed) 						{ create(:status, :closed) }
+		let!(:user_response)			{ create(:status, :user_response) }
+		let!(:support_response) 	{ create(:status, :support_response) }
+		subject 									{ post :create, params: valid_attributes }
 
-		it 'should create comment' do
-			puts ticket.errors.full_messages
-			sign_in ticket.user
-			expect{subject}.to change{Comment.count}.by(1)
+		context 'valid parameters' do
+			it 'should create comment' do
+				sign_in ticket.user
+				expect{subject}.to change{Comment.count}.by(1)
+			end
 		end
 
-		it 'should not create comment when ticket is closed' do
-			ticket.status = status
-			ticket.save
+		context 'additional actions' do
 
-			sign_in ticket.user
-			expect{subject}.not_to change{Comment.count}
+			it 'should not create comment when ticket is closed' do
+				ticket.status = closed
+				ticket.save
+				sign_in ticket.user
+				expect{subject}.not_to change{Comment.count}
+			end
+
+			it 'should change ticket status to user response' do
+				sign_in ticket.user
+				subject
+				expect(ticket.reload.status.status).to eq('user_response')
+			end
+
+			it 'should change ticket status to support response' do
+				sign_in user
+				post :create, params: { comment: { user_id: user.id, ticket_id: ticket.id, body: 'a'*20 } }
+				expect(ticket.reload.status.status).to eq('support_response')
+			end
+			
 		end
-
 
 	end
 

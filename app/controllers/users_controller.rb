@@ -13,19 +13,25 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
-    if @user.update(role_id: params[:user][:role_id])
-      redirect_to users_url
-    else
-      render :index
+    respond_to do |format|
+      if @user.update(role_id: params[:user][:role_id])
+        format.html { redirect_to users_url }
+        format.js
+      else
+        render :index
+      end
     end
   end
 
   def deactivate_account
     @user = User.find(params[:id])
-    if @user.update_attribute(:confirmed_at, nil)
-      redirect_to users_url
-    else
-      render :index
+    respond_to do |format|
+      if @user.update_attribute(:confirmed_at, nil)
+        format.html { redirect_to users_url }
+        format.js
+      else
+        render :index
+      end
     end
   end
 
