@@ -26,18 +26,14 @@ class User < ApplicationRecord
     self.role.name == 'om_support'
   end
 
-<<<<<<< HEAD
   def none?
     self.role.name == 'none'
   end
 
-||||||| merged common ancestors
-=======
   def support?
     self.om_support? || self.it_support? || self.admin?
   end
 
->>>>>>> staging
   def full_name
     "#{first_name} #{last_name}"
   end

@@ -15,10 +15,6 @@ class Ticket < ActiveRecord::Base
         " #{user_id} #{title} #{note} #{department} #{status} "
     end
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
     def user_response
         self.status = find_status('user_response')
     end
@@ -31,7 +27,6 @@ class Ticket < ActiveRecord::Base
       self.status.status == 'closed'
     end
 
->>>>>>> staging
     private
 
       def default_status
