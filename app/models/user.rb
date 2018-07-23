@@ -26,6 +26,10 @@ class User < ApplicationRecord
     self.role.name == 'om_support'
   end
 
+  def none?
+    self.role.name == 'none'
+  end
+
   def support?
     self.om_support? || self.it_support? || self.admin?
   end
