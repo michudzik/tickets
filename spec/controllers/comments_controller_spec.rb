@@ -39,14 +39,6 @@ RSpec.describe CommentsController, type: :controller do
 				post :create, params: { comment: { user_id: user.id, ticket_id: ticket.id, body: 'a'*20 } }
 				expect(ticket.reload.status.status).to eq('support_response')
 			end
-			
 		end
-
 	end
-
-	# describe '#create' do
-	# 	let(:comment) { create(:comment) }
-	# 	let(:valid_attributes) { { comment: attributes_for(:comment) } }
-	# end
-
 end
