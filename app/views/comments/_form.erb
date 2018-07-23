@@ -1,0 +1,10 @@
+<% @tichet = Ticket.find(params[:id]) %>
+
+<%= form_for @comment, url: comments_path do |f| %>
+	<%= f.label :body %>
+	<%= f.text_field :body %>
+	<%= f.hidden_field(:user_id, value: current_user.id) %>
+	<%= f.hidden_field(:ticket_id, value: @ticket.id) %>
+	<hr />
+	<%= f.submit 'Save' %>	
+<% end %>

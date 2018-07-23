@@ -1,0 +1,66 @@
+<div class="jumbotron">
+	<h1><%= @ticket.title %></h1>
+</div>
+<div class="tickets-display">
+	<p>
+	<strong>ID:</strong>	
+	<%= @ticket.id %>
+	<hr />
+	<strong>Title:</strong>	
+	<%= @ticket.title %>
+	<hr />
+	<strong>Content:</strong>	
+	<%= @ticket.note %>
+	<hr />
+	<strong>Author name:</strong>	
+	<%= @ticket.user.fullname %>
+	<hr />
+	<strong>Created at</strong>	:
+	<%= @ticket.created_at %>
+	<hr />
+	<strong>Updated at:</strong>	
+	<%= @ticket.updated_at %>
+	</p>
+</div>
+
+
+<div class="jumbotron">
+	<h2>Comments</h2>
+</div>
+
+<% @ticket.comments.each do |comment| %>
+	<div>
+		<% if comment.user.role.name == 'none' %>
+			<div class="container">
+				<%= image_tag("user_avatar.png", :alt => "Avatar", :class => "right") %>
+				<h5 class="commenter-name"><%= comment.user.fullname %></h5>
+				<br />
+				<h5><%= comment.body %></h5>
+				<br />
+				<span class="time-right"><%= comment.created_at.strftime("%I:%M%p") %></span>				
+			</div>
+		<% elsif comment.user.role.name == 'it_support' || current_user.role.name == 'om_support' || comment.user.role.name == 'admin' %>
+			<div class="container darker">
+				<%= image_tag("support_avatar.png", :alt => "Avatar") %>				
+				<h5 class="commenter-name"><%= comment.user.fullname %></h5>
+				<br />					
+				<h5><%= comment.body %></h5>					
+				<br />
+				<span class="time-left"><%= comment.created_at.strftime("%I:%M%p") %></span>
+			</div>
+		<% end %>
+	</div>
+<% end %>
+
+
+<% unless @ticket.closed? %>
+	<div class="jumbotron">
+		<h2>Add new comment</h2>
+	</div>
+
+	<div class="tickets-display">
+		<%= render 'comments/form' %>
+	</div>
+<% end %>
+
+<%= button_to 'Close', user_ticket_path(@ticket.id), method: :put, class: 'btn btn-danger' %>

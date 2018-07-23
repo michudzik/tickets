@@ -1,0 +1,4 @@
+<div class="row", data-ticket-id="<%= ticket.id %>">
+	<div class="col-sm-12 col-md-8"><strong>Title: </strong><%= link_to ticket.title, ticket_path(id: ticket.id) %></div>
+	<div class="col-sm-12 col-md-2"><strong>Status: </strong><%= ticket.status.status %></div>
+</div>
