@@ -47,9 +47,15 @@
           <li class="nav-item active">
             <%= link_to 'My Tickets', user_dashboard_path, class: 'nav-link' %>
           </li>
-          <li class="nav-item active">
-            <%= link_to 'IT Tickets', show_tickets_path, class: 'nav-link' %>
-          </li>
+          <% if current_user.it_support? %>
+            <li class="nav-item active">
+              <%= link_to 'IT Tickets', show_tickets_path, class: 'nav-link' %>
+            </li>
+          <% elsif current_user.om_support? %>
+            <li class="nav-item active">
+              <%= link_to 'OM Tickets', show_tickets_path, class: 'nav-link' %>
+            </li>
+          <% end %>
       </ul>
 
       <ul class="navbar-nav mr-sm-2">
