@@ -12,7 +12,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     respond_to do |format|
-      if @user.update(role_id: params[:user][:role_id])
+      if @user.update(user_params)
         format.html { redirect_to users_url }
         format.js
       else
@@ -42,6 +42,10 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def user_params
+    params.require(:user).permit(:role_id)
+  end
 
   def same_user(msg)
     redirect_to users_path, alert: msg and return if current_user.id == params[:id]
