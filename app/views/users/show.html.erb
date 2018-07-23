@@ -1,14 +1,14 @@
 <% if current_user.admin? %>
   <%= link_to 'Users', users_path, class: 'btn btn-primary' %>
 <% end %>
-<div class="jumbotron">
+<div class="jumbotron", height: 20px;>
 	<h2><%= current_user.fullname %></h2>
 </div>
 
 <div class="containter authors-display">
 	<p>
 		<strong>Email:</strong>		
-  	<%= current_user.email %><br />
+  		<%= current_user.email %><br />
 		<strong>Name:</strong>		
 		<%= current_user.first_name %><br />
 		<strong>Lastname:</strong>		
@@ -32,3 +32,8 @@
     </table>
   </div>
 <% end %>
+
+.jumbotron {
+	height: 55px;
+	padding-bottom: 0;
+}
