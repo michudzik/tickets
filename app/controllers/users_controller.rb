@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-
+  
   before_action :ensure_admin, only: [:index, :update, :deactivate_account]
   before_action :ensure_not_same_user, only: [:deactivate_account]
 
