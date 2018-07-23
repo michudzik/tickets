@@ -27,9 +27,9 @@
 </div>
 
 <% @ticket.comments.each do |comment| %>
-	<div class="comments-container">
+	<div>
 		<% if comment.user.role.name == 'none' %>
-			<div>
+			<div class="comments-section">
 				<h5 class="commenter-name"><%= comment.user.fullname %></h5>
 				<br />
 				<h5><%= comment.body %></h5>
@@ -37,7 +37,7 @@
 				<span class="time-right"><%= comment.created_at.strftime("%k:%M%p") %></span>				
 			</div>
 		<% elsif comment.user.role.name == 'it_support' || current_user.role.name == 'om_support' || comment.user.role.name == 'admin' %>
-			<div class="container darker">
+			<div class="comments-section darker">
 				<h5 class="commenter-name"><%= comment.user.fullname %></h5>
 				<br />					
 				<h5><%= comment.body %></h5>					
