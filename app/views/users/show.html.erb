@@ -1,7 +1,7 @@
 <% if current_user.admin? %>
   <%= link_to 'Users', users_path, class: 'btn btn-primary' %>
 <% end %>
-<div class="jumbotron">
+<div class="jumbotron", height: 20px;>
 	<h2><%= current_user.fullname %></h2>
 </div>
 
@@ -32,3 +32,8 @@
     </table>
   </div>
 <% end %>
+
+.jumbotron {
+	height: 55px;
+	padding-bottom: 0;
+}
