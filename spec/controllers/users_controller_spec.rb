@@ -119,7 +119,6 @@ RSpec.describe UsersController, type: :controller do
 
       it 'should redirect with an alert' do
         subject
-        byebug
         expect(flash[:alert]).to be_present
       end
     end
