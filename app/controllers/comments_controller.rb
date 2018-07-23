@@ -1,4 +1,5 @@
 class CommentsController < ApplicationController
+
 	before_action :ensure_ticket_not_closed
 
 	def create
@@ -24,5 +25,4 @@ class CommentsController < ApplicationController
 			redirect_to ticket_path(@ticket.id), alert: 'This ticket is closed'
 		end
 	end
-
 end

@@ -12,11 +12,9 @@ class Ticket < ActiveRecord::Base
 
     before_validation :default_status, on: :create
 
-
     def fullticket
         " #{user_id} #{title} #{note} #{department} #{status} "
     end
-
 
     private
 

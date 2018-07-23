@@ -26,6 +26,10 @@ class User < ApplicationRecord
     self.role.name == 'om_support'
   end
 
+  def none?
+    self.role.name == 'none'
+  end
+
   def full_name
     "#{first_name} #{last_name}"
   end
