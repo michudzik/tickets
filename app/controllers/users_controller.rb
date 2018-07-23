@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
-  before_action :ensure_admin, only: [:index, :update, :deactivate_account]
-  before_action :ensure_not_same_user, only: [:deactivate_account]
+  before_action :ensure_admin, only: [:index, :update, :deactivate_account, :activate_account]
 
   def show
   end
@@ -17,28 +16,35 @@ class UsersController < ApplicationController
         format.html { redirect_to users_url }
         format.js
       else
-        render :index
+        format.html { render :index }
       end
     end
   end
 
   def deactivate_account
+    #same_user('You can not deactivate yourself')
     @user = User.find(params[:id])
     respond_to do |format|
-      if @user.update_attribute(:confirmed_at, nil)
-        format.html { redirect_to users_url }
-        format.js
-      else
-        render :index
-      end
+      @user.lock_access!(send_instructions: false)
+      format.html { redirect_to users_url }
+      format.js
+    end
+  end
+
+  def activate_account
+    redirect_to users_path, notice: 'You can not deactivate yourself', params: {test: 123} and return if current_user.id == params[:id] 
+    #same_user('You can not activate yourself')
+    @user = User.find(params[:id])
+    respond_to do |format|
+      @user.unlock_access!
+      format.html { redirect_to users_url }
+      format.js
     end
   end
 
   private
 
-    def ensure_not_same_user
-      if current_user == User.find(params[:id])
-        redirect_to users_url, alert: 'You can not deactivate yourself'
-      end
-    end
+  def same_user(msg)
+    
+  end
 end

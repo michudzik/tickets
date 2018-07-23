@@ -1,7 +1,6 @@
 <tr data-user-id="<%= user.id %>">
   <td full_name-user-id="<%= user.id %>"><%= user.full_name %></td>
   <td email-user-id="<%= user.id %>"><%= user.email %></td>
-  <td role-user-id="<%= user.id %>"><%= user.role.name.humanize.to_s %></td>
   <td>
     <%= form_for(user, url: user_path(user.id), method: :put, remote: true) do |f| %>
       <div class="input-group">
@@ -12,16 +11,15 @@
       </div>
     <% end %>
   </td>
-  <td status-user-id="<%= user.id %>">Status:
-    <% if user.confirmed_at.nil? %>
-      Inactive
-    <% else %>
-      Active
-    <% end %>
-  </td>
-  <td deactivation-button-user-id="<%= user.id %>">
-    <% unless user.confirmed_at.nil? %>
-      <%= render 'deactivate_account_modal', user: user %>
-    <% end %>
-  </td>
+  <% if user.access_locked? %>
+    <td status-user-id="<%= user.id %>">Status: Inactive</td>
+    <td>
+      <%= link_to 'Activate', activate_account_user_path(user.id), method: :put, class: 'btn btn-primary' %>
+    </td>
+  <% else %>
+    <td status-user-id="<%= user.id %>">Status: Active</td>
+    <td>
+        <%= render 'deactivate_account_modal', user: user %>
+    </td>
+  <% end %>
 </tr>
