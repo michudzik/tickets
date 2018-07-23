@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'tickest@binarapps.com'
+  default from: 'tickets@binarapps.com'
   layout 'mailer'
 end
