@@ -7,7 +7,6 @@ class Ticket < ActiveRecord::Base
 
     validates :note, presence: true, length: { maximum: 500}
     validates :title, presence: true, length: { maximum: 30}
-    validates :user_id, presence: true
     validates :department, presence: true
 
     before_validation :default_status, on: :create
