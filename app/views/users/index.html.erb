@@ -4,7 +4,6 @@
     <tr>
       <th>Name</th>
       <th>Email</th>
-      <th>Role</th>
       <th>Change role</th>
       <th colspan="2">Status</th>
     </tr>
@@ -14,7 +13,6 @@
       <tr>
         <td><%= user.full_name %></td>
         <td><%= user.email %></td>
-        <td><%= user.role.name.humanize.to_s %></td>
         <td>
           <%= form_for(user, url: user_path(user.id), method: :put) do |f| %>
             <div class="input-group">
