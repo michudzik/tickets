@@ -5,39 +5,37 @@
 	float: left;
 }
 
- /* Chat containers */
-.comments-container {
+.comments-section {
 	text-align: left;
 	word-wrap: break-word;
-    border: 2px solid #dedede;
-    background-color: #f1f1f1;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 5px 0;
+  border: 2px solid #dedede;
+  background-color: #f1f1f1;
+  border-radius: 15px;
+  padding: 30px;
+  margin: 15px 0;
 }
 
-/* Darker chat container */
 .darker {
 	text-align: right;
 	word-wrap: break-word;
-    border-color: #ccc;
-    background-color: #ddd;
+  border-color: #ccc;
+  background-color: #ddd;
 }
 
 .container::after {
-    content: "";
-    clear: both;
-    display: table;
+  content: "";
+  clear: both;
+  display: table;
 }
 
 .time-right {
-    float: right;
-    color: #aaa;
+  float: right;
+  color: #aaa;
 }
 
 .time-left {
-    float: left;
-    color: #999;
+  float: left;
+  color: #999;
 }
 .commenter-name {
 	color: #999
