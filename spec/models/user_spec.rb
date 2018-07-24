@@ -18,6 +18,7 @@ RSpec.describe User, type: :model do
   describe 'relations' do
     it { should belong_to(:role) }
     it { should have_many(:comments) }
+    it { should have_many(:tickets) }
   end
 
   describe 'callbacks' do
