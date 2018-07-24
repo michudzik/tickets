@@ -1,4 +1,6 @@
 <div class="container">
+  <br />
+
   <% if @ticket.closed? %>
     <div class="ticket-closed-message mb-2 bg-danger text-white">
       <tr>
@@ -11,29 +13,23 @@
     </div>
   <% end %>
 
-  <div class="jumbotron">
-    <h1><%= @ticket.title %></h1>
-  </div>
-
   <div class="tickets-display">
     <table class="table">
-      <thead>
-        <tr>
-          <th>Content:</th>
-          <th>Author:</th>
-          <th>Created at:</th>
-          <th>Updated at:</th>
-        </tr>   
-      </thead>
       <tbody>
         <tr>
-          <th><%= @ticket.note %></th>
-          <th><%= @ticket.user.fullname %></th>
-          <th><%= @ticket.created_at.strftime("%c") %></th>
-          <th><%= @ticket.updated_at.strftime("%c") %></th>   
+          <td class="align-middle"><%= @ticket.title %></td>
+          <td class="align-middle"><%= @ticket.user.fullname %></td>
+          <td class="align-middle"><%= @ticket.created_at.strftime("%Y.%m.%d - %H:%M") %></td>
+          <td class="align-middle"><%= @ticket.status.status %></td>
+          <td align="right">
+            <% unless @ticket.closed? %>
+              <%= render 'lock_ticket_modal', ticket: @ticket %>
+            <% end %>
+          </td>
         </tr>
       </tbody>
     </table>
+    <%= @ticket.note %>
   </div>
 
   <div class="jumbotron">
@@ -70,7 +66,5 @@
     <div class="tickets-display">
       <%= render 'comments/form' %>
     </div>
-
-    <%= render 'lock_ticket_modal', ticket: @ticket %>
   <% end %>
 </div>
