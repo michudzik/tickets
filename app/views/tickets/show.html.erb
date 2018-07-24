@@ -14,57 +14,59 @@
   <% end %>
 
   <div class="tickets-display">
-    <table class="table">
+    <table class="table table-borderless">
       <tbody>
         <tr>
-          <td class="align-middle"><%= @ticket.title %></td>
-          <td class="align-middle"><%= @ticket.user.fullname %></td>
-          <td class="align-middle"><%= @ticket.created_at.strftime("%Y.%m.%d - %H:%M") %></td>
-          <td class="align-middle"><%= @ticket.status.status %></td>
-          <td align="right">
+          <td class="align-middle" align="center"><%= @ticket.title %></td>
+          <td class="align-middle" align="center"><%= @ticket.user.fullname %></td>
+          <td class="align-middle" align="center"><%= @ticket.created_at.strftime("%Y.%m.%d %H:%M") %></td>
+          <td class="align-middle" align="center"><%= @ticket.status.status %></td>
+          <td class="align-middle" align="right">
             <% unless @ticket.closed? %>
               <%= render 'lock_ticket_modal', ticket: @ticket %>
             <% end %>
           </td>
         </tr>
+        <tr>
+          <td>
+            <%= @ticket.note %>
+          </td>
+        </tr>
       </tbody>
     </table>
-    <%= @ticket.note %>
   </div>
 
-  <div class="jumbotron">
-    <h2>Comments</h2>
+  <div class="jumbotron p-2 bg-light">
+    <b>Comments</b>
+    <% @ticket.comments.each do |comment| %>
+      <div>
+        <% if comment.user.role.name == 'it_support' || current_user.role.name == 'om_support' || comment.user.role.name == 'admin' %>
+          <div class="comments-section darker p-2">
+            <span class="time-right"><%= comment.created_at.strftime("%Y.%m.%d - %H:%M") %></span>
+            <br />
+            <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
+            <br />          
+            <%= comment.body %>      
+            <br />
+          </div>
+        <% else %>
+          <div class="comments-section p-2">
+            <span class="time-left"><%= comment.created_at.strftime("%Y.%m.%d - %H:%M") %></span>
+            <br />
+            <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
+            <br />
+            <%= comment.body %>
+            <br />  
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% unless @ticket.closed? %>
+      <br />
+      <div class="tickets-display">
+        <%= render 'comments/form' %>
+      </div>
+    <% end %>
   </div>
-
-  <% @ticket.comments.each do |comment| %>
-    <div>
-      <% if comment.user.role.name == 'none' %>
-        <div class="comments-section">
-          <h5 class="commenter-name"><%= comment.user.fullname + ' ' + comment.user.role.name%></h5>
-          <br />
-          <h5><%= comment.body %></h5>
-          <br />
-          <span class="time-right"><%= comment.created_at.strftime("%k:%M%p") %></span>       
-        </div>
-      <% elsif comment.user.role.name == 'it_support' || current_user.role.name == 'om_support' || comment.user.role.name == 'admin' %>
-        <div class="comments-section darker">
-          <h5 class="commenter-name"><%= comment.user.fullname + ' ' + comment.user.role.name %></h5>
-          <br />          
-          <h5><%= comment.body %></h5>          
-          <br />
-          <span class="time-left"><%= comment.created_at.strftime("%I:%M%p") %></span>
-        </div>
-      <% end %>
-    </div>
-  <% end %>
-
-  <% unless @ticket.closed? %>
-    <div class="jumbotron">
-      <h2>Add new comment</h2>
-    </div>
-
-    <div class="tickets-display">
-      <%= render 'comments/form' %>
-    </div>
-  <% end %>
 </div>
