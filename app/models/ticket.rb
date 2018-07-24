@@ -10,12 +10,8 @@ class Ticket < ActiveRecord::Base
 
   before_validation :default_status, on: :create
 
-  def fullticket
-    " #{user_id} #{title} #{note} #{department} #{status} "
-  end
-
   def user_response
-    self.status = find_status('user_response')
+      self.status = find_status('user_response')
   end
 
   def support_response
