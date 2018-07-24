@@ -1,17 +1,25 @@
 <% if @ticket.errors.any? %>
-  <ul>
-    <% @ticket.errors.full_messages.each do |msg| %>
-      <li>
-        <%= msg %>
-      </li>
-    <% end %>
-  </ul>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 alert alert-danger">
+        <h5><%= pluralize(@ticket.errors.count, 'error') %> prohibited this ticket from being saved</h5>
+        <ul>
+        <% @ticket.errors.full_messages.each do |msg| %>
+          <li>
+            <%= msg %>
+          </li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
 <% end %>
+
 <div class="container">
   <div class="row">
     <div class="col-md-6 offset-md-3">
       <h1> Create new ticket </h1>
-      <%= form_for [current_user, current_user.tickets.build] do |f| %>
+      <%= form_for @ticket, url: user_tickets_path(current_user.id) do |f| %>
         <%= f.label :department_id %>
         <%= f.select :department_id, @departments, {}, class: 'custom-select' %>
         <hr />

@@ -18,7 +18,7 @@ class TicketsController < ApplicationController
   end
 
   def new
-    @ticket = Ticket.new
+    @ticket = current_user.tickets.build
     @departments = Department.all.map { |department| [department.department_name, department.id] }
   end
 
@@ -28,6 +28,7 @@ class TicketsController < ApplicationController
       if @ticket.save
         format.html { redirect_to user_dashboard_url, notice: 'New ticket has been reported' }
       else
+        @departments = Department.all.map { |department| [department.department_name, department.id] }
         format.html { render :new }
       end
     end
