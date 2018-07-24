@@ -5,5 +5,9 @@ FactoryBot.define do
 		user
 		association :department, :it
     association :status, :open
+
+    trait :om_department do
+      association :department, :om
+    end
 	end
 end
