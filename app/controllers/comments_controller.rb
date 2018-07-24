@@ -6,7 +6,8 @@ class CommentsController < ApplicationController
     respond_to do |format|
       if @comment.save
         @comment.update_ticket_status!(user: @comment.user, ticket: @ticket)
-        UserNotifier.notify_users(@comment.ticket.comments.pluck(:user_id), @comment.ticket)
+        a = @comment.ticket.comments.pluck(:user_id).reject { |id| id == current_user.id }
+        UserNotifier.notify_users(@comment.ticket.comments.pluck(:user_id).reject { |id| id == current_user.id }, @comment.ticket)
         format.html { redirect_to ticket_path(@ticket.id), notice: 'Comment was created' }
         format.js
       else
