@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     resources :tickets, except: [:new, :index, :show]
     member do
       put :deactivate_account
+      put :activate_account
     end
   end
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

@@ -1,4 +1,5 @@
 class CommentsController < ApplicationController
+
 	before_action :ensure_ticket_not_closed
 
 	def create
@@ -8,10 +9,10 @@ class CommentsController < ApplicationController
 			if @comment.save
 				ticket_creator ? @comment.ticket.user_response : @comment.ticket.support_response
 				@comment.ticket.save
-				format.html { redirect_to user_dashboard_path, notice: 'Comment was created' }
+				format.html { redirect_to ticket_path(@ticket.id), notice: 'Comment was created' }
 				format.js
 			else
-				format.html { redirect_to user_dashboard_path, alert: 'There was an error while creating comment' }
+				format.html { redirect_to ticket_path(@ticket.id), alert: 'There was an error while creating comment' }
 			end
 		end
 	end
@@ -27,5 +28,4 @@ class CommentsController < ApplicationController
 			redirect_to ticket_path(@ticket.id), alert: 'This ticket is closed'
 		end
 	end
-
 end

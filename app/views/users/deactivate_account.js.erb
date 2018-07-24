@@ -1,0 +1,3 @@
+// $("#exampleModalCenter<%= @user.id %>").css({color: 'red'}).modal('hide');
+$('[status-user-id="<%= @user.id %>"]').replaceWith( "<td>Status: Inactive</td>" );
+$('[deactivation-button-user-id="<%= @user.id %>"]').fadeOut(1);

@@ -1,39 +1,23 @@
-<% if current_user.admin? %>
-  <%= link_to 'Users', users_path, class: 'btn btn-primary' %>
-<% end %>
-<div class="jumbotron">
-	<h2><%= current_user.fullname %></h2>
+<div class="container">
+  <h1>My tickets</h1>
+  <% if current_user.tickets.any? %>    
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Status</th>
+            <th scope="col">Last response</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% current_user.tickets.each do |ticket| %>
+            <tr>
+              <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
+              <td><%= ticket.status.status.humanize.to_s %></td>
+              <td><%= ticket.comments.last.updated_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+  <% end %>
 </div>
-
-<div class="containter authors-display">
-	<p>
-		<strong>Email:</strong>		
-  	<%= current_user.email %><br />
-		<strong>Name:</strong>		
-		<%= current_user.first_name %><br />
-		<strong>Lastname:</strong>		
-		<%= current_user.last_name %><br />
-		<strong>Created at:</strong>		
-		<%= current_user.created_at %><br />
-		<strong>Updated at:</strong>		
-		<%= current_user.updated_at %><br />
-	</p>
-</div>
-
-<% if current_user.tickets.any? %>
-  <div class="authors-tickets">
-    <h2>Tickets</h2>
-    <table class="table">
-      <tbody>
-        <% current_user.tickets.each do |ticket| %>
-          <%= render 'tickets/ticket', ticket: ticket %>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-<% end %>
-
-.jumbotron {
-	height: 55px;
-	padding-bottom: 0;
-}
