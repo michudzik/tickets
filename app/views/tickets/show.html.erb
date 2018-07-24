@@ -1,4 +1,16 @@
 <div class="container">
+  <% if @ticket.closed? %>
+    <div class="ticket-closed-message mb-2 bg-danger text-white">
+      <tr>
+        <td class="align-text-bottom">
+          <h2>
+            <p class="text-center">THIS TICKET IS CLOSED</p>
+          </h2>
+        </td>
+      </tr>
+    </div>
+  <% end %>
+
   <div class="jumbotron">
     <h1><%= @ticket.title %></h1>
   </div>
@@ -61,5 +73,4 @@
 
     <%= render 'lock_ticket_modal', ticket: @ticket %>
   <% end %>
-
 </div>
