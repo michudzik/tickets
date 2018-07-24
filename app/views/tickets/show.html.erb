@@ -14,6 +14,13 @@
 	<hr />
 	<strong>Author name:</strong>	
 	<%= @ticket.user.fullname %>
+  <% if @ticket.uploads.attached? %>
+    <hr />
+    <strong>Attachment:</strong> 
+      <% @ticket.uploads.each_with_index do |upload, i| %>
+      <%= link_to("Document #{i+1}", rails_blob_path(upload, disposition: "attachment")) %>
+    <% end %>
+  <% end %>
 	<hr />
 	<strong>Created at</strong>	:
 	<%= @ticket.created_at %>
