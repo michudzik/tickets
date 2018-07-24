@@ -28,7 +28,7 @@ class TicketsController < ApplicationController
       if @ticket.save
         format.html { redirect_to user_dashboard_url, notice: 'New ticket has been reported' }
       else
-        format.html { redirect_to request.referrer, alert: 'There was an error, try again' }
+        format.html { render :new }
       end
     end
   end
@@ -48,7 +48,7 @@ class TicketsController < ApplicationController
   private
 
   def ticket_params
-    params.require(:ticket).permit(:title, :note, :status, :department_id)
+    params.require(:ticket).permit(:title, :note, :status_id, :department_id)
   end
 
   def ensure_authorized

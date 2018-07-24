@@ -84,4 +84,69 @@ RSpec.describe TicketsController, type: :controller do
       it { expect(assigns(:ticket).persisted?).to eq(false) }
     end
   end
+
+  describe '#create' do 
+    before { sign_in user }
+    let(:department) { create(:department, :it) }
+    let!(:status) { create(:status, :open) }
+    let(:valid_parameters) { { user_id: user.id, ticket: attributes_for(:ticket, department_id: department.id) } }
+    let(:invalid_parameters) { { user_id: user.id, ticket: attributes_for(:ticket, department_id: department.id, note: 'a'*1000) } }
+ 
+    context 'valid parameters' do
+      subject { post :create, params: valid_parameters }
+
+      it 'should redirect to user dashboard' do
+        expect(subject).to redirect_to(user_dashboard_url)
+      end
+
+      it 'should redirect with a notice' do
+        subject
+        expect(flash[:notice]).to be_present
+      end
+
+      it 'should create new ticket' do
+        expect{ subject }.to change{ Ticket.count }.by(1)
+      end
+    end
+
+    context 'invalid parameters' do 
+      subject { post :create, params: invalid_parameters }
+
+      it 'should render new template' do
+        expect(subject).to render_template('new')
+      end
+
+      it 'should redirect with a notice' do
+        subject
+        expect(flash[:alert]).to be_present
+      end
+    end
+
+  end
+
+  describe '#update' do
+    before { sign_in user }
+    let(:department) { create(:department, :it) }
+    let(:ticket) { create(:ticket) }
+    let!(:status) { create(:status, :open) }
+    let!(:status_closed) { create(:status, :closed) }
+    let(:valid_parameters) { { id: ticket.id, user_id: user.id } }
+ 
+    context 'valid parameters' do
+      subject { patch :update, params: valid_parameters }
+
+      it 'should redirect to user dashboard' do
+        expect(subject).to redirect_to(user_dashboard_url)
+      end
+
+      it 'should redirect with a notice' do
+        subject
+        expect(flash[:notice]).to be_present
+      end
+
+      it 'should create new ticket' do
+        expect{ subject }.to change{ Ticket.count }.by(1)
+      end
+    end
+  end
 end
