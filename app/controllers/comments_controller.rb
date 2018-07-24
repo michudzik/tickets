@@ -1,5 +1,4 @@
 class CommentsController < ApplicationController
-
 	before_action :ensure_ticket_not_closed
 
 	def create
@@ -18,6 +17,7 @@ class CommentsController < ApplicationController
 	end
 
 	private
+
 	def comment_params
 		params.require(:comment).permit(:body, :ticket_id).merge(user_id: current_user.id)
 	end
