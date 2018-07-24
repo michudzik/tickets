@@ -11,4 +11,29 @@ RSpec.describe Comment, type: :model do
     it { should belong_to(:ticket) }
   end
 
+  describe 'methods' do
+    describe '#update_ticket_status!' do
+      let(:admin) { create(:user, :admin) }
+      let(:ticket) { create(:ticket) }
+      let(:comment) { create(:comment, ticket_id: ticket.id) }
+
+      context 'user response' do
+        let!(:user_response) { create(:status, :user_response) }
+        it 'should have user response status' do
+          comment.update_ticket_status!(user: ticket.user, ticket: ticket)
+          expect(ticket.status.status).to eq('user_response')
+        end
+      end
+
+      context 'support response' do
+        let!(:support_response) { create(:status, :support_response) }
+        it 'should have support response status' do
+          comment.update_ticket_status!(user: admin, ticket: ticket)
+          expect(ticket.status.status).to eq('support_response')
+        end
+      end
+
+    end
+  end
+
 end
