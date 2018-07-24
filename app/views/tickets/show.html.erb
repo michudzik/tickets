@@ -40,7 +40,7 @@
     <b>Comments</b>
     <% @ticket.comments.each do |comment| %>
       <div>
-        <% if comment.user.fullname == current_user.fullname %>
+        <% if comment.user.id == current_user.id %>
           <div align="right">
             <div class="comments-section darker p-2 w-75">
               <span class="time-right"><%= comment.created_at.strftime("%H:%M") %></span>
