@@ -18,7 +18,9 @@
               <td><%= ticket.status.status.humanize.to_s %></td>
               <td>
                 <% if ticket.comments.any? %>
-                  <%= ticket.comments.last.updated_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y") %>
+                  <%= ticket.comments.last.updated_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y") %>                
+                <% else %>
+                  <%= ticket.created_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y") %>
                 <% end %>
               </td>
               <td>
