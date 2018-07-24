@@ -40,19 +40,21 @@
     <b>Comments</b>
     <% @ticket.comments.each do |comment| %>
       <div>
-        <% if comment.user.role.name == 'it_support' || current_user.role.name == 'om_support' || comment.user.role.name == 'admin' %>
-          <div class="comments-section darker p-2">
-            <span class="time-right"><%= comment.created_at.strftime("%Y.%m.%d - %H:%M") %></span>
-            <br />
-            <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
-            <br />          
-            <%= comment.body %>      
-            <br />
+        <% if comment.user.fullname == current_user.fullname %>
+          <div align="right">
+            <div class="comments-section darker p-2 w-75">
+              <span class="time-right"><%= comment.created_at.strftime("%H:%M") %></span>
+              <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
+              &emsp;
+              <br />          
+              <%= comment.body %>      
+              <br />
+            </div>
           </div>
         <% else %>
-          <div class="comments-section p-2">
-            <span class="time-left"><%= comment.created_at.strftime("%Y.%m.%d - %H:%M") %></span>
-            <br />
+          <div class="comments-section p-2 w-75">
+            <span class="time-left"><%= comment.created_at.strftime("%H:%M") %></span>
+            &emsp;
             <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
             <br />
             <%= comment.body %>
