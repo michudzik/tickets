@@ -63,4 +63,11 @@
         <% end %>
       </div>
     <% end %>
+
+  <% unless @ticket.closed? %>
+    <br />
+    <div class="tickets-display">
+      <%= render 'comments/form' %>
+    </div>
+  <% end %>
 </div>
