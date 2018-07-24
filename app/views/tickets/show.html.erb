@@ -30,7 +30,7 @@
 
   <% @ticket.comments.each do |comment| %>
     <div>
-      <% if comment.user.role.name == 'none' %>
+      <% if comment.user.fullname == current_user.fullname %>
         <div class="comments-section">
           <h5 class="commenter-name"><%= comment.user.fullname + ' ' + comment.user.role.name%></h5>
           <br />
@@ -38,13 +38,13 @@
           <br />
           <span class="time-right"><%= comment.created_at.in_time_zone("Warsaw").strftime("%k:%M") %></span>       
         </div>
-      <% elsif comment.user.role.name == 'it_support' || current_user.role.name == 'om_support' || comment.user.role.name == 'admin' %>
+        <% else %>
         <div class="comments-section darker">
           <h5 class="commenter-name"><%= comment.user.fullname + ' ' + comment.user.role.name %></h5>
           <br />          
           <h5><%= comment.body %></h5>          
           <br />
-          <span class="time-left"><%= comment.created_at.in_time_zone("Warsaw").strftime("%I:%M") %></span>
+          <span class="time-left"><%= comment.created_at.in_time_zone("Warsaw").strftime("%k:%M") %></span>
         </div>
       <% end %>
     </div>
