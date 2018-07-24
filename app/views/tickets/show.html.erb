@@ -58,7 +58,8 @@
     <div class="tickets-display">
       <%= render 'comments/form' %>
     </div>
+
+    <%= render 'lock_ticket_modal', ticket: @ticket %>
   <% end %>
 
-  <%= button_to 'Close', user_ticket_path(@ticket.id), method: :put, class: 'btn btn-danger' %>
 </div>
