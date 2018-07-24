@@ -1,10 +1,9 @@
 class TicketsController < ApplicationController
-
   before_action :ensure_authorized, only: :index
   before_action :ensure_related_to_ticket, only: :show
 
   def index
-    if current_user.admin? 
+    if current_user.admin?
       @tickets = Ticket.all
     elsif current_user.om_support?
       @tickets = Ticket.joins(:department).where('departments.department_name' => 'OM')
@@ -20,7 +19,7 @@ class TicketsController < ApplicationController
 
   def new
     @ticket = Ticket.new
-    @departments = Department.all.map { |department| [department.department_name, department.id]}
+    @departments = Department.all.map { |department| [department.department_name, department.id] }
   end
 
   def create
@@ -29,7 +28,7 @@ class TicketsController < ApplicationController
       if @ticket.save
         format.html { redirect_to user_dashboard_url, notice: 'New ticket has been reported' }
       else
-        format.html { redirect_to request.referrer, alert: 'There was an error, try again' }
+        format.html { render :new }
       end
     end
   end
@@ -43,24 +42,22 @@ class TicketsController < ApplicationController
       else
         format.html { redirect_to user_dashboard_url, alert: 'Could not close the ticket' }
       end
-    end 
+    end
   end
 
   private
 
   def ticket_params
-    params.require(:ticket).permit(:title, :note, :status, :department_id)
+    params.require(:ticket).permit(:title, :note, :status_id, :department_id)
   end
 
-  def ensure_authorized 
-    unless current_user.admin? || current_user.it_support? || current_user.om_support?
-      redirect_to user_dashboard_url, alert: 'Forbidden access'
-    end
+  def ensure_authorized
+    redirect_to user_dashboard_url, alert: 'Forbidden access' if current_user.none?
   end
 
   def ensure_related_to_ticket
     ticket = Ticket.find(params[:id])
-    unless (ticket.user == current_user || 
+    unless (ticket.user == current_user ||
                           current_user.admin? ||
                           (current_user.it_support? && ticket.department.department_name == 'IT') ||
                           (current_user.om_support? && ticket.department.department_name == 'OM'))
