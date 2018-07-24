@@ -1,34 +1,23 @@
-<div class="containter">
-  <div class="jumbotron">
-    <h2><%= current_user.fullname %></h2>
-  </div>
-
-  <div class="containter">
-    <p>
-      <strong>Email:</strong>   
-      <%= current_user.email %><br />
-      <strong>Name:</strong>    
-      <%= current_user.first_name %><br />
-      <strong>Lastname:</strong>    
-      <%= current_user.last_name %><br />
-      <strong>Created at:</strong>    
-      <%= current_user.created_at %><br />
-      <strong>Updated at:</strong>    
-      <%= current_user.updated_at %><br />
-    </p>
-  </div>
-
-  <% if current_user.tickets.any? %>
-    <% current_user.tickets.each do |ticket| %>
-      <div>
-        <table class="table">
-          <tbody>
+<div class="container">
+  <h1>My tickets</h1>
+  <% if current_user.tickets.any? %>    
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Status</th>
+            <th scope="col">Last response</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% current_user.tickets.each do |ticket| %>
             <tr>
-              <th><%= render 'tickets/ticket', ticket: ticket %></th>
-            </tr>         
-          </tbody>
-        </table>
-      </div>
-      <% end %>
+              <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
+              <td><%= ticket.status.status.humanize.to_s %></td>
+              <td><%= ticket.comments.last.updated_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
   <% end %>
 </div>

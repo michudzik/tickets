@@ -1,20 +1,23 @@
-<h1>All Tickets</h1>
-<table class="table">
-  <thead>
-    <th>Author</th>
-    <th>Title</th>
-    <th>Department</th>
-    <th>Status</th>
-  </thead>
-  <tbody>
-    <% @tickets.each do |ticket| %>
+<div class="container">
+  <h1>All Tickets</h1>
+  <table class="table table-hover">
+    <thead>
       <tr>
-        <td><%= ticket.user.full_name %></td>
-        <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
-        <td><%= ticket.department.department_name %></td>
-        <td><%= ticket.status.status.humanize.to_s %></td>
+        <th scope="col">Author</th>
+        <th scope="col">Title</th>
+        <th scope="col">Department</th>
+        <th scope="col">Status</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
-<%= link_to 'Back', users_path, class: 'btn btn-primary' %>
+    </thead>
+    <tbody>
+      <% @tickets.each do |ticket| %>
+        <tr>
+          <td><%= ticket.user.full_name %></td>
+          <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
+          <td><%= ticket.department.department_name %></td>
+          <td><%= ticket.status.status.humanize.to_s %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
