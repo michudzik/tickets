@@ -52,7 +52,7 @@ class TicketsController < ApplicationController
   end
 
   def ensure_authorized
-    redirect_to user_dashboard_url, alert: 'Forbidden access' unless current_user.admin? || current_user.it_support? || current_user.om_support?
+    redirect_to user_dashboard_url, alert: 'Forbidden access' if current_user.none?
   end
 
   def ensure_related_to_ticket

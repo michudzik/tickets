@@ -68,4 +68,20 @@ RSpec.describe TicketsController, type: :controller do
     end
   end
 
+  describe '#new' do
+    before do
+      sign_in user
+      get :new
+    end
+
+    describe 'successful response' do
+      it { expect(response).to be_successful }
+      it { expect(response).to render_template('new') }
+    end
+
+    context 'ticket' do
+      it { expect(assigns(:ticket)).to be_a(Ticket) }
+      it { expect(assigns(:ticket).persisted?).to eq(false) }
+    end
+  end
 end

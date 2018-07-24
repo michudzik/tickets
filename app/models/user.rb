@@ -26,7 +26,7 @@ class User < ApplicationRecord
   end
 
   def none?
-    self.role.name == 'none'
+    role.name == 'none'
   end
 
   def support?
