@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-<div class="jumbotron">
-	<h1><%= @ticket.title %></h1>
-</div>
 <div class="tickets-display">
 	<p>
 	<strong>ID:</strong>	
@@ -30,59 +26,28 @@
 	<%= @ticket.updated_at %>
 	</p>
 </div>
-=======
-<div class="container">
-  <div class="jumbotron">
-    <h1><%= @ticket.title %></h1>
-  </div>
->>>>>>> 9942913025ffabf08bfb5e4dd043127b5d39c737
 
-  <div class="tickets-display">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Content:</th>
-          <th>Author:</th>
-          <th>Created at:</th>
-          <th>Updated at:</th>
-        </tr>   
-      </thead>
-      <tbody>
-        <tr>
-          <th><%= @ticket.note %></th>
-          <th><%= @ticket.user.fullname %></th>
-          <th><%= @ticket.created_at.strftime("%c") %></th>
-          <th><%= @ticket.updated_at.strftime("%c") %></th>   
-        </tr>
-      </tbody>
-    </table>
+<% @ticket.comments.each do |comment| %>
+  <div>
+    <% if comment.user.role.name == 'none' %>
+      <div class="comments-section">
+        <h5 class="commenter-name"><%= comment.user.fullname + ' ' + comment.user.role.name%></h5>
+        <br />
+        <h5><%= comment.body %></h5>
+        <br />
+        <span class="time-right"><%= comment.created_at.in_time_zone("Warsaw").strftime("%k:%M") %></span>       
+      </div>
+    <% elsif comment.user.role.name == 'it_support' || current_user.role.name == 'om_support' || comment.user.role.name == 'admin' %>
+      <div class="comments-section darker">
+        <h5 class="commenter-name"><%= comment.user.fullname + ' ' + comment.user.role.name %></h5>
+        <br />          
+        <h5><%= comment.body %></h5>          
+        <br />
+        <span class="time-left"><%= comment.created_at.in_time_zone("Warsaw").strftime("%I:%M") %></span>
+      </div>
+    <% end %>
   </div>
-
-  <div class="jumbotron">
-    <h2>Comments</h2>
-  </div>
-
-  <% @ticket.comments.each do |comment| %>
-    <div>
-      <% if comment.user.role.name == 'none' %>
-        <div class="comments-section">
-          <h5 class="commenter-name"><%= comment.user.fullname + ' ' + comment.user.role.name%></h5>
-          <br />
-          <h5><%= comment.body %></h5>
-          <br />
-          <span class="time-right"><%= comment.created_at.in_time_zone("Warsaw").strftime("%k:%M") %></span>       
-        </div>
-      <% elsif comment.user.role.name == 'it_support' || current_user.role.name == 'om_support' || comment.user.role.name == 'admin' %>
-        <div class="comments-section darker">
-          <h5 class="commenter-name"><%= comment.user.fullname + ' ' + comment.user.role.name %></h5>
-          <br />          
-          <h5><%= comment.body %></h5>          
-          <br />
-          <span class="time-left"><%= comment.created_at.in_time_zone("Warsaw").strftime("%I:%M") %></span>
-        </div>
-      <% end %>
-    </div>
-  <% end %>
+<% end %>
 
   <% unless @ticket.closed? %>
     <div class="jumbotron">
