@@ -11,6 +11,9 @@ RSpec.describe Department, type: :model do
   describe 'validations' do
     it { should validate_presence_of(:department_name) }
     it { should validate_length_of(:department_name).is_at_most(40) }
+  end
+
+  describe 'relations' do
     it { should have_many(:tickets) }
   end
 
