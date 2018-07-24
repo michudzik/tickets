@@ -6,9 +6,9 @@ class TicketsController < ApplicationController
     if current_user.admin?
       @tickets = Ticket.all
     elsif current_user.om_support?
-      @tickets = Tickets.joins(:department).where(departments: { department_name: 'OM' } )
+      @tickets = Tickets.joins(:department).where(departments: { department_name: 'OM' })
     elsif current_user.it_support?
-      @tickets = Tickets.joins(:department).where(departments: { department_name: 'IT' } )
+      @tickets = Tickets.joins(:department).where(departments: { department_name: 'IT' })
     end
   end
 
