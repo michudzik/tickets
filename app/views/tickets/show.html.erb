@@ -36,7 +36,7 @@
           <br />
           <h5><%= comment.body %></h5>
           <br />
-          <span class="time-right"><%= comment.created_at.strftime("%k:%M%p") %></span>       
+          <span class="time-right"><%= comment.created_at.in_time_zone("Warsaw").strftime("%k:%M") %></span>       
         </div>
       <% elsif comment.user.role.name == 'it_support' || current_user.role.name == 'om_support' || comment.user.role.name == 'admin' %>
         <div class="comments-section darker">
@@ -44,7 +44,7 @@
           <br />          
           <h5><%= comment.body %></h5>          
           <br />
-          <span class="time-left"><%= comment.created_at.strftime("%I:%M%p") %></span>
+          <span class="time-left"><%= comment.created_at.in_time_zone("Warsaw").strftime("%I:%M") %></span>
         </div>
       <% end %>
     </div>
