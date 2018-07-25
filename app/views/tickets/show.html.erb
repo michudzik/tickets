@@ -1,5 +1,10 @@
 <div class="container">
   <br />
+  <script>
+  $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();   
+  });
+  </script>
 
   <% if @ticket.closed? %>
     <div class="ticket-closed-message mb-2 bg-danger text-white">
@@ -52,7 +57,13 @@
         <% if comment.user.id == current_user.id %>
           <div align="right">
             <div class="comments-section darker p-2 w-75">
-              <span class="time-right"><%= comment.created_at.strftime("%H:%M") %></span>
+              <span class="time-right">
+                <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
+                  <span class="time-right">
+                  <%= comment.created_at.strftime("%H:%M") %>
+                  </span>
+                </a>
+              </span>
               <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
               &emsp;
               <br />          
@@ -62,7 +73,13 @@
           </div>
         <% else %>
           <div class="comments-section p-2 w-75">
-            <span class="time-left"><%= comment.created_at.strftime("%H:%M") %></span>
+            <span class="time-left">
+              <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
+                <span class="time-left">
+                  <%= comment.created_at.strftime("%H:%M") %>
+                </span>
+              </a>
+            </span>
             &emsp;
             <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
             <br />
