@@ -4,11 +4,11 @@ class TicketsController < ApplicationController
 
   def index
     if current_user.admin?
-      @tickets = Ticket.all.paginate(:page => params[:page], :per_page => 15)      
+      @tickets = Ticket.all.paginate(:page => params[:page], :per_page => params[:number])
     elsif current_user.om_support?
-      @tickets = Ticket.joins(:department).where('departments.department_name' => 'OM').paginate(:page => params[:page], :per_page => 15)
+      @tickets = Ticket.joins(:department).where('departments.department_name' => 'OM').paginate(:page => params[:page], :per_page => params[:number])
     elsif current_user.it_support?
-      @tickets = Ticket.joins(:department).where('departments.department_name' => 'IT').paginate(:page => params[:page], :per_page => 15)
+      @tickets = Ticket.joins(:department).where('departments.department_name' => 'IT').paginate(:page => params[:page], :per_page => params[:number])
     end
   end
 

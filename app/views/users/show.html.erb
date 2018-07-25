@@ -1,6 +1,15 @@
 <div class="container">
   <h1>My tickets</h1>
-      
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Count
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <%= link_to '10', user_dashboard_path(:number => 10), class: 'dropdown-item' %>
+        <%= link_to '30', user_dashboard_path(:number => 30), class: 'dropdown-item' %>
+        <%= link_to '50', user_dashboard_path(:number => 50), class: 'dropdown-item' %>
+      </div>
+    </div>
       <table class="table table-striped">
         <thead>
           <tr>
@@ -11,35 +20,38 @@
           </tr>
         </thead>
         <tbody> 
-          <% if current_user.tickets.any? %>
-          <% current_user.tickets.each do |ticket| %>
-            <tr>
-              <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
-              <td><%= ticket.status.status.humanize.to_s %></td>
-              <td>
-                <% if ticket.comments.any? %>
-                  <%= ticket.comments.last.updated_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y") %>                
-                <% else %>
-                  <%= ticket.created_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y") %>
-                <% end %>
-              </td>
-              <td>
-                <div class="dropdown">
-                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    See comments
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <% ticket.comments.last(6).reverse_each do |comments| %>
-                      <a class="dropdown-item-text">
-                        <strong><%= comments.user.role.name %></strong><%= '(' + comments.created_at.in_time_zone("Warsaw").strftime("%k:%M") + '): ' + comments.body %>
-                      </a>
-                    <% end %>
+          <% if @tickets.any? %>
+            <% @tickets.each do |ticket| %>
+              <tr>
+                <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
+                <td><%= ticket.status.status.humanize.to_s %></td>
+                <td>
+                  <% if ticket.comments.any? %>
+                    <%= ticket.comments.last.updated_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y") %>                
+                  <% else %>
+                    <%= ticket.created_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y") %>
+                  <% end %>
+                </td>
+                <td>
+                  <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      See comments
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <% ticket.comments.last(6).reverse_each do |comments| %>
+                        <a class="dropdown-item-text">
+                          <strong><%= comments.user.role.name %></strong><%= '(' + comments.created_at.in_time_zone("Warsaw").strftime("%k:%M") + '): ' + comments.body %>
+                        </a>
+                      <% end %>
+                    </div>
                   </div>
-                </div>
-              </td>
-            </tr>
+                </td>
+              </tr>
+            <% end %>
           <% end %>
         </tbody>
       </table>
-  <% end %>
+    <div>
+      <%= will_paginate @tickets, :container => false %>
+    </div>
 </div>

@@ -2,10 +2,11 @@ class UsersController < ApplicationController
   before_action :ensure_admin, only: %i[index update deactivate_account activate_account]
 
   def show
+    @tickets = current_user.tickets.paginate(:page => params[:page], :per_page => params[:number])
   end
 
   def index
-    @users = User.where.not(id: current_user.id).paginate(:page => params[:page], :per_page => 15)
+    @users = User.where.not(id: current_user.id).paginate(:page => params[:page], :per_page => params[:number])
     @roles = Role.all.map { |role| [role.name.humanize.to_s, role.id] }
   end
 
