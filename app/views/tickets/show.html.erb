@@ -67,7 +67,7 @@
               <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
               &emsp;
               <br />          
-              <%= comment.body %>      
+              <%= simple_format(comment.body) %>      
               <br />
             </div>
           </div>
@@ -83,7 +83,7 @@
             &emsp;
             <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
             <br />
-            <%= comment.body %>
+            <%= simple_format(comment.body) %>
             <br />  
           </div>
         <% end %>
