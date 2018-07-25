@@ -28,13 +28,6 @@ RSpec.describe Ticket, type: :model do
 
         let(:ticket) { create(:ticket) }
 
-        describe '#fullticket' do
-            let!(:ticket) { create(:ticket) }
-            it 'should have working #fullticket method' do
-                expect(ticket.fullticket).to eq(" #{ticket.user_id} #{ticket.title} #{ticket.note} #{ticket.department} #{ticket.status} ")
-            end
-        end
-
         describe '#closed?' do
             let(:status) { create(:status, :closed) }
 

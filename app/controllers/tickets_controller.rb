@@ -58,11 +58,6 @@ class TicketsController < ApplicationController
 
   def ensure_related_to_ticket
     ticket = Ticket.find(params[:id])
-    unless (ticket.user == current_user ||
-                          current_user.admin? ||
-                          (current_user.it_support? && ticket.department.department_name == 'IT') ||
-                          (current_user.om_support? && ticket.department.department_name == 'OM'))
-        redirect_to user_dashboard_url, alert: 'Forbidden access'
-    end
+    redirect_to user_dashboard_url, alert: 'Forbidden access' unless ticket.related_to_ticket?(current_user)
   end
 end
