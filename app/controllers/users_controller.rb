@@ -13,8 +13,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to users_url }
-        format.js
+        format.html { redirect_to users_url, notice: "You have successfully changed the role of #{@user.full_name}" }
       else
         format.html { render :index }
       end

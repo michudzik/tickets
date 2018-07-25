@@ -1,1 +1,0 @@
-$('[role-user-id="<%= @user.id %>"]').css({color: 'red'}).replaceWith( '<td role-user-id="' + "<%= @user.id %>" + '">' + "<%= @user.role.name.humanize.to_s %>" + "</td>" ).css({color: 'blue'});
