@@ -24,10 +24,10 @@ class TicketsController < ApplicationController
   def create
     @ticket = current_user.tickets.build(ticket_params)
     if @ticket.save
-      redirect_to user_dashboard_url, notice: 'New ticket has been reported' 
+      redirect_to user_dashboard_url, notice: 'New ticket has been reported'
     else
       @departments = Department.all.map { |department| [department.department_name, department.id] }
-      render :new 
+      render :new
     end
   end
 
