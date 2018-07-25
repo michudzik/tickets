@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
   before_action :ensure_admin, only: %i[index update deactivate_account activate_account]
-  self.per_page = 10
 
   def show
     @tickets = current_user.tickets.paginate(:page => params[:page], :per_page => params[:number])
