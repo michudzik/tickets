@@ -21,7 +21,8 @@
         <%= f.label :note , 'Body' %>
         <%= f.text_area :note, class: 'form-control', cols: '16', rows: '6' %>
         <hr />
-        <%= f.file_field :uploads, multiple: true %>
+        <%= f.label :uploads , 'Attachments' %><br/>
+        <%= f.file_field :uploads, class: 'form-control', multiple: true, class: 'btn btn-default' %>
         <hr />
         <%= f.submit 'Create', class: 'btn btn-primary' %>
       <% end %>
