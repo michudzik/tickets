@@ -24,7 +24,8 @@ class Ticket < ActiveRecord::Base
 
   def related_to_ticket?(current_user)
     user == current_user || current_user.admin? ||
-     (current_user.it_support? && ticket.department.department_name == 'IT') || (current_user.om_support? && ticket.department.department_name == 'OM')
+      (current_user.it_support? && ticket.department.department_name == 'IT') ||
+      (current_user.om_support? && ticket.department.department_name == 'OM')
   end
 
   private
