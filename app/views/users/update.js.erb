@@ -1,0 +1,5 @@
+ var $row = $('[data-user-id="<%= @user.id %>"]').addClass('user-highlight');
+
+ setTimeout(function() {
+     $row.removeClass("user-highlight");
+ }, 1000);

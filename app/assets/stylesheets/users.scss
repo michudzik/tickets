@@ -1,0 +1,13 @@
+@keyframes user-highlight {
+  0% {
+    background: #8f8;
+  }
+  100% {
+    background: none;
+  }
+}
+
+.user-highlight {
+  transition: 1s;
+  background: #8f8 !important;
+}
