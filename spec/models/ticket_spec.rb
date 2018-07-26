@@ -13,6 +13,7 @@ RSpec.describe Ticket, type: :model do
     it { should validate_length_of(:note).is_at_most(500) }
     it { should validate_length_of(:title).is_at_most(30) }
   end
+    
 
   describe 'attributes' do
     it 'should have proper attributes' do
@@ -24,9 +25,11 @@ RSpec.describe Ticket, type: :model do
     it { should belong_to(:user) }
     it { should belong_to(:department) }
     it { should belong_to(:status) }
+    it { should have_many(:comments)}
   end
 
   describe 'methods' do
+
     let(:ticket) { create(:ticket) }
 
     describe '#closed?' do
@@ -100,7 +103,6 @@ RSpec.describe Ticket, type: :model do
         end
       end
     end
-
   end
 
   describe 'callbacks' do
@@ -110,8 +112,14 @@ RSpec.describe Ticket, type: :model do
     let!(:support_response)  { create(:status, :support_response) }
 
     it 'should set status to open' do
-      expect(ticket.status.status).to eq('open')
+        expect(ticket.status.status).to eq('open')
+    end
+  end              
+
+  describe 'attachments' do
+    it 'is valid  ' do
+      subject.uploads.attach(io: File.open(fixture_path + '/testimage.jpg'), filename: 'attachment.jpg', content_type: 'image/jpg')
+      expect(subject.uploads).to be_attached
     end
   end
-
 end

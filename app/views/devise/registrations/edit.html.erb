@@ -26,14 +26,12 @@
 
           <div class="registration-password">
             <div class="registration-field">
-              <%= f.label :password, class: 'registration-label' %> <i>(leave blank if you don't want to change it)</i><br />
+              <%= f.label :password, class: 'registration-label' %>
+              <% if @minimum_password_length %>
+                <i>(<%= @minimum_password_length %> characters minimum)</i>
+              <% end %>
               <%= f.password_field :password, autocomplete: "off", class: 'form-control' %>
             </div>
-
-            <% if @minimum_password_length %>
-              <br />
-              <em><%= @minimum_password_length %> characters minimum</em>
-            <% end %>
 
             <div class="registration-field">
               <%= f.label :password_confirmation, class: 'registration-label' %><br />
@@ -41,7 +39,7 @@
             </div>
 
             <div class="registration-field">
-              <%= f.label :current_password, class: 'registration-label' %> <i>(we need your current password to confirm your changes)</i><br />
+              <%= f.label :current_password, class: 'registration-label' %> 
               <%= f.password_field :current_password, autocomplete: "off", class: 'form-control' %>
             </div>
           </div>

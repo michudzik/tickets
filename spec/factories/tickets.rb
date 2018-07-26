@@ -5,7 +5,6 @@ FactoryBot.define do
 		user
 		association :department
     association :status
-
     trait :om_department do
       association :department, :om
     end
