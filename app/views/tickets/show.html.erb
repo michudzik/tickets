@@ -43,7 +43,7 @@
         </tr>
         <tr>
           <td colspan="5">
-            <%= simple_format(@ticket.note) %>
+            <%= @ticket.note.gsub("\n", "<br />").html_safe %>
           </td>
         </tr>
       </tbody>
@@ -53,7 +53,6 @@
   <div class="jumbotron p-2 bg-light">
     <b>Comments</b>
     <% @ticket.comments.each do |comment| %>
-      <div>
         <% if comment.user.id == current_user.id %>
           <div align="right">
             <div class="comments-section darker p-2 w-75">
@@ -66,9 +65,8 @@
               </span>
               <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
               &emsp;
-              <br />          
-              <%= simple_format(comment.body) %>      
               <br />
+              <%= comment.body.gsub("\n", "<br />").html_safe %>
             </div>
           </div>
         <% else %>
@@ -83,11 +81,9 @@
             &emsp;
             <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
             <br />
-            <%= simple_format(comment.body) %>
-            <br />  
+            <%= comment.body.gsub("\n", "<br />").html_safe %>
           </div>
         <% end %>
-      </div>
     <% end %>
 
   <% unless @ticket.closed? %>
