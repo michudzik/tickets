@@ -25,8 +25,8 @@ class User < ApplicationRecord
     role.name == 'om_support'
   end
 
-  def none?
-    role.name == 'none'
+  def user?
+    role.name == 'user'
   end
 
   def support?
@@ -44,6 +44,6 @@ class User < ApplicationRecord
   private
 
   def default_role
-    self.role ||= Role.find_by(name: 'none')
+    self.role ||= Role.find_by(name: 'user')
   end
 end
