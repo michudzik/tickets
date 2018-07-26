@@ -10,6 +10,8 @@ RSpec.describe Ticket, type: :model do
       it { should validate_presence_of(:title) }
       it { should validate_presence_of(:note) }
       it { should validate_presence_of(:department) }
+      it { should validate_length_of(:title).is_at_most(30) }
+      it { should validate_length_of(:note).is_at_most(500) }
   end
 
   describe 'attributes' do
@@ -22,18 +24,12 @@ RSpec.describe Ticket, type: :model do
     it { should belong_to(:user) }
     it { should belong_to(:department) }
     it { should belong_to(:status) }
+    it { should have_many(:comments)}
   end
 
   describe 'methods' do
 
     let(:ticket) { create(:ticket) }
-
-    describe '#fullticket' do
-      let!(:ticket) { create(:ticket) }
-      it 'should have working #fullticket method' do
-        expect(ticket.fullticket).to eq(" #{ticket.user_id} #{ticket.title} #{ticket.note} #{ticket.department} #{ticket.status} ")
-      end
-    end
 
     describe '#closed?' do
       let(:status) { create(:status, :closed) }
