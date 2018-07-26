@@ -6,9 +6,9 @@ class TicketsController < ApplicationController
     if current_user.admin?
       @tickets = Ticket.all
     elsif current_user.om_support?
-      @tickets = Ticket.joins(:department).where('departments.department_name' => 'OM')
+      @tickets = Ticket.joins(:department).where('departments.name' => 'OM')
     elsif current_user.it_support?
-      @tickets = Ticket.joins(:department).where('departments.department_name' => 'IT')
+      @tickets = Ticket.joins(:department).where('departments.name' => 'IT')
     end
   end
 
@@ -19,7 +19,7 @@ class TicketsController < ApplicationController
 
   def new
     @ticket = Ticket.new
-    @departments = Department.all.map { |department| [department.department_name, department.id] }
+    @departments = Department.all.map { |department| [department.name, department.id] }
   end
 
   def create
@@ -59,8 +59,8 @@ class TicketsController < ApplicationController
     ticket = Ticket.find(params[:id])
     unless (ticket.user == current_user ||
                           current_user.admin? ||
-                          (current_user.it_support? && ticket.department.department_name == 'IT') ||
-                          (current_user.om_support? && ticket.department.department_name == 'OM'))
+                          (current_user.it_support? && ticket.department.name == 'IT') ||
+                          (current_user.om_support? && ticket.department.name == 'OM'))
         redirect_to user_dashboard_url, alert: 'Forbidden access'
     end
   end
