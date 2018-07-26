@@ -61,7 +61,7 @@ class TicketsController < ApplicationController
                           current_user.admin? ||
                           (current_user.it_support? && ticket.department.name == 'IT') ||
                           (current_user.om_support? && ticket.department.name == 'OM'))
-        redirect_to user_dashboard_url, alert: 'Forbidden access'
+      redirect_to user_dashboard_url, alert: 'Forbidden access'
     end
   end
 end
