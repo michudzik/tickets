@@ -37,13 +37,13 @@ class Ticket < ActiveRecord::Base
     end
   end
 
-  def self.find_related_tickets(user)
-    if user.admin?
+  def self.find_related_tickets(current_user)
+    if current_user.admin?
       Ticket.all
-    elsif user.om_support?
-      Tickets.joins(:department).where(departments: { department_name: 'OM' })
-    elsif user.it_support?
-      Tickets.joins(:department).where(departments: { department_name: 'IT' })
+    elsif current_user.om_support?
+      Ticket.joins(:department).where(departments: { department_name: 'OM' })
+    elsif current_user.it_support?
+      Ticket.joins(:department).where(departments: { department_name: 'IT' })
     end
   end
 

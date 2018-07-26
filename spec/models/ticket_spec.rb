@@ -27,7 +27,6 @@ RSpec.describe Ticket, type: :model do
   end
 
   describe 'methods' do
-
     let(:ticket) { create(:ticket) }
 
     describe '#closed?' do
@@ -101,6 +100,7 @@ RSpec.describe Ticket, type: :model do
         end
       end
     end
+
   end
 
   describe 'callbacks' do
