@@ -103,6 +103,37 @@ RSpec.describe Ticket, type: :model do
         end
       end
     end
+
+    describe '::find_related_tickets' do
+      let(:it_department) { create(:department) }
+      let(:om_department) { create(:department, :om) }
+      let!(:ticket_it) { create(:ticket, department_id: it_department.id) }
+      let!(:ticket_om) { create(:ticket, department_id: om_department.id) } 
+
+      context 'it' do
+        it 'should return it ticket' do
+          user = create(:user, :it_support)
+          expect(Ticket.find_related_tickets(user)).to include(ticket_it)
+          expect(Ticket.find_related_tickets(user)).not_to include(ticket_om)
+        end
+      end
+
+      context 'om' do
+        it 'should return om ticket' do
+          user = create(:user, :om_support)
+          expect(Ticket.find_related_tickets(user)).to include(ticket_om)
+          expect(Ticket.find_related_tickets(user)).not_to include(ticket_it)
+        end
+      end
+
+      context 'admin' do
+        it 'should return both tickets' do
+          user = create(:user, :admin)
+          expect(Ticket.find_related_tickets(user)).to include(ticket_it, ticket_om)
+        end
+      end
+    end
+
   end
 
   describe 'callbacks' do
@@ -120,6 +151,21 @@ RSpec.describe Ticket, type: :model do
     it 'is valid  ' do
       subject.uploads.attach(io: File.open(fixture_path + '/testimage.jpg'), filename: 'attachment.jpg', content_type: 'image/jpg')
       expect(subject.uploads).to be_attached
+    end
+  end
+
+  describe 'scopes' do
+    let(:ticket_it) { create(:ticket) }
+    let(:ticket_om) { create(:ticket, :om_department) }
+
+    it 'should have it_department scope' do
+      expect(Ticket.it_department).to include(ticket_it)
+      expect(Ticket.it_department).not_to include(ticket_om)
+    end
+
+    it 'should have om_department scope' do
+      expect(Ticket.om_department).to include(ticket_om)
+      expect(Ticket.om_department).not_to include(ticket_it)
     end
   end
 end
