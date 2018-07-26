@@ -7,7 +7,7 @@ class CommentsController < ApplicationController
       if @comment.save
         @comment.update_ticket_status!(user: @comment.user, ticket: @ticket)
         user_ids = @comment.ticket.comments.where.not(user_id: current_user.id).pluck(:user_id)
-        @comment.ticket(user_ids)
+        @comment.ticket.notify_users(user_ids)
         format.html { redirect_to ticket_path(@ticket.id), notice: 'Comment was created' }
         format.js
       else

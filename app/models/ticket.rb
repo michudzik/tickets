@@ -24,8 +24,8 @@ class Ticket < ActiveRecord::Base
 
   def related_to_ticket?(current_user)
     user == current_user || current_user.admin? ||
-      (current_user.it_support? && ticket.department.department_name == 'IT') ||
-      (current_user.om_support? && ticket.department.department_name == 'OM')
+      (current_user.it_support? && department.department_name == 'IT') ||
+      (current_user.om_support? && department.department_name == 'OM')
   end
 
   def notify_users(user_ids)
@@ -34,6 +34,16 @@ class Ticket < ActiveRecord::Base
       users.each do |user|
         UserMailer.with(user: user, ticket: slef).notify.deliver_later
       end
+    end
+  end
+
+  def self.find_related_tickets(user)
+    if user.admin?
+      Ticket.all
+    elsif user.om_support?
+      Tickets.joins(:department).where(departments: { department_name: 'OM' })
+    elsif user.it_support?
+      Tickets.joins(:department).where(departments: { department_name: 'IT' })
     end
   end
 

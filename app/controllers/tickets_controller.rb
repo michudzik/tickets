@@ -1,13 +1,7 @@
 class TicketsController < ApplicationController
   def index
     redirect_to user_dashboard_url, alert: 'Forbidden access - you have to be an admin to access this site' and return if current_user.none?
-    if current_user.admin?
-      @tickets = Ticket.all
-    elsif current_user.om_support?
-      @tickets = Tickets.joins(:department).where(departments: { department_name: 'OM' })
-    elsif current_user.it_support?
-      @tickets = Tickets.joins(:department).where(departments: { department_name: 'IT' })
-    end
+    @tickets = Ticket.find_related_tickets(current_user)
   end
 
   def show
