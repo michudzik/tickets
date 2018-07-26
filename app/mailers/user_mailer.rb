@@ -1,4 +1,5 @@
 class UserMailer < ApplicationMailer
+  
   def notify
     @user = params[:user]
     @ticket = params[:ticket]

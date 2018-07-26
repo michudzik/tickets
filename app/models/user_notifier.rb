@@ -1,4 +1,5 @@
 class UserNotifier
+
   def self.notify_users(ticket)
     users = ticket.comments.pluck(:user_id)
     users = User.find(users)

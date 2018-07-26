@@ -1,4 +1,5 @@
 class TicketsController < ApplicationController
+
   before_action :ensure_authorized, only: :index
   before_action :ensure_related_to_ticket, only: :show
 
@@ -26,7 +27,7 @@ class TicketsController < ApplicationController
     @ticket = current_user.tickets.build(ticket_params)
     respond_to do |format|
       if @ticket.save
-        format.html { redirect_to user_dashboard_url, notice: 'New ticket has been reported' }
+        format.html { redirect_to user_dashboard_path, notice: 'New ticket has been reported' }
       else
         format.html { render :new }
       end
@@ -38,9 +39,9 @@ class TicketsController < ApplicationController
     status_closed = Status.find_by(status: 'closed')
     respond_to do |format|
       if @ticket.update(status_id: status_closed.id)
-        format.html { redirect_to user_dashboard_url, notice: 'Ticket closed' }
+        format.html { redirect_to user_dashboard_path, notice: 'Ticket closed' }
       else
-        format.html { redirect_to user_dashboard_url, alert: 'Could not close the ticket' }
+        format.html { redirect_to user_dashboard_path, alert: 'Could not close the ticket' }
       end
     end
   end
@@ -52,7 +53,7 @@ class TicketsController < ApplicationController
   end
 
   def ensure_authorized
-    redirect_to user_dashboard_url, alert: 'Forbidden access' if current_user.user?
+    redirect_to user_dashboard_path, alert: 'Forbidden access' if current_user.user?
   end
 
   def ensure_related_to_ticket
@@ -61,7 +62,7 @@ class TicketsController < ApplicationController
                           current_user.admin? ||
                           (current_user.it_support? && ticket.department.department_name == 'IT') ||
                           (current_user.om_support? && ticket.department.department_name == 'OM'))
-        redirect_to user_dashboard_url, alert: 'Forbidden access'
+        redirect_to user_dashboard_path, alert: 'Forbidden access'
     end
   end
 end

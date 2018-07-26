@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+
   before_action :ensure_admin, only: %i[index update deactivate_account activate_account]
 
   def show
@@ -14,7 +15,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to users_url }
+        format.html { redirect_to users_path }
         format.js
       else
         format.html { render :index }
@@ -27,7 +28,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     respond_to do |format|
       @user.lock_access!(send_instructions: false)
-      format.html { redirect_to users_url }
+      format.html { redirect_to users_path }
       format.js
     end
   end
@@ -37,7 +38,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     respond_to do |format|
       @user.unlock_access!
-      format.html { redirect_to users_url }
+      format.html { redirect_to users_path }
       format.js
     end
   end

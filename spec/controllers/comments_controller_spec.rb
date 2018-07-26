@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe CommentsController, type: :controller do
 
   describe '#create' do
-
     let(:ticket)              { create(:ticket) }
     let(:user)                { create(:user, :it_support) }
     let(:valid_attributes)    { { comment: { user_id: ticket.user.id, ticket_id: ticket.id, body: 'a'*20 } } }
