@@ -46,6 +46,17 @@
             <%= @ticket.note.gsub("\n", "<br />").html_safe %>
           </td>
         </tr>
+        <tr>
+          <td>
+            <% if @ticket.uploads.attached? %>
+              <hr />
+              <strong>Attachments: </strong> 
+              <% @ticket.uploads.each_with_index do |upload, i| %>
+                <%= link_to("Document #{i+1}", rails_blob_path(upload, disposition: "attachment")) %>
+              <% end %>
+            <% end %>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>

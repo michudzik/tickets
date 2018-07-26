@@ -1,6 +1,16 @@
 Rails.application.routes.draw do
   root 'home#home'
-  devise_for :users, controllers: {  registrations: "registrations" }
+  devise_for :users, skip: :registrations, controllers: {  registrations: "registrations" }
+  devise_scope :user do
+    resource :registration,
+      only: [:new, :create, :edit, :update],
+      path: 'users',
+      path_names: { new: 'sign_up' },
+      controller: 'devise/registrations',
+      as: :user_registration do
+        get :cancel
+      end
+  end
   get '/new_ticket', to: 'tickets#new'
   get '/show_tickets', to: 'tickets#index'
   get '/user_dashboard', to: 'users#show'
@@ -14,3 +24,4 @@ Rails.application.routes.draw do
     end
   end
 end
+

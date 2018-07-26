@@ -2,6 +2,12 @@ require 'rails_helper'
 
 RSpec.describe Comment, type: :model do
 
+  describe 'attributes' do
+    it 'should have proper attributes' do
+      expect(subject.attributes).to include('user_id', 'ticket_id', 'body')
+    end
+  end
+
 	describe 'validations' do
 		it { should validate_presence_of(:body) }
 	end
