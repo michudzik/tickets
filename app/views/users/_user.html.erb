@@ -1,5 +1,5 @@
 <tr data-user-id="<%= user.id %>">
-  <td full_name-user-id="<%= user.id %>"><%= user.full_name %></td>
+  <td full_name-user-id="<%= user.id %>"><%= user.fullname %></td>
   <td email-user-id="<%= user.id %>"><%= user.email %></td>
   <td>
     <%= form_for(user, url: user_path(user.id), method: :put, remote: true) do |f| %>
