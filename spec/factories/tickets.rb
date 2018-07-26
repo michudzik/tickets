@@ -4,7 +4,8 @@ FactoryBot.define do
 		ticket.note		{ Faker::Lorem.sentences(3).join('') }
 		user
 		association :department, :it
-    association :status, :open
+		association :status, :open
+		
 
     trait :om_department do
       association :department, :om

@@ -10,7 +10,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md-6 offset-md-3">
-      <h1> Create new ticket </h1>
+      <h1><center> Create new ticket </center></h1>
       <%= form_for [current_user, current_user.tickets.build] do |f| %>
         <%= f.label :department_id %>
         <%= f.select :department_id, @departments, {}, class: 'custom-select' %>
@@ -21,7 +21,9 @@
         <%= f.label :note , 'Body' %>
         <%= f.text_area :note, class: 'form-control', cols: '16', rows: '6' %>
         <hr />
-       
+        <%= f.label :uploads , 'Attachments' %><br/>
+        <%= f.file_field :uploads, class: 'form-control', multiple: true, class: 'btn btn-default' %>
+        <hr />
         <%= f.submit 'Create', class: 'btn btn-primary' %>
       <% end %>
     </div>
