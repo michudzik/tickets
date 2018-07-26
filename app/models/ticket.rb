@@ -1,5 +1,4 @@
 class Ticket < ActiveRecord::Base
-
   belongs_to :user
   belongs_to :department
   has_many :comments
@@ -13,7 +12,7 @@ class Ticket < ActiveRecord::Base
   before_validation :default_status, on: :create
 
   def user_response
-      self.status = find_status('user_response')
+    self.status = find_status('user_response')
   end
 
   def support_response
