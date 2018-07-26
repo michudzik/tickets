@@ -19,7 +19,7 @@ class Ticket < ActiveRecord::Base
   end
 
   def closed?
-    status.status == 'closed'
+    status.name == 'closed'
   end
 
   private
@@ -29,6 +29,6 @@ class Ticket < ActiveRecord::Base
   end
 
   def find_status(name)
-    Status.find_by(status: name)
+    Status.find_by(name: name)
   end
 end

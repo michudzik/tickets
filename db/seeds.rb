@@ -18,5 +18,5 @@ User.create(first_name: 'admin', last_name: 'admin', email: 'admin@admin.com', p
 end
 
 ['open', 'support_response', 'user_response', 'closed'].each do |status|
-  Status.find_or_create_by({ status: status })
+  Status.find_or_create_by({ name: status })
 end

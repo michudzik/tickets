@@ -35,7 +35,7 @@ class TicketsController < ApplicationController
 
   def update
     @ticket = Ticket.find(params[:id])
-    status_closed = Status.find_by(status: 'closed')
+    status_closed = Status.find_by(name: 'closed')
     respond_to do |format|
       if @ticket.update(status_id: status_closed.id)
         format.html { redirect_to user_dashboard_url, notice: 'Ticket closed' }

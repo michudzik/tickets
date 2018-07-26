@@ -15,7 +15,7 @@
           <td><%= ticket.user.full_name %></td>
           <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
           <td><%= ticket.department.name %></td>
-          <td><%= ticket.status.status.humanize.to_s %></td>
+          <td><%= ticket.status.name.humanize.to_s %></td>
         </tr>
       <% end %>
     </tbody>

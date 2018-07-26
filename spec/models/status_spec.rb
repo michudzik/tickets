@@ -4,7 +4,7 @@ RSpec.describe Status, type: :model do
   
   describe 'attributes' do
     it 'should have proper attributes' do
-      expect(subject.attributes).to include('status')
+      expect(subject.attributes).to include('name')
     end
   end
 

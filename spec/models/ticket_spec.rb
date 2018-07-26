@@ -28,13 +28,6 @@ RSpec.describe Ticket, type: :model do
 
         let(:ticket) { create(:ticket) }
 
-        describe '#fullticket' do
-            let!(:ticket) { create(:ticket) }
-            it 'should have working #fullticket method' do
-                expect(ticket.fullticket).to eq(" #{ticket.user_id} #{ticket.title} #{ticket.note} #{ticket.department} #{ticket.status} ")
-            end
-        end
-
         describe '#closed?' do
             let(:status) { create(:status, :closed) }
 
@@ -53,7 +46,7 @@ RSpec.describe Ticket, type: :model do
 
             it 'should change ticket status to user_response' do
                 ticket.user_response
-                expect(ticket.status.status).to eq('user_response')
+                expect(ticket.status.name).to eq('user_response')
             end
         end
 
@@ -62,7 +55,7 @@ RSpec.describe Ticket, type: :model do
 
             it 'should change ticket status to support_response' do
                 ticket.support_response
-                expect(ticket.status.status).to eq('support_response')
+                expect(ticket.status.name).to eq('support_response')
             end
         end
     end
@@ -74,7 +67,7 @@ RSpec.describe Ticket, type: :model do
         let!(:support_response)  { create(:status, :support_response) }
 
         it 'should set status to open' do
-            expect(ticket.status.status).to eq('open')
+            expect(ticket.status.name).to eq('open')
         end
     end
 end

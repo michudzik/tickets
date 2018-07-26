@@ -31,13 +31,13 @@ RSpec.describe CommentsController, type: :controller do
       it 'should change ticket status to user response' do
         sign_in ticket.user
         subject
-        expect(ticket.reload.status.status).to eq('user_response')
+        expect(ticket.reload.status.name).to eq('user_response')
       end
 
       it 'should change ticket status to support response' do
         sign_in user
         post :create, params: { comment: { user_id: user.id, ticket_id: ticket.id, body: 'a'*20 } }
-        expect(ticket.reload.status.status).to eq('support_response')
+        expect(ticket.reload.status.name).to eq('support_response')
       end
     end
   end
