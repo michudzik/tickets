@@ -28,6 +28,15 @@ class Ticket < ActiveRecord::Base
       (current_user.om_support? && ticket.department.department_name == 'OM')
   end
 
+  def notify_users(user_ids)
+    unless user_ids.empty?
+      users = User.find(user_ids)
+      users.each do |user|
+        UserMailer.with(user: user, ticket: slef).notify.deliver_later
+      end
+    end
+  end
+
   private
 
   def default_status
