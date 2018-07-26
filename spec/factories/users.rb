@@ -5,7 +5,7 @@ FactoryBot.define do
     email         { "#{Faker::Name.first_name}@example.com" }
     password      'secret'
     confirmed_at  { DateTime.now }
-    association :role, :none
+    association :role, :user
 
     trait :admin do
       association :role, :admin
