@@ -40,7 +40,7 @@ RSpec.describe UsersController, type: :controller do
   describe '#update' do
     let(:admin)             { create(:user, :admin) }
     let(:user)              { create(:user) }
-    let(:none_role)         { create(:role, :none) }
+    let(:none_role)         { create(:role) }
     let(:valid_params)      { { id: user.id, user: { role_id: none_role.id } } }
     let(:invalid_params)    { { id: user.id, user: { role_id: nil } } }
 

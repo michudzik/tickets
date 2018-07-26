@@ -1,8 +1,6 @@
 FactoryBot.define do
   factory :status do
-    trait :open do
-      status 'open'
-    end
+    status 'open'
 
     trait :user_response do
       status 'user_response'

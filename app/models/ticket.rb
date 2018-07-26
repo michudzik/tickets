@@ -23,6 +23,31 @@ class Ticket < ActiveRecord::Base
     status.status == 'closed'
   end
 
+  def related_to_ticket?(current_user)
+    user == current_user || current_user.admin? ||
+      (current_user.it_support? && department.department_name == 'IT') ||
+      (current_user.om_support? && department.department_name == 'OM')
+  end
+
+  def notify_users(user_ids)
+    unless user_ids.empty?
+      users = User.find(user_ids)
+      users.each do |user|
+        UserMailer.with(user: user, ticket: slef).notify.deliver_later
+      end
+    end
+  end
+
+  def self.find_related_tickets(current_user)
+    if current_user.admin?
+      Ticket.all
+    elsif current_user.om_support?
+      Ticket.joins(:department).where(departments: { department_name: 'OM' })
+    elsif current_user.it_support?
+      Ticket.joins(:department).where(departments: { department_name: 'IT' })
+    end
+  end
+
   private
 
   def default_status
