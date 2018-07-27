@@ -31,10 +31,6 @@ class User < ApplicationRecord
     om_support? || it_support? || admin?
   end
 
-  def full_name
-    "#{first_name} #{last_name}"
-  end
-
   def fullname
     "#{first_name} #{last_name}"
   end

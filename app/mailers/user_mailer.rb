@@ -5,7 +5,7 @@ class UserMailer < ApplicationMailer
     @ticket = params[:ticket]
     mail(
       to: @user.email,
-      subject: "Someone responded to - #{@ticket.title}. Status - #{@ticket.status.status.humanize}"
+      subject: "Someone responded to - #{@ticket.title}. Status - #{@ticket.status.name.humanize}"
     )
   end
 end

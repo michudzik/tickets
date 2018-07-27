@@ -4,13 +4,13 @@ RSpec.describe Department, type: :model do
   
   describe 'should have proper attributes' do
     it 'should have proper attributes' do
-      expect(subject.attributes).to include('department_name')
+      expect(subject.attributes).to include('name')
     end
   end
 
   describe 'validations' do
-    it { should validate_presence_of(:department_name) }
-    it { should validate_length_of(:department_name).is_at_most(40) }
+    it { should validate_presence_of(:name) }
+    it { should validate_length_of(:name).is_at_most(40) }
   end
 
   describe 'relations' do
