@@ -1,12 +1,13 @@
 class TicketsController < ApplicationController
+
   def index
-    redirect_to user_dashboard_url, alert: 'Forbidden access - you have to be an admin to access this site' and return if current_user.none?
-    @tickets = Ticket.find_related_tickets(current_user)
+    redirect_to user_dashboard_path, alert: 'Forbidden access - you have to be an admin to access this site' and return if current_user.user?
+    @tickets = Ticket.find_related_tickets(current_user).paginate(:page => params[:page], :per_page => params[:number])
   end
 
   def show
     @ticket = Ticket.find(params[:id])
-    redirect_to user_dashboard_url, alert: 'Forbidden access' and return unless @ticket.related_to_ticket?(current_user)
+    redirect_to user_dashboard_path, alert: 'Forbidden access' and return unless @ticket.related_to_ticket?(current_user)
     @comment = Comment.new(ticket_id: @ticket.id)
   end
 
@@ -18,7 +19,7 @@ class TicketsController < ApplicationController
   def create
     @ticket = current_user.tickets.build(ticket_params)
     if @ticket.save
-      redirect_to user_dashboard_url, notice: 'New ticket has been reported'
+      redirect_to user_dashboard_path, notice: 'New ticket has been reported'
     else
       @departments = Department.all.map { |department| [department.department_name, department.id] }
       render :new
@@ -29,7 +30,7 @@ class TicketsController < ApplicationController
     @ticket = Ticket.find(params[:id])
     status_closed = Status.find_by(status: 'closed')
     @ticket.update(status_id: status_closed.id)
-    redirect_to user_dashboard_url, notice: 'Ticket closed'
+    redirect_to user_dashboard_path, notice: 'Ticket closed'
   end
 
   private

@@ -1,4 +1,5 @@
 class Ticket < ActiveRecord::Base
+  
   belongs_to :user
   belongs_to :department
   has_many :comments
@@ -10,6 +11,9 @@ class Ticket < ActiveRecord::Base
   validates :department, presence: true
 
   before_validation :default_status, on: :create
+
+  scope :it_department, -> { joins(:department).where(departments: { department_name: 'IT'}) }
+  scope :om_department, -> { joins(:department).where(departments: { department_name: 'OM'}) }
 
   def user_response
     self.status = find_status('user_response')
@@ -40,11 +44,11 @@ class Ticket < ActiveRecord::Base
 
   def self.find_related_tickets(current_user)
     if current_user.admin?
-      Ticket.all
+      all
     elsif current_user.om_support?
-      Ticket.joins(:department).where(departments: { department_name: 'OM' })
+      om_department
     elsif current_user.it_support?
-      Ticket.joins(:department).where(departments: { department_name: 'IT' })
+      it_department
     end
   end
 

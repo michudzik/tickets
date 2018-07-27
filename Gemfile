@@ -48,6 +48,8 @@ gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'haml-rails'
 
+gem 'will_paginate', '~> 3.1.0'
+
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'factory_bot_rails'

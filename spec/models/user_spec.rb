@@ -23,14 +23,14 @@ RSpec.describe User, type: :model do
 
   describe 'callbacks' do
     let(:user) { create(:user) }
-    it 'should set role to none if not given' do
-      expect(user.role.name).to eq('none')
+    it 'should set role to user if not given' do
+      expect(user.role.name).to eq('user')
     end
   end
 
   describe 'methods' do
     let!(:admin_role)        { create(:role, :admin) }
-    let!(:none_role)         { create(:role) }
+    let!(:user_role)         { create(:role) }
     let!(:it_support_role)   { create(:role, :it_support) }
     let!(:om_support_role)   { create(:role, :om_support) }
     let(:user) { create(:user) }
@@ -91,7 +91,7 @@ RSpec.describe User, type: :model do
       end
 
       it 'should return false' do
-        user.role = none_role
+        user.role = user_role
         expect(user.support?).to eq(false)
       end
     end

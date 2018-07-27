@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  
   root 'home#home'
   devise_for :users, skip: :registrations, controllers: {  registrations: "registrations" }
   devise_scope :user do
@@ -18,10 +19,9 @@ Rails.application.routes.draw do
   resources :comments, only: :create
   resources :users, only: [:index, :update] do
     resources :tickets, except: [:new, :index, :show]
-    member do
-      put :deactivate_account
-      put :activate_account
+      member do
+        put :deactivate_account
+        put :activate_account
+      end
     end
-  end
 end
-
