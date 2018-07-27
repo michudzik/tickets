@@ -1,5 +1,15 @@
 <div class="container">
   <h1>Users</h1>
+  <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Count
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <%= link_to '10', users_path(:number => 10), class: 'dropdown-item' %>
+      <%= link_to '30', users_path(:number => 30), class: 'dropdown-item' %>
+      <%= link_to '50', users_path(:number => 50), class: 'dropdown-item' %>
+    </div>
+  </div>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -15,4 +25,9 @@
       <% end %>
     </tbody>
   </table>
+  <% if @users.any? %>
+    <div>
+      <%= will_paginate @users, :container => false %>
+    </div>
+  <% end %>
 </div>
