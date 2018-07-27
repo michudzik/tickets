@@ -1,1 +1,5 @@
-$('[role-user-id="<%= @user.id %>"]').css({color: 'red'}).replaceWith( '<td role-user-id="' + "<%= @user.id %>" + '">' + "<%= @user.role.name.humanize.to_s %>" + "</td>" ).css({color: 'blue'});
+ var $row = $('[data-user-id="<%= @user.id %>"]').addClass('user-highlight');
+
+ setTimeout(function() {
+     $row.removeClass("user-highlight");
+ }, 1000);

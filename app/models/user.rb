@@ -1,12 +1,10 @@
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-        :recoverable, :rememberable, :trackable,
-        :validatable, :confirmable, :lockable
 
-  validates :first_name,  presence: true
-  validates :last_name,   presence: true
+  devise :database_authenticatable, :registerable,
+    :recoverable, :rememberable, :trackable,
+    :validatable, :confirmable, :lockable
+
+  validates :first_name, :last_name,  presence: true
   belongs_to :role
   has_many :comments
   has_many :tickets
@@ -25,8 +23,8 @@ class User < ApplicationRecord
     role.name == 'om_support'
   end
 
-  def none?
-    role.name == 'none'
+  def user?
+    role.name == 'user'
   end
 
   def support?
@@ -44,6 +42,6 @@ class User < ApplicationRecord
   private
 
   def default_role
-    self.role ||= Role.find_by(name: 'none')
+    self.role ||= Role.find_by(name: 'user')
   end
 end

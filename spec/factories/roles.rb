@@ -1,9 +1,7 @@
 FactoryBot.define do
   factory :role do
 
-    trait :none do
-      name 'none'
-    end
+    name 'user'
 
     trait :it_support do
       name 'it_support'
