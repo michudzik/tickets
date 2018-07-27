@@ -43,7 +43,7 @@
         </tr>
         <tr>
           <td colspan="5">
-            <%= @ticket.note.gsub("\n", "<br />").html_safe %>
+            <%= sanitize @ticket.note.gsub("\n", "<br />").html_safe %>
           </td>
         </tr>
         <tr>
@@ -77,7 +77,7 @@
               <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
               &emsp;
               <br />
-              <%= comment.body.gsub("\n", "<br />").html_safe %>
+              <%= sanitize comment.body.gsub("\n", "<br />").html_safe %>
             </div>
           </div>
         <% else %>
@@ -92,7 +92,7 @@
             &emsp;
             <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
             <br />
-            <%= comment.body.gsub("\n", "<br />").html_safe %>
+            <%= sanitize comment.body.gsub("\n", "<br />").html_safe %>
           </div>
         <% end %>
     <% end %>
