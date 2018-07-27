@@ -20,13 +20,18 @@
       </tr>
     </thead>
     <tbody>
-      <% @tickets.each do |ticket| %>
-        <tr>
-          <td><%= ticket.user.fullname %></td>
-          <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
-          <td><%= ticket.department.name %></td>
-          <td><%= ticket.status.name.humanize.to_s %></td>
-        </tr>
+      <% cache @tickets do %>
+        <% @tickets.each do |ticket| %>
+          <% cache ticket do %>
+            <%= render 'ticket', ticket: ticket %>
+          <% end %>
+          <!-- <tr>
+            <td><%= ticket.user.fullname %></td>
+            <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
+            <td><%= ticket.department.name %></td>
+            <td><%= ticket.status.name.humanize.to_s %></td>
+          </tr> -->
+        <% end %>
       <% end %>
     </tbody>
   </table>

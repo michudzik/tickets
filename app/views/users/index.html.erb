@@ -22,7 +22,7 @@
       <% cache @users do %>
         <% @users.each do |user| %>
           <% cache user do %>
-            <%= render user %>
+            <%= render 'user', user: user %>
           <% end %>
         <% end %>
       <% end %>
