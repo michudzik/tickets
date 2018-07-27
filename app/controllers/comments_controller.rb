@@ -1,4 +1,5 @@
 class CommentsController < ApplicationController
+
   def create
     @ticket = Ticket.find(params[:comment][:ticket_id])
     redirect_to ticket_path(@ticket.id), alert: 'This ticket is closed' and return if @ticket.status.name == 'closed'
@@ -6,7 +7,8 @@ class CommentsController < ApplicationController
     respond_to do |format|
       if @comment.save
         @comment.update_ticket_status!(user: @comment.user, ticket: @ticket)
-        UserNotifier.notify_users(@comment.ticket)
+        user_ids = @comment.ticket.comments.where.not(user_id: current_user.id).pluck(:user_id)
+        @comment.ticket.notify_users(user_ids)
         format.html { redirect_to ticket_path(@ticket.id), notice: 'Comment was created' }
         format.js
       else
