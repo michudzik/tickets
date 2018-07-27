@@ -12,8 +12,8 @@ class Ticket < ActiveRecord::Base
 
   before_validation :default_status, on: :create
 
-  scope :it_department, -> { joins(:department).where(departments: { department_name: 'IT'}) }
-  scope :om_department, -> { joins(:department).where(departments: { department_name: 'OM'}) }
+  scope :it_department, -> { joins(:department).where(departments: { name: 'IT'}) }
+  scope :om_department, -> { joins(:department).where(departments: { name: 'OM'}) }
 
   def user_response
     self.status = find_status('user_response')
@@ -24,13 +24,13 @@ class Ticket < ActiveRecord::Base
   end
 
   def closed?
-    status.status == 'closed'
+    status.name == 'closed'
   end
 
   def related_to_ticket?(current_user)
     user == current_user || current_user.admin? ||
-      (current_user.it_support? && department.department_name == 'IT') ||
-      (current_user.om_support? && department.department_name == 'OM')
+      (current_user.it_support? && department.name == 'IT') ||
+      (current_user.om_support? && department.name == 'OM')
   end
 
   def notify_users(user_ids)
@@ -59,6 +59,6 @@ class Ticket < ActiveRecord::Base
   end
 
   def find_status(name)
-    Status.find_by(status: name)
+    Status.find_by(name: name)
   end
 end

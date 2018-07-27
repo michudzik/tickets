@@ -9,12 +9,12 @@ class TicketsController < ApplicationController
     @ticket = Ticket.find(params[:id])
     redirect_to user_dashboard_path, alert: 'Forbidden access' and return unless @ticket.related_to_ticket?(current_user)
     @comment = Comment.new(ticket_id: @ticket.id)
-    @status = @ticket.status.status.humanize
+    @status = @ticket.status.name.humanize
   end
 
   def new
     @ticket = current_user.tickets.build
-    @departments = Department.all.map { |department| [department.department_name, department.id] }
+    @departments = Department.all.map { |department| [department.name, department.id] }
   end
 
   def create
@@ -22,14 +22,14 @@ class TicketsController < ApplicationController
     if @ticket.save
       redirect_to user_dashboard_path, notice: 'New ticket has been reported'
     else
-      @departments = Department.all.map { |department| [department.department_name, department.id] }
+      @departments = Department.all.map { |department| [department.name, department.id] }
       render :new
     end
   end
 
   def update
     @ticket = Ticket.find(params[:id])
-    status_closed = Status.find_by(status: 'closed')
+    status_closed = Status.find_by(name: 'closed')
     @ticket.update(status_id: status_closed.id)
     redirect_to user_dashboard_path, notice: 'Ticket closed'
   end
