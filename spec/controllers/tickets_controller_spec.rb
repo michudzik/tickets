@@ -87,8 +87,8 @@ RSpec.describe TicketsController, type: :controller do
 
   describe '#create' do 
     before { sign_in user }
-    let(:department) { create(:department, :it) }
-    let!(:status) { create(:status, :open) }
+    let(:department) { create(:department) }
+    let!(:status) { create(:status) }
     let(:valid_parameters) { { user_id: user.id, ticket: attributes_for(:ticket, department_id: department.id) } }
     let(:invalid_parameters) { { user_id: user.id, ticket: attributes_for(:ticket, department_id: department.id, note: 'a'*1000) } }
  
@@ -126,9 +126,9 @@ RSpec.describe TicketsController, type: :controller do
 
   describe '#update' do
     before { sign_in user }
-    let(:department) { create(:department, :it) }
+    let(:department) { create(:department) }
     let(:ticket) { create(:ticket) }
-    let!(:status) { create(:status, :open) }
+    let!(:status) { create(:status) }
     let!(:status_closed) { create(:status, :closed) }
     let(:valid_parameters) { { id: ticket.id, user_id: user.id } }
  

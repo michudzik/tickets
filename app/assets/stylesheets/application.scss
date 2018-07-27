@@ -23,3 +23,17 @@
   padding-top: 20px;
   padding-bottom: 30px;
 }
+
+.btn-default {
+  background-color: #FFF;
+  color: #333;
+  border-color: #DAD9E0;
+  border-radius: 25px;
+}
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active    {
+  background-color: #DAD9E0;
+  color: #333;
+  border-color: #DAD9E0;
+}

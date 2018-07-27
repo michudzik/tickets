@@ -1,8 +1,8 @@
 class User < ApplicationRecord
 
   devise :database_authenticatable, :registerable,
-        :recoverable, :rememberable, :trackable,
-        :validatable, :confirmable, :lockable
+    :recoverable, :rememberable, :trackable,
+    :validatable, :confirmable, :lockable
 
   validates :first_name, :last_name,  presence: true
   belongs_to :role
