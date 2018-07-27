@@ -1,5 +1,10 @@
 <div class="container">
   <br />
+  <script>
+  $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();   
+  });
+  </script>
 
   <% if @ticket.closed? %>
     <div class="ticket-closed-message mb-2 bg-danger text-white">
@@ -15,12 +20,21 @@
 
   <div class="tickets-display">
     <table class="table table-borderless">
+      <thead>
+        <tr>
+          <td class="align-middle" align="center">Title:</td>
+          <td class="align-middle" align="center">User:</td>
+          <td class="align-middle" align="center">Created at:</td>
+          <td class="align-middle" align="center">Status:</td>
+          <td></td>
+        </tr>
+      </thead>
       <tbody>
         <tr>
           <td class="align-middle" align="center"><%= @ticket.title %></td>
           <td class="align-middle" align="center"><%= @ticket.user.fullname %></td>
           <td class="align-middle" align="center"><%= @ticket.created_at.strftime("%Y.%m.%d %H:%M") %></td>
-          <td class="align-middle" align="center"><%= @ticket.status.status %></td>
+          <td class="align-middle" align="center"><%= @status %></td>
           <td class="align-middle" align="right">
             <% unless @ticket.closed? %>
               <%= render 'lock_ticket_modal', ticket: @ticket %>
@@ -28,9 +42,8 @@
           </td>
         </tr>
         <tr>
-          <td>
-            <hr />
-            <%= @ticket.note %>
+          <td colspan="5">
+            <%= word_wrap(sanitize(@ticket.note).gsub("\n", "<br />").html_safe, line_width: 10) %>
           </td>
         </tr>
         <tr>
@@ -51,29 +64,37 @@
   <div class="jumbotron p-2 bg-light">
     <b>Comments</b>
     <% @ticket.comments.each do |comment| %>
-      <div>
         <% if comment.user.id == current_user.id %>
           <div align="right">
             <div class="comments-section darker p-2 w-75">
-              <span class="time-right"><%= comment.created_at.strftime("%H:%M") %></span>
-              <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
+              <div class="time-right">
+                <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
+                  <div class="time-right">
+                  <%= comment.created_at.strftime("%H:%M") %>
+                  </div>
+                </a>
+              </div>
+              <b class="commenter-name"><%= "#{comment.user.fullname} (#{comment.user.role.name.humanize})" %></b>
               &emsp;
-              <br />          
-              <%= comment.body %>      
               <br />
+              <%= sanitize comment.body.gsub("\n", "<br />").html_safe %>
             </div>
           </div>
         <% else %>
           <div class="comments-section p-2 w-75">
-            <span class="time-left"><%= comment.created_at.strftime("%H:%M") %></span>
+            <div class="time-left">
+              <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
+                <div class="time-left">
+                  <%= comment.created_at.strftime("%H:%M") %>
+                </div>
+              </a>
+            </div>
             &emsp;
-            <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
+            <b class="commenter-name"><%= "#{comment.user.fullname} (#{comment.user.role.name.humanize})" %></b>
             <br />
-            <%= comment.body %>
-            <br />  
+            <%= sanitize comment.body.gsub("\n", "<br />").html_safe %>
           </div>
         <% end %>
-      </div>
     <% end %>
 
   <% unless @ticket.closed? %>
