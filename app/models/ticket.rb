@@ -37,7 +37,7 @@ class Ticket < ActiveRecord::Base
     unless user_ids.empty?
       users = User.find(user_ids)
       users.each do |user|
-        UserMailer.with(user: user, ticket: slef).notify.deliver_later
+        UserMailer.with(user: user, ticket: self).notify.deliver_later
       end
     end
   end
