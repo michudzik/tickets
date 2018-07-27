@@ -1,4 +1,9 @@
 <div class="container">
+  <script>
+  $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();   
+  });
+  </script>
   <h1>My tickets</h1>
     <div class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -33,18 +38,20 @@
                   <% end %>
                 </td>
                 <td>
-                  <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      See comments
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <% ticket.comments.last(6).reverse_each do |comments| %>
-                        <a class="dropdown-item-text">
-                          <strong><%= comments.user.role.name %></strong><%= '(' + comments.created_at.in_time_zone("Warsaw").strftime("%k:%M") + '): ' + comments.body %>
-                        </a>
-                      <% end %>
+                  <% if ticket.comments.any? %>
+                    <div class="dropdown">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        See comments
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <% ticket.comments.last(6).reverse_each do |comment| %>
+                          <a class="dropdown-item-text" data-toggle="tooltip" title="<%= comment.body %>">
+                            <strong><%= comment.user.role.name %></strong><%= "(#{comment.created_at.in_time_zone("Warsaw").strftime("%k:%M")}): #{comment.body.truncate(40, omission: '... (continued)')}" %>
+                          </a>
+                        <% end %>
+                      </div>
                     </div>
-                  </div>
+                  <% end %>
                 </td>
               </tr>
             <% end %>
