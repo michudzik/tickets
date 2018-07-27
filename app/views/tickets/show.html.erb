@@ -18,7 +18,7 @@
     </div>
   <% end %>
 
-  <div class="tickets-display" style="border: none">
+  <div class="tickets-display">
     <table class="table table-borderless">
       <thead>
         <tr>
@@ -34,7 +34,7 @@
           <td class="align-middle" align="center"><%= @ticket.title %></td>
           <td class="align-middle" align="center"><%= @ticket.user.fullname %></td>
           <td class="align-middle" align="center"><%= @ticket.created_at.strftime("%Y.%m.%d %H:%M") %></td>
-          <td class="align-middle" align="center"><%= @ticket.status.status.humanize.to_s %></td>
+          <td class="align-middle" align="center"><%= @status %></td>
           <td class="align-middle" align="right">
             <% unless @ticket.closed? %>
               <%= render 'lock_ticket_modal', ticket: @ticket %>
@@ -43,7 +43,7 @@
         </tr>
         <tr>
           <td colspan="5">
-            <%= sanitize @ticket.note.gsub("\n", "<br />").html_safe %>
+            <%= word_wrap(sanitize(@ticket.note).gsub("\n", "<br />").html_safe, line_width: 10) %>
           </td>
         </tr>
         <tr>
@@ -67,14 +67,14 @@
         <% if comment.user.id == current_user.id %>
           <div align="right">
             <div class="comments-section darker p-2 w-75">
-              <span class="time-right">
+              <div class="time-right">
                 <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
-                  <span class="time-right">
+                  <div class="time-right">
                   <%= comment.created_at.strftime("%H:%M") %>
-                  </span>
+                  </div>
                 </a>
-              </span>
-              <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
+              </div>
+              <b class="commenter-name"><%= "#{comment.user.fullname} (#{comment.user.role.name.humanize})" %></b>
               &emsp;
               <br />
               <%= sanitize comment.body.gsub("\n", "<br />").html_safe %>
@@ -82,15 +82,15 @@
           </div>
         <% else %>
           <div class="comments-section p-2 w-75">
-            <span class="time-left">
+            <div class="time-left">
               <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
-                <span class="time-left">
+                <div class="time-left">
                   <%= comment.created_at.strftime("%H:%M") %>
-                </span>
+                </div>
               </a>
-            </span>
+            </div>
             &emsp;
-            <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
+            <b class="commenter-name"><%= "#{comment.user.fullname} (#{comment.user.role.name.humanize})" %></b>
             <br />
             <%= sanitize comment.body.gsub("\n", "<br />").html_safe %>
           </div>
