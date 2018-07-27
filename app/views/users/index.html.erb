@@ -19,8 +19,12 @@
       </tr>
     </thead>
     <tbody>
-      <% @users.each do |user| %>
-        <%= render 'user', user: user %>
+      <% cache @users do %>
+        <% @users.each do |user| %>
+          <% cache user do %>
+            <%= render user %>
+          <% end %>
+        <% end %>
       <% end %>
     </tbody>
   </table>
