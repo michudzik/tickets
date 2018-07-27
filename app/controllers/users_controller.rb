@@ -1,44 +1,55 @@
 class UsersController < ApplicationController
-  before_action :ensure_admin, only: [:index, :update, :deactivate_account]
-  before_action :ensure_not_same_user, only: [:deactivate_account]
+
+  before_action :ensure_admin, only: %i[index update deactivate_account activate_account]
 
   def show
+    @tickets = current_user.tickets.paginate(:page => params[:page], :per_page => params[:number])
   end
 
   def index
-    @users = User.where.not(id: current_user.id)
+    @users = User.where.not(id: current_user.id).paginate(:page => params[:page], :per_page => params[:number])
     @roles = Role.all.map { |role| [role.name.humanize.to_s, role.id] }
   end
 
   def update
     @user = User.find(params[:id])
     respond_to do |format|
-      if @user.update(role_id: params[:user][:role_id])
-        format.html { redirect_to users_url }
+      if @user.update(user_params)
+        format.html { redirect_to users_path, notice: "You have successfully changed the role of #{@user.full_name}" }
         format.js
       else
-        render :index
+        format.html { render :index }
       end
     end
   end
 
   def deactivate_account
+    same_user('You can not deactivate yourself')
     @user = User.find(params[:id])
     respond_to do |format|
-      if @user.update_attribute(:confirmed_at, nil)
-        format.html { redirect_to users_url }
-        format.js
-      else
-        render :index
-      end
+      @user.lock_access!(send_instructions: false)
+      format.html { redirect_to users_path }
+      format.js
+    end
+  end
+
+  def activate_account
+    same_user('You can not activate yourself')
+    @user = User.find(params[:id])
+    respond_to do |format|
+      @user.unlock_access!
+      format.html { redirect_to users_path }
+      format.js
     end
   end
 
   private
 
-    def ensure_not_same_user
-      if current_user == User.find(params[:id])
-        redirect_to users_url, alert: 'You can not deactivate yourself'
-      end
-    end
+  def user_params
+    params.require(:user).permit(:role_id)
+  end
+
+  def same_user(msg)
+    redirect_to users_path, alert: msg and return if current_user.id == params[:id]
+  end
 end

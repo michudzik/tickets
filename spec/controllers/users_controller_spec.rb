@@ -40,9 +40,9 @@ RSpec.describe UsersController, type: :controller do
   describe '#update' do
     let(:admin)             { create(:user, :admin) }
     let(:user)              { create(:user) }
-    let(:none_role)         { create(:role, :none) }
-    let(:valid_params)      { { id: user.id, user: { role_id: none_role.id } } }
-    let(:invalid_params)    { { id: user.id, user: { role_id: 100 } } }
+    let(:user_role)         { create(:role) }
+    let(:valid_params)      { { id: user.id, user: { role_id: user_role.id } } }
+    let(:invalid_params)    { { id: user.id, user: { role_id: nil } } }
 
     context 'valid params' do
        subject  { patch :update, params: valid_params }
@@ -84,10 +84,10 @@ RSpec.describe UsersController, type: :controller do
 
     it 'should deactivate user' do
       subject
-      expect(user.reload.confirmed_at).to eq(nil)
+      expect(user.reload.access_locked?).to eq(true)
     end
 
-    context 'callback' do
+    context 'same user' do
       subject { put :deactivate_account, params: { id: admin.id } }
       it 'should redirect to index when admin wants to deactivate himself' do
         expect(subject).to redirect_to(users_url)
@@ -98,7 +98,30 @@ RSpec.describe UsersController, type: :controller do
         expect(flash[:alert]).to be_present
       end
     end
+  end
 
+  describe '#activate_user' do
+    let(:admin) { create(:user, :admin) }
+    let(:user)  { create(:user) }
+    subject { put :activate_account, params: { id: user.id } } 
+    before { sign_in admin }
+
+    it 'should activate user' do
+      subject
+      expect(user.reload.access_locked?).to eq(false)
+    end
+
+    context 'same user' do
+      subject { put :activate_account, params: { id: admin.id } }
+      it 'should redirect to index when admin wants to deactivate himself' do
+        expect(subject).to redirect_to(users_url)
+      end
+
+      it 'should redirect with an alert' do
+        subject
+        expect(flash[:alert]).to be_present
+      end
+    end
   end
 
 end

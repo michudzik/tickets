@@ -1,6 +1,17 @@
 Rails.application.routes.draw do
+  
   root 'home#home'
-  devise_for :users, controllers: {  registrations: "registrations" }
+  devise_for :users, skip: :registrations, controllers: {  registrations: "registrations" }
+  devise_scope :user do
+    resource :registration,
+      only: [:new, :create, :edit, :update],
+      path: 'users',
+      path_names: { new: 'sign_up' },
+      controller: 'devise/registrations',
+      as: :user_registration do
+        get :cancel
+      end
+  end
   get '/new_ticket', to: 'tickets#new'
   get '/show_tickets', to: 'tickets#index'
   get '/user_dashboard', to: 'users#show'
@@ -8,9 +19,9 @@ Rails.application.routes.draw do
   resources :comments, only: :create
   resources :users, only: [:index, :update] do
     resources :tickets, except: [:new, :index, :show]
-    member do
-      put :deactivate_account
+      member do
+        put :deactivate_account
+        put :activate_account
+      end
     end
-  end
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

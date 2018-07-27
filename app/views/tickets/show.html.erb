@@ -1,66 +1,106 @@
-<div class="jumbotron">
-	<h1><%= @ticket.title %></h1>
+<div class="container">
+  <br />
+  <script>
+  $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();   
+  });
+  </script>
+
+  <% if @ticket.closed? %>
+    <div class="ticket-closed-message mb-2 bg-danger text-white">
+      <tr>
+        <td class="align-text-bottom">
+          <h2>
+            <p class="text-center">THIS TICKET IS CLOSED</p>
+          </h2>
+        </td>
+      </tr>
+    </div>
+  <% end %>
+
+  <div class="tickets-display">
+    <table class="table table-borderless">
+      <thead>
+        <tr>
+          <td class="align-middle" align="center">Title:</td>
+          <td class="align-middle" align="center">User:</td>
+          <td class="align-middle" align="center">Created at:</td>
+          <td class="align-middle" align="center">Status:</td>
+          <td></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="align-middle" align="center"><%= @ticket.title %></td>
+          <td class="align-middle" align="center"><%= @ticket.user.fullname %></td>
+          <td class="align-middle" align="center"><%= @ticket.created_at.strftime("%Y.%m.%d %H:%M") %></td>
+          <td class="align-middle" align="center"><%= @status %></td>
+          <td class="align-middle" align="right">
+            <% unless @ticket.closed? %>
+              <%= render 'lock_ticket_modal', ticket: @ticket %>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="5">
+            <%= word_wrap(sanitize(@ticket.note).gsub("\n", "<br />").html_safe, line_width: 10) %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <% if @ticket.uploads.attached? %>
+              <hr />
+              <strong>Attachments: </strong> 
+              <% @ticket.uploads.each_with_index do |upload, i| %>
+                <%= link_to("Document #{i+1}", rails_blob_path(upload, disposition: "attachment")) %>
+              <% end %>
+            <% end %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="jumbotron p-2 bg-light">
+    <b>Comments</b>
+    <% @ticket.comments.each do |comment| %>
+        <% if comment.user.id == current_user.id %>
+          <div align="right">
+            <div class="comments-section darker p-2 w-75">
+              <div class="time-right">
+                <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
+                  <div class="time-right">
+                  <%= comment.created_at.strftime("%H:%M") %>
+                  </div>
+                </a>
+              </div>
+              <b class="commenter-name"><%= "#{comment.user.fullname} (#{comment.user.role.name.humanize})" %></b>
+              &emsp;
+              <br />
+              <%= sanitize comment.body.gsub("\n", "<br />").html_safe %>
+            </div>
+          </div>
+        <% else %>
+          <div class="comments-section p-2 w-75">
+            <div class="time-left">
+              <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
+                <div class="time-left">
+                  <%= comment.created_at.strftime("%H:%M") %>
+                </div>
+              </a>
+            </div>
+            &emsp;
+            <b class="commenter-name"><%= "#{comment.user.fullname} (#{comment.user.role.name.humanize})" %></b>
+            <br />
+            <%= sanitize comment.body.gsub("\n", "<br />").html_safe %>
+          </div>
+        <% end %>
+    <% end %>
+
+  <% unless @ticket.closed? %>
+    <br />
+    <div class="tickets-display">
+      <%= render 'comments/form' %>
+    </div>
+  <% end %>
 </div>
-<div class="tickets-display">
-	<p>
-	<strong>ID:</strong>	
-	<%= @ticket.id %>
-	<hr />
-	<strong>Title:</strong>	
-	<%= @ticket.title %>
-	<hr />
-	<strong>Content:</strong>	
-	<%= @ticket.note %>
-	<hr />
-	<strong>Author name:</strong>	
-	<%= @ticket.user.fullname %>
-	<hr />
-	<strong>Created at</strong>	:
-	<%= @ticket.created_at %>
-	<hr />
-	<strong>Updated at:</strong>	
-	<%= @ticket.updated_at %>
-	</p>
-</div>
-
-
-<div class="jumbotron">
-	<h2>Comments</h2>
-</div>
-
-<% @ticket.comments.each do |comment| %>
-	<div>
-		<% if comment.user.role.name == 'none' %>
-			<div class="container">
-				<%= image_tag("user_avatar.png", :alt => "Avatar", :class => "right") %>
-				<h5 class="commenter-name"><%= comment.user.fullname %></h5>
-				<br />
-				<h5><%= comment.body %></h5>
-				<br />
-				<span class="time-right"><%= comment.created_at.strftime("%I:%M%p") %></span>				
-			</div>
-		<% elsif comment.user.role.name == 'it_support' || current_user.role.name == 'om_support' || comment.user.role.name == 'admin' %>
-			<div class="container darker">
-				<%= image_tag("support_avatar.png", :alt => "Avatar") %>				
-				<h5 class="commenter-name"><%= comment.user.fullname %></h5>
-				<br />					
-				<h5><%= comment.body %></h5>					
-				<br />
-				<span class="time-left"><%= comment.created_at.strftime("%I:%M%p") %></span>
-			</div>
-		<% end %>
-	</div>
-<% end %>
-
-
-<% unless @ticket.closed? %>
-	<div class="jumbotron">
-		<h2>Add new comment</h2>
-	</div>
-
-	<div class="tickets-display">
-		<%= render 'comments/form' %>
-	</div>
-<% end %>
-
-<%= button_to 'Close', user_ticket_path(@ticket.id), method: :put, class: 'btn btn-danger' %>

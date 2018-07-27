@@ -1,20 +1,39 @@
-<h1>All Tickets</h1>
-<table class="table">
-  <thead>
-    <th>Author</th>
-    <th>Title</th>
-    <th>Department</th>
-    <th>Status</th>
-  </thead>
-  <tbody>
-    <% @tickets.each do |ticket| %>
+<div class="container">
+  <h1>All Tickets</h1>
+  <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Count
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <%= link_to '10', show_tickets_path(:number => 10), class: 'dropdown-item' %>
+      <%= link_to '30', show_tickets_path(:number => 30), class: 'dropdown-item' %>
+      <%= link_to '50', show_tickets_path(:number => 50), class: 'dropdown-item' %>
+    </div>
+  </div>
+  <table class="table table-striped">
+    <thead>
       <tr>
-        <td><%= ticket.user.full_name %></td>
-        <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
-        <td><%= ticket.department.department_name %></td>
-        <td><%= ticket.status.status.humanize.to_s %></td>
+        <th scope="col">Author</th>
+        <th scope="col">Title</th>
+        <th scope="col">Department</th>
+        <th scope="col">Status</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
-<%= link_to 'Back', users_path, class: 'btn btn-primary' %>
+    </thead>
+    <tbody>
+      <% @tickets.each do |ticket| %>
+        <tr>
+          <td><%= ticket.user.full_name %></td>
+          <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
+          <td><%= ticket.department.department_name %></td>
+          <td><%= ticket.status.status.humanize.to_s %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% if @tickets.any? %>
+    <div>
+      <%= will_paginate @tickets, :container => false %>
+    </div>
+  <% end %>
+  
+</div>

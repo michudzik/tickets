@@ -1,11 +1,13 @@
 class Comment < ActiveRecord::Base
-	
-	validates :body, presence: true
 
-	belongs_to :user
-	belongs_to :ticket
+  validates :body, presence: true
 
-	def comment_info
-		"#{body} #{user_id} #{updated_at}"
-	end
+  belongs_to :user
+  belongs_to :ticket
+
+  def update_ticket_status!(options = {})
+    same_user = options[:user].id == options[:ticket].user.id
+    same_user ? options[:ticket].user_response : options[:ticket].support_response
+    options[:ticket].save
+  end
 end
