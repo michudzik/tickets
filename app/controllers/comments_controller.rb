@@ -1,5 +1,4 @@
 class CommentsController < ApplicationController
-
   def create
     @ticket = Ticket.find(params[:comment][:ticket_id])
     redirect_to ticket_path(@ticket.id), alert: 'This ticket is closed' and return if @ticket.status.name == 'closed'
