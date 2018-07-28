@@ -29,7 +29,10 @@
             <% @tickets.each do |ticket| %>
               <tr>
                 <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
-                <td><%= ticket.status.name.humanize.to_s %></td>
+                <td>
+                  <div class="<%= ticket.status.name %>">
+                    <%= ticket.status.name.humanize.to_s %></td>
+                  </div>
                 <td>
                   <% if ticket.comments.any? %>
                     <%= ticket.comments.last.updated_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y") %>                
