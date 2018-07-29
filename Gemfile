@@ -77,6 +77,7 @@ group :test do
   gem 'chromedriver-helper'
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
+  gem 'simplecov', require: false
 end
 
 group :production do
