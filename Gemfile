@@ -7,6 +7,8 @@ ruby '2.5.1'
 gem 'slack-notifier'
 # Recaptcha
 gem 'recaptcha'
+# Redis
+gem 'redis'
 # Boostrap
 gem 'bootstrap', '~> 4.1.1'
 # JQuery for bootstrap
