@@ -28,6 +28,4 @@ Rails.application.routes.draw do
       put :activate_account
     end
   end
-
-  mount ActionCable.server => '/cable'
 end
