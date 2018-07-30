@@ -35,6 +35,17 @@ RSpec.describe User, type: :model do
     let!(:om_support_role)   { create(:role, :om_support) }
     let(:user) { create(:user) }
 
+    describe '#same_user?' do
+      it 'should return true' do
+        expect(user.same_user?(user.id)).to eq(true)
+      end
+
+      it 'should return false' do
+        other_user = create(:user)
+        expect(user.same_user?(other_user.id)).to eq(false)
+      end
+    end
+
     describe '#admin?' do
       it 'should return true' do
         user.role = admin_role

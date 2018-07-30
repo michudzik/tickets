@@ -1,0 +1,19 @@
+.open {
+  @extend .badge;
+  @extend .badge-success;
+}
+
+.closed {
+  @extend .badge;
+  @extend .badge-danger;
+}
+
+.support_response {
+  @extend .badge;
+  @extend .badge-warning;
+}
+
+.user_response {
+  @extend .badge;
+  @extend .badge-info;
+}

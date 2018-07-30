@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-
   before_action :ensure_admin, only: %i[index update deactivate_account activate_account]
 
   def show
@@ -24,7 +23,7 @@ class UsersController < ApplicationController
   end
 
   def deactivate_account
-    redirect_to users_path, alert: 'You can not deactivate yourself' and return if same_user?(params[:id].to_i)
+    redirect_to users_path, alert: 'You can not deactivate yourself' and return if current_user.same_user?(params[:id].to_i)
     @user = User.find(params[:id])
     respond_to do |format|
       @user.lock_access!(send_instructions: false)
@@ -34,7 +33,11 @@ class UsersController < ApplicationController
   end
 
   def activate_account
+<<<<<<< HEAD
     redirect_to users_path, alert: 'You can not activate yourself' and return if same_user?(params[:id].to_i)
+=======
+    redirect_to users_path, alert: 'You can not activate yourself' and return if current_user.same_user?(params[:id].to_i)
+>>>>>>> 0793a864d51cf6a15ec282f487bc0354394d5547
     @user = User.find(params[:id])
     respond_to do |format|
       @user.unlock_access!
@@ -48,8 +51,11 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:role_id)
   end
+<<<<<<< HEAD
 
   def same_user?(id)
     current_user.id == id
   end
+=======
+>>>>>>> 0793a864d51cf6a15ec282f487bc0354394d5547
 end

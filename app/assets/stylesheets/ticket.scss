@@ -7,3 +7,23 @@
   word-wrap: break-word;
   word-break: break-all;
 }
+
+.ticket-properties-table {
+  border: none;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.ticket-properties-table td {
+  border: none;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  width: 160px;
+}
+
+.ticket-note {
+  padding-bottom: 0.5em;
+  padding-top: 0.5em;
+}

@@ -2,7 +2,9 @@
   <div class="comments-section <% if align == 'right' %>darker<% end %> p-2 w-75">
     <div class="time-<%= align %>">
       <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
+        <div class="time-<%= align %>">
         <%= comment.created_at.strftime("%H:%M") %>
+        </div>
       </a>
       &emsp;
     </div>
