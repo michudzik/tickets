@@ -22,10 +22,10 @@
     <table class="table table-borderless">
       <thead>
         <tr>
-          <td class="align-middle" align="center">Title:</td>
-          <td class="align-middle" align="center">User:</td>
-          <td class="align-middle" align="center">Created at:</td>
-          <td class="align-middle" align="center">Status:</td>
+          <td class="align-middle" align="center"><strong>Title:</strong></td>
+          <td class="align-middle" align="center"><strong>User:</strong></td>
+          <td class="align-middle" align="center"><strong>Created at:</strong></td>
+          <td class="align-middle" align="center"><strong>Status:</strong></td>
           <td></td>
         </tr>
       </thead>
@@ -33,7 +33,7 @@
         <tr>
           <td class="align-middle" align="center"><%= @ticket.title %></td>
           <td class="align-middle" align="center"><%= @ticket.user.fullname %></td>
-          <td class="align-middle" align="center"><%= @ticket.created_at.strftime("%Y.%m.%d %H:%M") %></td>
+          <td class="align-middle" align="center"><%= @ticket.created_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y") %></td>
           <td class="align-middle" align="center"><%= @status %></td>
           <td class="align-middle" align="right">
             <% unless @ticket.closed? %>
@@ -68,7 +68,7 @@
           <div align="right">
             <div class="comments-section darker p-2 w-75">
               <div class="time-right">
-                <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
+                <a data-toggle="tooltip" title="<%= comment.created_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y") %>">
                   <div class="time-right">
                   <%= comment.created_at.strftime("%H:%M") %>
                   </div>
