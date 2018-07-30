@@ -1,10 +1,15 @@
-<tr data-comment-id="<%= comment.id %>">
-	<td>
-		<p>
-			<strong>Body:</strong>
-			<%= comment.body %>
-			<br />
-			<%= link_to 'Destroy', [comment.user, comment], method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-		</p>
-	</td>
-</tr>
+<div align="<%= align %>">
+  <div class="comments-section <% if align == 'right' %>darker<% end %> p-2 w-75">
+    <div class="time-<%= align %>">
+      <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
+        <div class="time-<%= align %>">
+        <%= comment.created_at.strftime("%H:%M") %>
+        </div>
+      </a>
+    </div>
+    <b class="commenter-name"><%= "#{comment.user.fullname} (#{comment.user.role.name.humanize})" %></b>
+    &emsp;
+    <br />
+    <%= sanitize comment.body.gsub("\n", "<br />").html_safe %>
+  </div>
+</div>

@@ -3,8 +3,6 @@ require 'rails_helper'
 RSpec.describe TicketsController, type: :controller do
 
   let(:admin) { create(:user, :admin) }
-  let(:itsupport) { create(:user, :it_support) }
-  let(:omsupport) { create(:user, :om_support) }
   let!(:user) { create(:user) }
 
   describe '#index' do
@@ -116,15 +114,15 @@ RSpec.describe TicketsController, type: :controller do
         expect(subject).to render_template('new')
       end
 
-      it 'should redirect with a notice' do
+      it 'should have errors' do
         subject
-        expect(flash[:alert]).to be_present
+        expect(assigns(:ticket).errors).to be_present
       end
     end
 
   end
 
-  describe '#update' do
+  describe '#close' do
     before { sign_in user }
     let(:department) { create(:department) }
     let(:ticket) { create(:ticket) }
@@ -133,7 +131,7 @@ RSpec.describe TicketsController, type: :controller do
     let(:valid_parameters) { { id: ticket.id, user_id: user.id } }
  
     context 'valid parameters' do
-      subject { patch :update, params: valid_parameters }
+      subject { put :close, params: valid_parameters }
 
       it 'should redirect to user dashboard' do
         expect(subject).to redirect_to(user_dashboard_url)
@@ -144,9 +142,11 @@ RSpec.describe TicketsController, type: :controller do
         expect(flash[:notice]).to be_present
       end
 
-      it 'should create new ticket' do
-        expect{ subject }.to change{ Ticket.count }.by(1)
+      it 'should change ticket status to closed' do
+        subject
+        expect(ticket.reload.status.name).to eq('closed')
       end
+
     end
   end
 end
