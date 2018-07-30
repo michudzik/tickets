@@ -3,7 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.1'
 
-#Slack
+# Slack
 gem 'slack-notifier'
 # Recaptcha
 gem 'recaptcha'
@@ -77,6 +77,7 @@ group :test do
   gem 'chromedriver-helper'
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
+  gem 'simplecov', require: false
 end
 
 group :production do
