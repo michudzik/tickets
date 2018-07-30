@@ -26,7 +26,7 @@ class TicketsController < ApplicationController
     end
   end
 
-  def update
+  def close
     @ticket = Ticket.find(params[:id])
     status_closed = Status.find_by(name: 'closed')
     @ticket.update(status_id: status_closed.id)

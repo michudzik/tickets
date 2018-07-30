@@ -20,10 +20,14 @@ Rails.application.routes.draw do
   get '/tickets/:id',   to: 'tickets#show', as: :ticket
   resources :comments, only: :create
   resources :users, only: [:index, :update] do
-    resources :tickets, except: [:new, :index, :show]
-      member do
-        put :deactivate_account
-        put :activate_account
+    resources :tickets, except: [:new, :index, :show, :update] do
+      member do 
+        put :close
       end
     end
+    member do
+      put :deactivate_account
+      put :activate_account
+    end
+  end
 end

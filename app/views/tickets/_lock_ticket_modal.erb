@@ -18,7 +18,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
-        <%= button_to 'Close ticket', user_ticket_path(@ticket.id), method: :put, class: 'btn btn-danger' %>
+        <%= button_to 'Close ticket', close_user_ticket_path(@ticket.id), method: :put, class: 'btn btn-danger' %>
       </div>
     </div>
   </div>

@@ -17,86 +17,73 @@
       </tr>
     </div>
   <% end %>
-
-  <div class="tickets-display">
-    <table class="table table-borderless">
-      <thead>
-        <tr>
-          <td class="align-middle" align="center">Title:</td>
-          <td class="align-middle" align="center">User:</td>
-          <td class="align-middle" align="center">Created at:</td>
-          <td class="align-middle" align="center">Status:</td>
-          <td></td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="align-middle" align="center"><%= @ticket.title %></td>
-          <td class="align-middle" align="center"><%= @ticket.user.fullname %></td>
-          <td class="align-middle" align="center"><%= @ticket.created_at.strftime("%Y.%m.%d %H:%M") %></td>
-          <td class="align-middle" align="center"><%= @status %></td>
-          <td class="align-middle" align="right">
-            <% unless @ticket.closed? %>
-              <%= render 'lock_ticket_modal', ticket: @ticket %>
-            <% end %>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="5">
-            <%= word_wrap(sanitize(@ticket.note).gsub("\n", "<br />").html_safe, line_width: 10) %>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <% if @ticket.uploads.attached? %>
-              <hr />
-              <strong>Attachments: </strong> 
-              <% @ticket.uploads.each_with_index do |upload, i| %>
-                <%= link_to("Document #{i+1}", rails_blob_path(upload, disposition: "attachment")) %>
+  <div class="jumbotron p-2 bg-light">
+    <b>Ticket</b>
+    <div class="tickets-display" align="center">
+      <table class="ticket-properties-table">
+        <thead>
+          <tr>
+            <td><b>Title:</b></td>
+            <td><b>User:</b></td>
+            <td><b>Created at:</b></td>
+            <td><b>Status:</b></td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= @ticket.title %></td>
+            <td><%= @ticket.user.fullname %></td>
+            <td><%= @ticket.created_at.strftime("%Y.%m.%d %H:%M") %></td>
+            <td><%= @status %></td>
+            <td>
+              <% unless @ticket.closed? %>
+                <%= render 'lock_ticket_modal', ticket: @ticket %>
               <% end %>
-            <% end %>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" class="ticket-note">
+              <hr />
+              <div class="text-left">
+                <%= sanitize(@ticket.note).gsub(/\n/, '<br />').html_safe %>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <% if @ticket.uploads.attached? %>
+                <hr />
+                <strong>Attachments: </strong> 
+                <br />
+                <% @ticket.uploads.each_with_index do |upload, i| %>
+                  <%= link_to("Document #{i+1}", rails_blob_path(upload, disposition: "attachment")) %>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <div class="jumbotron p-2 bg-light">
-    <b>Comments</b>
-    <% @ticket.comments.each do |comment| %>
-        <% if comment.user.id == current_user.id %>
-          <div align="right">
-            <div class="comments-section darker p-2 w-75">
-              <div class="time-right">
-                <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
-                  <div class="time-right">
-                  <%= comment.created_at.strftime("%H:%M") %>
-                  </div>
-                </a>
-              </div>
-              <b class="commenter-name"><%= "#{comment.user.fullname} (#{comment.user.role.name.humanize})" %></b>
-              &emsp;
-              <br />
-              <%= sanitize comment.body.gsub("\n", "<br />").html_safe %>
-            </div>
-          </div>
-        <% else %>
-          <div class="comments-section p-2 w-75">
-            <div class="time-left">
-              <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
-                <div class="time-left">
-                  <%= comment.created_at.strftime("%H:%M") %>
-                </div>
-              </a>
-            </div>
-            &emsp;
-            <b class="commenter-name"><%= "#{comment.user.fullname} (#{comment.user.role.name.humanize})" %></b>
-            <br />
-            <%= sanitize comment.body.gsub("\n", "<br />").html_safe %>
-          </div>
-        <% end %>
-    <% end %>
+  <hr />
 
+  <div class="jumbotron p-2 bg-light">
+  <b>Comments</b>
+  <div class="commentSection" data-ticket-id="<%= @ticket.id %>">
+    <% cache @ticket.comments do %>
+      <% @ticket.comments.each do |comment| %>
+        <% cache comment do %>
+          <% if comment.user.id == current_user.id %>
+            <%= render 'comments/comment', comment: comment, align: 'right' %>
+          <% else %>
+            <%= render 'comments/comment', comment: comment, align: 'left' %> 
+          <% end %> 
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
   <% unless @ticket.closed? %>
     <br />
     <div class="tickets-display">

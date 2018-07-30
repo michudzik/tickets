@@ -29,7 +29,11 @@
             <% @tickets.each do |ticket| %>
               <tr>
                 <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
-                <td><%= ticket.status.name.humanize.to_s %></td>
+                <td>
+                  <div class="<%= ticket.status.name %>">
+                    <%= ticket.status.name.humanize.to_s %>
+                  </div>
+                </td>
                 <td>
                   <% if ticket.comments.any? %>
                     <%= ticket.comments.last.updated_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y") %>                
@@ -46,7 +50,7 @@
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <% ticket.comments.last(6).reverse_each do |comment| %>
                           <a class="dropdown-item-text" data-toggle="tooltip" title="<%= comment.body %>">
-                            <strong><%= comment.user.role.name %></strong><%= "(#{comment.created_at.in_time_zone("Warsaw").strftime("%k:%M")}): #{comment.body.truncate(40, omission: '... (continued)')}" %>
+                            <b><%= "#{comment.user.fullname}(#{comment.user.role.name})" %></b><%= "(#{comment.created_at.in_time_zone("Warsaw").strftime("%k:%M")}): #{comment.body.truncate(40, omission: '... (continued)')}" %>
                           </a>
                         <% end %>
                       </div>

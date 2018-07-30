@@ -33,6 +33,10 @@ class User < ApplicationRecord
     om_support? || it_support? || admin?
   end
 
+  def same_user?(user_id)
+    id == user_id
+  end
+
   def fullname
     "#{first_name} #{last_name}"
   end
