@@ -9,6 +9,7 @@ class CommentsController < ApplicationController
         user_ids = @comment.ticket.comments.where.not(user_id: current_user.id).pluck(:user_id)
         @comment.ticket.notify_users(user_ids)
         format.html { redirect_to ticket_path(@ticket.id), notice: 'Comment was created' }
+        format.js
       else
         format.html { redirect_to ticket_path(@ticket.id), alert: 'There was an error while creating comment' }
       end

@@ -1,0 +1,5 @@
+<% if @comment.persisted? %>
+  $('[data-comment-id="<%= @comment.id %>"]').remove();
+  $('.commentSection').append('<%= j render partial: 'comments/comment', locals: { comment: @comment, align: 'right' } %>');
+<% else %>
+<% end %>
