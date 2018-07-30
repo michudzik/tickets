@@ -12,7 +12,7 @@
       <b class="commenter-name"><%= "#{comment.user.fullname} (#{comment.user.role.name.humanize})" %></b>
       &emsp;
       <br />
-      <%= sanitize comment.body.gsub("\n", "<br />").html_safe %>
+      <%= sanitize comment.body.gsub(/\n/, '<br />').html_safe %>
     </div>
   </div>
 </div>
