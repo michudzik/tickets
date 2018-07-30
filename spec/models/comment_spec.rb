@@ -27,7 +27,7 @@ RSpec.describe Comment, type: :model do
         let!(:user_response) { create(:status, :user_response) }
         it 'should have user response status' do
           comment.update_ticket_status!(user: ticket.user, ticket: ticket)
-          expect(ticket.status.status).to eq('user_response')
+          expect(ticket.status.name).to eq('user_response')
         end
       end
 
@@ -35,7 +35,7 @@ RSpec.describe Comment, type: :model do
         let!(:support_response) { create(:status, :support_response) }
         it 'should have support response status' do
           comment.update_ticket_status!(user: admin, ticket: ticket)
-          expect(ticket.status.status).to eq('support_response')
+          expect(ticket.status.name).to eq('support_response')
         end
       end
 

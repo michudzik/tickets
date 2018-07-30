@@ -1,13 +1,12 @@
 class User < ApplicationRecord
-
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :trackable,
     :validatable, :confirmable, :lockable
 
-  validates :first_name, :last_name,  presence: true
+  validates :first_name, :last_name, presence: true
   belongs_to :role
-  has_many :comments
-  has_many :tickets
+  has_many :comments, dependent: :nullify
+  has_many :tickets, dependent: :nullify
 
   before_validation :default_role, on: :create
 
@@ -29,10 +28,6 @@ class User < ApplicationRecord
 
   def support?
     om_support? || it_support? || admin?
-  end
-
-  def full_name
-    "#{first_name} #{last_name}"
   end
 
   def fullname
