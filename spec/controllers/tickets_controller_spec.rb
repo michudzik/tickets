@@ -116,9 +116,9 @@ RSpec.describe TicketsController, type: :controller do
         expect(subject).to render_template('new')
       end
 
-      it 'should redirect with a notice' do
+      it 'should have errors' do
         subject
-        expect(flash[:alert]).to be_present
+        expect(assigns(:ticket).errors).to be_present
       end
     end
 

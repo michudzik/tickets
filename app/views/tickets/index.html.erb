@@ -20,17 +20,12 @@
       </tr>
     </thead>
     <tbody>
-      <% @tickets.each do |ticket| %>
-        <tr>
-          <td><%= ticket.user.fullname %></td>
-          <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
-          <td><%= ticket.department.name %></td>
-          <td>
-            <h6><div class="<%= ticket.status.name %>">
-              <%= ticket.status.name.humanize.to_s %>
-            </div></h6>    
-          </td>
-        </tr>
+      <% cache @tickets do %>
+        <% @tickets.each do |ticket| %>
+          <% cache ticket do %>
+            <%= render 'ticket', ticket: ticket %>
+          <% end %>
+        <% end %>
       <% end %>
     </tbody>
   </table>
@@ -39,5 +34,4 @@
       <%= will_paginate @tickets, :container => false %>
     </div>
   <% end %>
-  
 </div>

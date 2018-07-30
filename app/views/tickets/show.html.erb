@@ -67,38 +67,16 @@
 
   <div class="jumbotron p-2 bg-light">
     <b>Comments</b>
-    <% @ticket.comments.each do |comment| %>
-        <% if comment.user.id == current_user.id %>
-          <div align="right">
-            <div class="comments-section darker p-2 w-75">
-              <div class="time-right">
-                <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
-                  <div class="time-right">
-                  <%= comment.created_at.strftime("%H:%M") %>
-                  </div>
-                </a>
-              </div>
-              <b class="commenter-name"><%= "#{comment.user.fullname} (#{comment.user.role.name.humanize})" %></b>
-              &emsp;
-              <br />
-              <%= sanitize comment.body.gsub("\n", "<br />").html_safe %>
-            </div>
-          </div>
-        <% else %>
-          <div class="comments-section p-2 w-75">
-            <div class="time-left">
-              <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
-                <div class="time-left">
-                  <%= comment.created_at.strftime("%H:%M") %>
-                </div>
-              </a>
-            </div>
-            &emsp;
-            <b class="commenter-name"><%= "#{comment.user.fullname} (#{comment.user.role.name.humanize})" %></b>
-            <br />
-            <%= sanitize comment.body.gsub("\n", "<br />").html_safe %>
-          </div>
+    <% cache @ticket.comments do %>
+      <% @ticket.comments.each do |comment| %>
+        <% cache comment do %>
+          <% if comment.user.id == current_user.id %>
+            <%= render 'comments/comment', comment: comment, align: 'right' %>
+          <% else %>
+            <%= render 'comments/comment', comment: comment, align: 'left' %> 
+          <% end %>
         <% end %>
+      <% end %>
     <% end %>
 
   <% unless @ticket.closed? %>
