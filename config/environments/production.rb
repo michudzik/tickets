@@ -44,8 +44,7 @@ Rails.application.configure do
   # Mount Action Cable outside main process or domain
   config.action_cable.mount_path = '/cable'
   config.action_cable.url = 'wss://tickets.binarlab.com/cable'
-  #config.action_cable.allowed_request_origins = [ 'http://tickets.binarlab.com', /http:\/\/tickets.*/ ]
-  config.action_cable.disable_request_forgery_protection = true
+  config.action_cable.allowed_request_origins = [ /http:\/\/*/, /https:\/\/*/ ]
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 
