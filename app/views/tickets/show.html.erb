@@ -46,7 +46,7 @@
             <td colspan="5" class="ticket-note">
               <hr />
               <div class="text-left">
-                <%= sanitize(@ticket.note).gsub("\n", "<br />").html_safe %>
+                <%= sanitize(@ticket.note).gsub(/\n/, '<br />').html_safe %>
               </div>
             </td>
           </tr>
