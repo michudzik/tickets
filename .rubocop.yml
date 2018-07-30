@@ -49,3 +49,5 @@ Style/FrozenStringLiteralComment:
   Enabled:                             false
 Rails/ApplicationRecord:
   Enabled:                             false
+Style/AndOr:
+  Enabled:                             false
