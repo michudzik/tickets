@@ -70,7 +70,8 @@
   <hr />
 
   <div class="jumbotron p-2 bg-light">
-    <b>Comments</b>
+  <b>Comments</b>
+  <div class="commentSection" data-ticket-id="<%= @ticket.id %>">
     <% cache @ticket.comments do %>
       <% @ticket.comments.each do |comment| %>
         <% cache comment do %>
@@ -78,11 +79,11 @@
             <%= render 'comments/comment', comment: comment, align: 'right' %>
           <% else %>
             <%= render 'comments/comment', comment: comment, align: 'left' %> 
-          <% end %>
+          <% end %> 
         <% end %>
       <% end %>
     <% end %>
-
+  </div>
   <% unless @ticket.closed? %>
     <br />
     <div class="tickets-display">
