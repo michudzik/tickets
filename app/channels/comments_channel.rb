@@ -1,6 +1,6 @@
 class CommentsChannel < ApplicationCable::Channel
   def subscribed
-    stream_from "comments_#{params[ticket_id]}_channel"
+    stream_from "comments_#{params['ticket_id']}_channel"
   end
 
   def unsubscribed
