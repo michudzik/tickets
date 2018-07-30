@@ -19,11 +19,4 @@ jQuery(document).on 'turbolinks:load', ->
       send_comment: (comment, ticket_id) ->
         @perform 'send_comment', comment: comment, ticket_id: ticket_id
 
-    $('#new_comment').submit (e) ->
-        $this = $(this)
-        textarea = $this.find('#comment_body')
-        if $.trim(textarea.val()).length > 1
-          App.comments.send_comment textarea.val(), comments.data('chat-room-id')
-          textarea.val('')
-        e.preventDefault()
-        return false
+    
