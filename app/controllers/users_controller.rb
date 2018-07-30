@@ -2,12 +2,14 @@ class UsersController < ApplicationController
 
   before_action :ensure_admin, only: %i[index update deactivate_account activate_account]
 
+  has_scope :unlocked
+
   def show
     @tickets = current_user.tickets.paginate(page: params[:page], per_page: params[:number])
   end
 
   def index
-    @users = User.where.not(id: current_user.id).paginate(page: params[:page], per_page: params[:number])
+    @users = User.all.paginate(page: params[:page], per_page: params[:number])
     @roles = Role.all.map { |role| [role.name.humanize.to_s, role.id] }
   end
 
@@ -21,6 +23,16 @@ class UsersController < ApplicationController
         format.html { render :index }
       end
     end
+  end
+
+  def locked
+    @users_locked = User.locked.paginate(page: params[:page], per_page: params[:number])
+    @roles = Role.all.map { |role| [role.name.humanize.to_s, role.id] }
+  end
+
+  def unlocked
+    @users_unlocked = User.unlocked.paginate(page: params[:page], per_page: params[:number])
+    @roles = Role.all.map { |role| [role.name.humanize.to_s, role.id] }
   end
 
   def deactivate_account
@@ -42,6 +54,19 @@ class UsersController < ApplicationController
       format.js
     end
   end
+
+  def sort_by_firstname
+    
+  end
+
+  def sort_by_lastname
+    
+  end
+
+  def sort_by_email
+    
+  end
+
 
   private
 

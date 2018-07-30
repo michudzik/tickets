@@ -2,6 +2,18 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
 
+  describe '#filtered' do
+    let(:user_1) { create(:user, locked_at: DateTime.now) }
+    let(:user_2) { create(:user) }
+    it "filter by locked" do
+      expect(user_1.locked_at).to_not eq(nil)
+    end
+
+    it "filter by unlocked" do
+      expect(user_2.locked_at).to eq(nil)
+    end
+  end
+
   describe 'attributes' do
     it 'should have proper attributes' do
       expect(subject.attributes).to include('first_name', 'last_name')

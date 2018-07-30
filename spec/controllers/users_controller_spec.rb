@@ -37,6 +37,48 @@ RSpec.describe UsersController, type: :controller do
     
   end
 
+  describe '#locked' do
+    let(:admin) { create(:user, :admin) }
+    before do 
+      sign_in admin
+      get :locked
+    end
+
+    describe 'successful response' do
+      it { expect(response).to be_successful }
+      it { expect(response).to render_template('locked') }
+    end
+
+    context 'users' do
+      let!(:user_1) { create(:user, locked_at: DateTime.now) }
+
+      it 'should return all locked users' do
+        expect(user_1.locked_at).to_not eq(nil)
+      end
+    end
+  end
+
+  describe '#unlocked' do
+    let(:admin) { create(:user, :admin) }
+    before do 
+      sign_in admin
+      get :unlocked
+    end
+
+    describe 'successful response' do
+      it { expect(response).to be_successful }
+      it { expect(response).to render_template('unlocked') }
+    end
+
+    context 'users' do
+      let!(:user_1) { create(:user) }
+
+      it 'should return all unlocked users' do
+        expect(user_1.locked_at).to eq(nil)
+      end
+    end
+  end
+
   describe '#update' do
     let(:admin)             { create(:user, :admin) }
     let(:user)              { create(:user) }

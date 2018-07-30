@@ -10,6 +10,9 @@ class User < ApplicationRecord
 
   before_validation :default_role, on: :create
 
+  scope :unlocked, -> { where(:locked_at => nil) }
+  scope :locked, -> { where.not(:locked_at => nil) }
+
   def admin?
     role.name == 'admin'
   end

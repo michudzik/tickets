@@ -11,15 +11,15 @@
       <%= link_to 'Unlocked', users_unlocked_path, class: 'dropdown-item' %>
     </div>
   </div>
-  
-  <div class="dropdown">
+
+    <div class="dropdown">
     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Count
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      <%= link_to '10', users_path(:number => 10), class: 'dropdown-item' %>
-      <%= link_to '30', users_path(:number => 30), class: 'dropdown-item' %>
-      <%= link_to '50', users_path(:number => 50), class: 'dropdown-item' %>
+      <%= link_to '10', users_locked_path(:number => 10), class: 'dropdown-item' %>
+      <%= link_to '30', users_locked_path(:number => 30), class: 'dropdown-item' %>
+      <%= link_to '50', users_locked_path(:number => 50), class: 'dropdown-item' %>
     </div>
   </div>
   <table class="table table-striped">
@@ -32,7 +32,7 @@
     </thead>
     <tbody>
       <% cache @users do %>
-        <% @users.each do |user| %>
+        <% @users_locked.each do |user| %>
           <% cache user do %>
             <%= render 'user', user: user %>
           <% end %>
@@ -40,9 +40,9 @@
       <% end %>
     </tbody>
   </table>
-  <% if @users.any? %>
+  <% if @users_locked.any? %>
     <div>
-      <%= will_paginate @users, :container => false %>
+      <%= will_paginate @users_locked, :container => false %>
     </div>
   <% end %>
 </div>
