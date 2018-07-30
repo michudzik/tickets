@@ -8,6 +8,14 @@ class CommentsController < ApplicationController
         @comment.update_ticket_status!(user: @comment.user, ticket: @ticket)
         user_ids = @comment.ticket.comments.where.not(user_id: current_user.id).pluck(:user_id)
         @comment.ticket.notify_users(user_ids)
+        # ActionCable.server.broadcast(
+        #   "#{@ticket.id}",
+        #   created_at: @comment.created_at.strftime('%H:%M'),
+        #   full_name: @comment.user.fullname,
+        #   role: @comment.user.role.name.humanize,
+        #   body: @comment.body.gsub("\n", "<br/>"),
+        #   full_date: @comment.created_at.strftime('%A, %Y.%m.%d, %H:%M')
+        # )
         format.html { redirect_to ticket_path(@ticket.id), notice: 'Comment was created' }
         format.js
       else
