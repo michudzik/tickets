@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   get '/new_ticket', to: 'tickets#new'
   get '/show_tickets', to: 'tickets#index'
   get '/user_dashboard', to: 'users#show'
+  get '/users_locked', to: 'users#locked'
+  get '/users_unlocked', to: 'users#unlocked'
   get '/tickets/:id',   to: 'tickets#show', as: :ticket
   resources :comments, only: :create
   resources :users, only: [:index, :update] do
