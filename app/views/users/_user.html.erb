@@ -6,9 +6,9 @@
       <div class="input-group">
         <% if current_user.id == user.id %>
           <div class="input-group-btn">
-            <%= f.select :role_id, @roles, {}, class: 'custom-select', disabled: 'disabled' %>
+            <%= f.select :role_id, ['Admin', 1], {}, class: 'custom-select', disabled: 'disabled' %>
           </div>
-          <%= f.submit 'Save', class: 'btn btn-secondary disabled', data: { disable_with: false } %>
+          <%= f.submit 'Save', class: 'btn btn-secondary disabled', data: { disable_with: false }, disabled: 'disabled' %>
         <% else %>
           <div class="input-group-btn">
               <%= f.select :role_id, @roles, {}, class: 'custom-select', 'data-user-select-id': "#{user.id}" %>
