@@ -123,14 +123,14 @@ RSpec.describe TicketsController, type: :controller do
   end
 
   describe '#close' do
-    before { sign_in user }
     let(:department) { create(:department) }
     let(:ticket) { create(:ticket) }
     let!(:status) { create(:status) }
     let!(:status_closed) { create(:status, :closed) }
     let(:valid_parameters) { { id: ticket.id, user_id: user.id } }
  
-    context 'valid parameters' do
+    context 'user' do
+      before { sign_in user }
       subject { put :close, params: valid_parameters }
 
       it 'should redirect to user dashboard' do
@@ -146,7 +146,65 @@ RSpec.describe TicketsController, type: :controller do
         subject
         expect(ticket.reload.status.name).to eq('closed')
       end
-
     end
+
+    context 'support' do
+      let(:it) { create(:user, :it_support) }
+      let(:om) { create(:user, :om_support) }
+      let(:admin) { create(:user, :admin) }
+      subject { put :close, params: valid_parameters }
+
+      context 'it_support' do
+        before { sign_in it }
+        it 'should redirect to tickets index' do
+          expect(subject).to redirect_to(show_tickets_path)
+        end
+
+        it 'should redirect with a notice' do
+          subject
+          expect(flash[:notice]).to be_present
+        end
+
+        it 'should change ticket status to closed' do
+          subject
+          expect(ticket.reload.status.name).to eq('closed')
+        end 
+      end
+
+      context 'om_support' do
+        before { sign_in om }
+        it 'should redirect to tickets index' do
+          expect(subject).to redirect_to(show_tickets_path)
+        end
+
+        it 'should redirect with a notice' do
+          subject
+          expect(flash[:notice]).to be_present
+        end
+
+        it 'should change ticket status to closed' do
+          subject
+          expect(ticket.reload.status.name).to eq('closed')
+        end 
+      end
+
+      context 'admin' do
+        before { sign_in admin }
+        it 'should redirect to tickets index' do
+          expect(subject).to redirect_to(show_tickets_path)
+        end
+
+        it 'should redirect with a notice' do
+          subject
+          expect(flash[:notice]).to be_present
+        end
+
+        it 'should change ticket status to closed' do
+          subject
+          expect(ticket.reload.status.name).to eq('closed')
+        end 
+      end
+    end
+
   end
 end

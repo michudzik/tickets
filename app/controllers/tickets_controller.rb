@@ -30,7 +30,11 @@ class TicketsController < ApplicationController
     @ticket = Ticket.find(params[:id])
     status_closed = Status.find_by(name: 'closed')
     @ticket.update(status_id: status_closed.id)
-    redirect_to user_dashboard_path, notice: 'Ticket closed'
+    if current_user.support?
+      redirect_to show_tickets_path, notice: 'Ticket closed'
+    else
+      redirect_to user_dashboard_path, notice: 'Ticket closed'
+    end
   end
 
   private
