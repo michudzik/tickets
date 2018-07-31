@@ -1,5 +1,7 @@
- var $row = $('[data-user-id="<%= @user.id %>"]').addClass('user-highlight');
-
- setTimeout(function() {
-     $row.removeClass("user-highlight");
- }, 1000);
+var btn = $('[data-user-btn-id="<%= @user.id %>"]');
+var box = $('[data-user-select-id="<%= @user.id %>"]');
+btn.addClass('disabled');
+box.prop('disabled', 'disabled');
+btn.removeClass('btn-primary');
+btn.addClass('btn-secondary');
+btn.prop('value', 'Saved');
