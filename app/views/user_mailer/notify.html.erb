@@ -6,7 +6,7 @@
   <body>
     <h1>Hi, <%= @user.fullname %></h1>
     <p>
-      Someone responded to the ticket you are watching: <%= @ticket.title %>
+     <%= @ticket.comments.last.user.fullname %> responded to the ticket you are watching: <%= @ticket.title %>
     </p>
     <p>Current status: <%= @ticket.status.name %></p>
     <p>

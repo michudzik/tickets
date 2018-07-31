@@ -1,7 +1,7 @@
 Hi, <%= @user.fullname %>
 ===============================================
  
-Someone responded to the ticket you are watching: <%= @ticket.title %>
+<%= @ticket.comments.last.user.fullname %> responded to the ticket you are watching: <%= @ticket.title %>
 Current status: <%= @ticket.status.name %>
 
 <%= link_to 'Show', ticket_url(@ticket.id) %>
