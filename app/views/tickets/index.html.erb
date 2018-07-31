@@ -10,6 +10,16 @@
       <%= link_to '50', show_tickets_path(:number => 50), class: 'dropdown-item' %>
     </div>
   </div>
+  <div class="ticket-searchEngine">
+    <%= form_tag search_tickets_path, method: :get, class: 'col-md-4 offset-md-8 input-group' do %>
+      <%= text_field_tag :query, 'Search', 'aria-label': 'Search', class: 'form-control' %>
+      <%= submit_tag 'Search', class: 'btn btn-secondary' %>
+    <% end %>
+<!--     <form class="col-md-4 offset-md-8 input-group">
+      <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-secondary" type="submit">Search</button>
+    </form> -->
+  </div>
   <table class="table table-striped">
     <thead>
       <tr>

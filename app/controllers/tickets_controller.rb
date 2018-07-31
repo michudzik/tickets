@@ -37,6 +37,12 @@ class TicketsController < ApplicationController
     end
   end
 
+  def search
+    redirect_to user_dashboard_path, alert: 'Forbidden access' and return if current_user.user?
+    query = params[:query] 
+    @ticket = Ticket.where('title LIKE ? OR note LIKE ?', query, query)
+  end
+
   private
 
   def ticket_params
