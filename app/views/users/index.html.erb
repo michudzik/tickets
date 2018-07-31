@@ -1,15 +1,47 @@
 <div class="container">
   <h1>Users</h1>
-  <div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Count
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      <%= link_to '10', users_path(:number => 10), class: 'dropdown-item' %>
-      <%= link_to '30', users_path(:number => 30), class: 'dropdown-item' %>
-      <%= link_to '50', users_path(:number => 50), class: 'dropdown-item' %>
-    </div>
-  </div>
+
+  <table>
+    <tr>
+      <th>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Results
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <%= link_to '10', users_path(:number => 10, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <%= link_to '30', users_path(:number => 30, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <%= link_to '50', users_path(:number => 50, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+          </div>
+        </div>
+      </th>
+      <th>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Filter
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <%= link_to 'All', users_path(:number => params[:number], :filter_param => "all", :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <%= link_to 'Locked', users_path(:number => params[:number], :filter_param => "locked", :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <%= link_to 'Unlocked', users_path(:number => params[:number], :filter_param => "unlocked", :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+          </div>
+        </div>
+      </th>
+      <th>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Sort
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <%= link_to 'First name', users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "first_name"), class: 'dropdown-item' %>
+            <%= link_to 'Last name', users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "last_name"), class: 'dropdown-item' %>
+            <%= link_to 'Email', users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "email"), class: 'dropdown-item' %>
+          </div>
+        </div>
+      </th>
+    </tr>
+  </table>
+
   <table class="table table-striped">
     <thead>
       <tr>

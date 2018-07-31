@@ -1,13 +1,37 @@
 class UsersController < ApplicationController
   before_action :ensure_admin, only: %i[index update deactivate_account activate_account]
 
+  has_scope :unlocked
+  has_scope :locked
+  has_scope :ordered_by_first_name
+  has_scope :ordered_by_last_name
+  has_scope :ordered_by_email
+
   def show
     @tickets = current_user.tickets.paginate(page: params[:page], per_page: params[:number])
   end
 
   def index
-    @users = User.all.paginate(page: params[:page], per_page: params[:number])
     @roles = Role.all.map { |role| [role.name.humanize.to_s, role.id] }
+    @users = User.all 
+    
+    case params[:filter_param]
+    when "locked"
+      @users = @users.locked
+    when "unlocked"
+      @users = @users.unlocked
+    end
+
+    case params[:sorted_by]
+    when "first_name"
+      @users = @users.ordered_by_first_name
+    when "last_name"
+      @users = @users.ordered_by_last_name
+    when "email"
+      @users = @users.ordered_by_email
+    end
+
+    @users = @users.paginate(page: params[:page], per_page: params[:number])    
   end
 
   def update
