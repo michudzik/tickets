@@ -18,16 +18,15 @@
     </div>
   <% end %>
   <div class="jumbotron p-2 bg-light">
-    <b>Ticket</b>
     <div class="tickets-display" align="center">
       <table class="ticket-properties-table">
         <thead>
           <tr>
-            <td><b>Title:</b></td>
-            <td><b>User:</b></td>
-            <td><b>Created at:</b></td>
-            <td><b>Status:</b></td>
-            <td></td>
+            <th><b>Title:</b></th>
+            <th><b>User:</b></th>
+            <th><b>Created at:</b></th>
+            <th><b>Status:</b></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -41,46 +40,40 @@
                 <%= render 'lock_ticket_modal', ticket: @ticket %>
               <% end %>
             </td>
-          </tr>
-          <tr>
-            <td colspan="5" class="ticket-note">
-              <hr />
-              <div class="text-left">
-                <%= sanitize(@ticket.note).gsub(/\n/, '<br />').html_safe %>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <% if @ticket.uploads.attached? %>
-                <hr />
-                <strong>Attachments: </strong> 
-                <br />
-                <% @ticket.uploads.each_with_index do |upload, i| %>
-                  <%= link_to("Document #{i+1}", rails_blob_path(upload, disposition: "attachment")) %>
-                <% end %>
-              <% end %>
-            </td>
-          </tr>
         </tbody>
       </table>
     </div>
+    <hr/>
+
+    <div class="ticket-note text-left">
+      <p><%= sanitize(@ticket.note).gsub(/\n/, '<br />').html_safe %></p>
+    </div>
+    <% if @ticket.uploads.attached? %>
+    <hr />
+      <div class="ticket-attachements">
+        <table>
+          <thead>
+            <th>Attachements:</th>
+          </thead>
+          <tbody>
+            <% @ticket.uploads.each_with_index do |upload, i| %>
+              <tr><td><%= link_to("#{upload.filename}", rails_blob_path(upload, disposition: "attachment")) %></td></tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
   </div>
 
-  <hr />
-
   <div class="jumbotron p-2 bg-light">
-  <b>Comments</b>
   <div class="commentSection" data-ticket-id="<%= @ticket.id %>">
     <% cache @ticket.comments do %>
       <% @ticket.comments.each do |comment| %>
-        <% cache comment do %>
-          <% if comment.user.id == current_user.id %>
-            <%= render 'comments/comment', comment: comment, align: 'right' %>
-          <% else %>
-            <%= render 'comments/comment', comment: comment, align: 'left' %> 
-          <% end %> 
-        <% end %>
+        <% if comment.user.id == current_user.id %>
+          <%= render 'comments/comment', comment: comment, align: 'right' %>
+        <% else %>
+          <%= render 'comments/comment', comment: comment, align: 'left' %> 
+        <% end %> 
       <% end %>
     <% end %>
   </div>
