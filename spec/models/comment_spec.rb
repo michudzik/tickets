@@ -17,6 +17,13 @@ RSpec.describe Comment, type: :model do
     it { should belong_to(:ticket) }
   end
 
+  describe 'attachments' do
+    it 'is valid  ' do
+      subject.uploads.attach(io: File.open(fixture_path + '/testimage.jpg'), filename: 'attachment.jpg', content_type: 'image/jpg')
+      expect(subject.uploads).to be_attached
+    end
+  end
+
   describe 'methods' do
     describe '#update_ticket_status!' do
       let(:admin) { create(:user, :admin) }
