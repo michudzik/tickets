@@ -5,9 +5,9 @@
     <%= form_for(user, url: user_path(user.id), method: :put, remote: true) do |f| %>
       <div class="input-group">
         <div class="input-group-btn">
-           <%= f.select :role_id, @roles, {}, class: 'custom-select' %>
+           <%= f.select :role_id, @roles, {}, class: 'custom-select', 'data-user-select-id': "#{user.id}" %>
         </div>
-        <%= f.submit 'Save', class: 'btn btn-primary' %>
+        <%= f.submit 'Save', class: 'btn btn-primary', data: { disable_with: false }, 'data-user-btn-id': "#{user.id}" %>
       </div>
     <% end %>
   </td>
