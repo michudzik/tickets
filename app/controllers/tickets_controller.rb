@@ -1,7 +1,7 @@
 class TicketsController < ApplicationController
   def index
     redirect_to user_dashboard_path, alert: 'Forbidden access' and return if current_user.user?
-    @tickets = Ticket.find_related_tickets(current_user).paginate(page: params[:page], per_page: params[:number])
+    @tickets = Ticket.find_related_tickets(current_user).order(created_at: :desc).paginate(page: params[:page], per_page: params[:number])
   end
 
   def show
