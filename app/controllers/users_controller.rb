@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.where.not(id: current_user.id).paginate(page: params[:page], per_page: params[:number])
+    @users = User.all.paginate(page: params[:page], per_page: params[:number])
     @roles = Role.all.map { |role| [role.name.humanize.to_s, role.id] }
   end
 

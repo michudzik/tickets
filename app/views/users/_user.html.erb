@@ -4,10 +4,17 @@
   <td>
     <%= form_for(user, url: user_path(user.id), method: :put, remote: true) do |f| %>
       <div class="input-group">
-        <div class="input-group-btn">
-           <%= f.select :role_id, @roles, {}, class: 'custom-select' %>
-        </div>
-        <%= f.submit 'Save', class: 'btn btn-primary' %>
+        <% if current_user.id == user.id %>
+          <div class="input-group-btn">
+            <%= f.select :role_id, @roles, {}, class: 'custom-select', disabled: 'disabled' %>
+          </div>
+          <%= f.submit 'Save', class: 'btn btn-secondary disabled', data: { disable_with: false } %>
+        <% else %>
+          <div class="input-group-btn">
+              <%= f.select :role_id, @roles, {}, class: 'custom-select' %>
+          </div>
+          <%= f.submit 'Save', class: 'btn btn-primary' %>
+        <% end %>
       </div>
     <% end %>
   </td>
@@ -17,7 +24,7 @@
     </td>
   <% else %>
     <td>
-        <%= render 'lock_account_modal', user: user %>
+      <%= render 'lock_account_modal', user: user %>
     </td>
   <% end %>
 </tr>

@@ -1,4 +1,4 @@
-<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter<%= user.id %>">
+<button <% if current_user.id == user.id %> disabled="disabled" class="btn btn-secondary" <% else %> class="btn btn-danger" <% end %> type="button"  data-toggle="modal" data-target="#exampleModalCenter<%= user.id %>">
   Lock
 </button>
 
