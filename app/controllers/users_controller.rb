@@ -8,8 +8,26 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.all.paginate(page: params[:page], per_page: params[:number])
     @roles = Role.all.map { |role| [role.name.humanize.to_s, role.id] }
+    @users = User.all 
+    
+    case params[:filter_param]
+    when "locked"
+      @users = @users.locked
+    when "unlocked"
+      @users = @users.unlocked
+    end
+
+    case params[:sorted_by]
+    when "first_name"
+      @users = @users.ordered_by_first_name
+    when "last_name"
+      @users = @users.ordered_by_last_name
+    when "email"
+      @users = @users.ordered_by_email
+    end
+
+    @users = @users.paginate(page: params[:page], per_page: params[:number])    
   end
 
   def update
@@ -22,16 +40,6 @@ class UsersController < ApplicationController
         format.html { render :index }
       end
     end
-  end
-
-  def locked
-    @users_locked = User.locked.paginate(page: params[:page], per_page: params[:number])
-    @roles = Role.all.map { |role| [role.name.humanize.to_s, role.id] }
-  end
-
-  def unlocked
-    @users_unlocked = User.unlocked.paginate(page: params[:page], per_page: params[:number])
-    @roles = Role.all.map { |role| [role.name.humanize.to_s, role.id] }
   end
 
   def deactivate_account
@@ -53,19 +61,6 @@ class UsersController < ApplicationController
       format.js
     end
   end
-
-  def sort_by_firstname
-    
-  end
-
-  def sort_by_lastname
-    
-  end
-
-  def sort_by_email
-    
-  end
-
 
   private
 

@@ -10,8 +10,11 @@ class User < ApplicationRecord
 
   before_validation :default_role, on: :create
 
-  scope :unlocked, -> { where(:locked_at => nil) }
-  scope :locked, -> { where.not(:locked_at => nil) }
+  scope :unlocked,              -> { where(:locked_at => nil) }
+  scope :locked,                -> { where.not(:locked_at => nil) }
+  scope :ordered_by_first_name, -> { order('lower(first_name)') }
+  scope :ordered_by_last_name,  -> { order('lower(last_name)') }
+  scope :ordered_by_email,      -> { order('lower(email)') }
 
   def admin?
     role.name == 'admin'
