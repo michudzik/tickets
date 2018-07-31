@@ -121,7 +121,6 @@ RSpec.describe UsersController, type: :controller do
   describe '#deactivate_user' do
     let(:admin) { create(:user, :admin) }
     let(:user)  { create(:user) }
-    #subject { put :deactivate_account, params: { id: user.id } } 
     before { sign_in admin }
 
     it 'should deactivate user' do

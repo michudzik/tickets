@@ -1,4 +1,4 @@
-<div align="<%= align %>">
+<div align="<%= align %>" data-comment-id="<%= comment.id %>">
   <div class="comments-section <% if align == 'right' %>darker<% end %> p-2 w-75">
     <div class="time-<%= align %>">
       <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
@@ -14,5 +14,18 @@
       <br />
       <%= sanitize comment.body.gsub(/\n/, '<br />').html_safe %>
     </div>
+     <% if comment.uploads.attached? %>
+     <br />
+      <table>
+        <thead align="left">
+          <tr>
+            <th>Attachements:</th>
+          </tr>
+        </thead>
+        <% comment.uploads.each_with_index do |upload, i| %>
+          <tr><td align="left"><%= link_to("#{upload.filename}", rails_blob_path(upload, disposition: "attachment")) %></td></tr>
+        <% end %>
+      </table>
+    <% end %>
   </div>
 </div>

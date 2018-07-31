@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  
+  mount ActionCable.server, at: '/cable'
   root 'home#home'
   devise_for :users, skip: :registrations, controllers: {  registrations: "registrations" }
   devise_scope :user do

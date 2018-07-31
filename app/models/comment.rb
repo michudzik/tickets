@@ -3,6 +3,7 @@ class Comment < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :ticket
+  has_many_attached :uploads
 
   after_create_commit { CommentBroadcastJob.perform_later(self) }
 
