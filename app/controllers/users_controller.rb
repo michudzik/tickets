@@ -2,6 +2,10 @@ class UsersController < ApplicationController
   before_action :ensure_admin, only: %i[index update deactivate_account activate_account]
 
   has_scope :unlocked
+  has_scope :locked
+  has_scope :ordered_by_first_name
+  has_scope :ordered_by_last_name
+  has_scope :ordered_by_email
 
   def show
     @tickets = current_user.tickets.paginate(page: params[:page], per_page: params[:number])
