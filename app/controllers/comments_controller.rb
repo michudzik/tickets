@@ -7,6 +7,7 @@ class CommentsController < ApplicationController
       if @comment.save
         @comment.update_ticket_status!(user: @comment.user, ticket: @ticket)
         UserNotifier.notify_users(@comment.ticket)
+        SlackService.new.call("kowal.bartek.10@gmail.com")
         format.html { redirect_to ticket_path(@ticket.id), notice: 'Comment was created' }
         format.js
       else
