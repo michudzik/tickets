@@ -210,8 +210,8 @@ RSpec.describe TicketsController, type: :controller do
 
   describe '#search' do
     let(:ticket1) { create(:ticket, title: 'abc', note: 'abc') }
-    let(:ticket2) { create(:ticket, :om_deparment, title: 'cde', note: 'cde') }
-    let(:ticket3) { create(:ticket, :om_deparment, title: 'abc', note: 'abc') }
+    let(:ticket2) { create(:ticket, :om_department, title: 'cde', note: 'cde') }
+    let(:ticket3) { create(:ticket, :om_department, title: 'abc', note: 'abc') }
     let(:ticket4) { create(:ticket, title: 'cde', note: 'cde') }
     subject { get :search, params: { query: 'a' } }
     
@@ -247,14 +247,50 @@ RSpec.describe TicketsController, type: :controller do
 
     context 'admin' do
       let(:admin) { create(:user, :admin) }
-      subject { get :search, params: { query: 'a'} }
+      before do
+        sign_in admin
+        subject
+      end
 
+      it 'should return ticket1 and ticket3' do
+        expect(assigns(:tickets)).to match_array([ticket1, ticket3])
+      end
+
+      it 'should not return ticket2 and ticket4' do
+        expect(assigns(:tickets)).not_to include([ticket2, ticket4])
+      end
     end
 
     context 'it_support' do
+      let(:it) { create(:user, :it_support) }
+      before do
+        sign_in it
+        subject
+      end
+
+      it 'should return ticket1' do
+        expect(assigns(:tickets)).to match_array([ticket1])
+      end
+
+      it 'should not return ticket1, ticket2 and ticket4' do
+        expect(assigns(:tickets)).not_to include([ticket2, ticket3, ticket4])
+      end
     end
 
     context 'om_support' do
+      let(:om) { create(:user, :om_support) }
+      before do
+        sign_in om
+        subject
+      end
+
+      it 'should return ticket3' do
+        expect(assigns(:tickets)).to match_array([ticket3])
+      end
+
+      it 'should not return ticket2 and ticket4' do
+        expect(assigns(:tickets)).not_to include([ticket1, ticket2, ticket4])
+      end
     end
   end
 
