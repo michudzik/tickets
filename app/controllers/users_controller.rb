@@ -13,25 +13,25 @@ class UsersController < ApplicationController
 
   def index
     @roles = Role.all.map { |role| [role.name.humanize.to_s, role.id] }
-    @users = User.all 
+    @users = User.all
     
     case params[:filter_param]
-    when "locked"
+    when 'locked'
       @users = @users.locked
-    when "unlocked"
+    when 'unlocked'
       @users = @users.unlocked
     end
 
     case params[:sorted_by]
-    when "first_name"
+    when 'first_name'
       @users = @users.ordered_by_first_name
-    when "last_name"
+    when 'last_name'
       @users = @users.ordered_by_last_name
-    when "email"
+    when 'email'
       @users = @users.ordered_by_email
     end
 
-    @users = @users.paginate(page: params[:page], per_page: params[:number])    
+    @users = @users.paginate(page: params[:page], per_page: params[:number])
   end
 
   def update
