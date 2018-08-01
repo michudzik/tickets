@@ -209,9 +209,30 @@ RSpec.describe TicketsController, type: :controller do
   end
 
   describe '#search' do
+    let(:ticket1) { create(:ticket, title: 'abc', note: 'abc') }
+    let(:ticket2) { create(:ticket, :om_deparment, title: 'cde', note: 'cde') }
+    let(:ticket3) { create(:ticket, :om_deparment, title: 'abc', note: 'abc') }
+    let(:ticket4) { create(:ticket, title: 'cde', note: 'cde') }
+    subject { get :search, params: { query: 'a' } }
+    
+    describe 'successful response' do
+      let(:user) { create(:user, :admin) }
+      before do
+       sign_in user
+       subject
+     end
+
+      it 'should get a successful response' do
+        expect(response).to be_successful
+      end
+
+      it 'should render search engine template' do
+        expect(response).to render_template('search')
+      end
+    end
+
     context 'user' do
       let(:user) { create(:user) }
-      subject { get :search, params: { query: 'a' } }
       before { sign_in user }
 
       it 'should redirect to user\'s dashboard' do
@@ -225,6 +246,9 @@ RSpec.describe TicketsController, type: :controller do
     end
 
     context 'admin' do
+      let(:admin) { create(:user, :admin) }
+      subject { get :search, params: { query: 'a'} }
+
     end
 
     context 'it_support' do
