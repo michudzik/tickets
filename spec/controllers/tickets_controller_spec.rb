@@ -207,4 +207,92 @@ RSpec.describe TicketsController, type: :controller do
     end
 
   end
+
+  describe '#search' do
+    let(:ticket1) { create(:ticket, title: 'abc', note: 'abc') }
+    let(:ticket2) { create(:ticket, :om_department, title: 'cde', note: 'cde') }
+    let(:ticket3) { create(:ticket, :om_department, title: 'abc', note: 'abc') }
+    let(:ticket4) { create(:ticket, title: 'cde', note: 'cde') }
+    subject { get :search, params: { query: 'a' } }
+    
+    describe 'successful response' do
+      let(:user) { create(:user, :admin) }
+      before do
+       sign_in user
+       subject
+     end
+
+      it 'should get a successful response' do
+        expect(response).to be_successful
+      end
+
+      it 'should render search engine template' do
+        expect(response).to render_template('search')
+      end
+    end
+
+    context 'user' do
+      let(:user) { create(:user) }
+      before { sign_in user }
+
+      it 'should redirect to user\'s dashboard' do
+        expect(subject).to redirect_to(user_dashboard_path)
+      end
+
+      it 'should redirect with a notice' do
+        subject
+        expect(flash[:alert]).to be_present
+      end
+    end
+
+    context 'admin' do
+      let(:admin) { create(:user, :admin) }
+      before do
+        sign_in admin
+        subject
+      end
+
+      it 'should return ticket1 and ticket3' do
+        expect(assigns(:tickets)).to match_array([ticket1, ticket3])
+      end
+
+      it 'should not return ticket2 and ticket4' do
+        expect(assigns(:tickets)).not_to include([ticket2, ticket4])
+      end
+    end
+
+    context 'it_support' do
+      let(:it) { create(:user, :it_support) }
+      before do
+        sign_in it
+        subject
+      end
+
+      it 'should return ticket1' do
+        expect(assigns(:tickets)).to match_array([ticket1])
+      end
+
+      it 'should not return ticket1, ticket2 and ticket4' do
+        expect(assigns(:tickets)).not_to include([ticket2, ticket3, ticket4])
+      end
+    end
+
+    context 'om_support' do
+      let(:om) { create(:user, :om_support) }
+      before do
+        sign_in om
+        subject
+      end
+
+      it 'should return ticket3' do
+        expect(assigns(:tickets)).to match_array([ticket3])
+      end
+
+      it 'should not return ticket2 and ticket4' do
+        expect(assigns(:tickets)).not_to include([ticket1, ticket2, ticket4])
+      end
+    end
+  end
+
+
 end
