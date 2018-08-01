@@ -38,16 +38,18 @@
   </div>
 </div>
 
-  <script>
-    $(window).on("beforeunload", function() {
-      window.onbeforeunload = null;
-      return "Are you sure? You didn't finish the form!";
-    });
-    
-    $(document).ready(function() {
-      $("#myForm").on("submit", function(e) {
-        $(window).off("beforeunload");
-        return true;
-      });
-    });
-  </script>
+<script>
+  jQuery(document).on('turbolinks:load', function(){
+     var form = $('#new_ticket'),
+         original = form.serialize()
+
+     form.submit(function(){
+         window.onbeforeunload = null
+     })
+
+     window.onbeforeunload = function(){
+         if (form.serialize() != original)
+             return 'Are you sure you want to leave?'
+     }
+  })
+</script>
