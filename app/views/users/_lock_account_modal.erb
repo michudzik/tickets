@@ -1,4 +1,4 @@
-<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter<%= user.id %>">
+<button <% if current_user.id == user.id %> disabled="disabled" class="btn btn-secondary" <% else %> class="btn btn-danger" <% end %> type="button"  data-toggle="modal" data-target="#exampleModalCenter<%= user.id %>">
   Lock
 </button>
 
@@ -12,7 +12,7 @@
         </button>
       </div>
       <div class="modal-body">
-        Do you really want to deactivate <%= user.full_name %> ?
+        Do you really want to deactivate <%= user.fullname %> ?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

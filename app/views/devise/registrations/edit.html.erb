@@ -25,6 +25,7 @@
           <% end %>
 
           <div class="registration-password">
+            <p align="center">Leave blank if you don't want to change it</p>
             <div class="registration-field">
               <%= f.label :password, class: 'registration-label' %>
               <% if @minimum_password_length %>
@@ -38,8 +39,11 @@
               <%= f.password_field :password_confirmation, autocomplete: "off", class: 'form-control' %>
             </div>
 
+            <hr/>
+
             <div class="registration-field">
-              <%= f.label :current_password, class: 'registration-label' %> 
+              <%= f.label :current_password, class: 'registration-label' %>
+              <i>(we need your current password to confirm your changes)</i>
               <%= f.password_field :current_password, autocomplete: "off", class: 'form-control' %>
             </div>
           </div>
@@ -49,12 +53,6 @@
           </div>
         <% end %>
       </div>
-
-      <h3 class="registration-header">Delete account</h3>
-
-      <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: 'registration-cancel btn btn-danger btn-block' %>
-  
     </div>
   </div>
 </div>
-

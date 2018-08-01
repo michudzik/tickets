@@ -1,6 +1,58 @@
 <div class="container">
-  <h1>All Tickets</h1>
-  <table class="table table-hover">
+  <div class="row">
+    <div class="col-md-6">
+      <h1>All Tickets</h1>
+    </div>
+    <div class="col-md-4 offset-md-2 ticket-searchEngine">
+      <%= render 'search_engine' %>
+    </div>
+  </div>
+
+  <table>
+    <tr>
+      <th>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Results
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <%= link_to '10', show_tickets_path(:number => 10, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <%= link_to '30', show_tickets_path(:number => 30, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <%= link_to '50', show_tickets_path(:number => 50, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+          </div>
+        </div>
+      </th>
+      <th>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Filter by status
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <%= link_to 'All', show_tickets_path(:number => params[:number], :filter_param => "all", :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <div class="dropdown-divider"></div>
+            <%= link_to 'Open', show_tickets_path(:number => params[:number], :filter_param => "open", :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <%= link_to 'Support response', show_tickets_path(:number => params[:number], :filter_param => "support_response", :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <%= link_to 'User response', show_tickets_path(:number => params[:number], :filter_param => "user_response", :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <%= link_to 'Closed', show_tickets_path(:number => params[:number], :filter_param => "closed", :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>                                  
+          </div>
+        </div>
+      </th>
+      <th>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Sort
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <%= link_to 'Title', show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "title"), class: 'dropdown-item' %>
+            <%= link_to 'Last name', show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "last_name"), class: 'dropdown-item' %>
+            <%= link_to 'Department', show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "department"), class: 'dropdown-item' %>
+          </div>
+        </div>
+      </th>
+    </tr>
+  </table>
+
+  <table class="table table-striped">
     <thead>
       <tr>
         <th scope="col">Author</th>
@@ -10,14 +62,18 @@
       </tr>
     </thead>
     <tbody>
-      <% @tickets.each do |ticket| %>
-        <tr>
-          <td><%= ticket.user.full_name %></td>
-          <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
-          <td><%= ticket.department.department_name %></td>
-          <td><%= ticket.status.status.humanize.to_s %></td>
-        </tr>
+      <% cache @tickets do %>
+        <% @tickets.each do |ticket| %>
+          <% cache ticket do %>
+            <%= render 'ticket', ticket: ticket %>
+          <% end %>
+        <% end %>
       <% end %>
     </tbody>
   </table>
+  <% if @tickets.any? %>
+    <div>
+      <%= will_paginate @tickets, :container => false %>
+    </div>
+  <% end %>
 </div>

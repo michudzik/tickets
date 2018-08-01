@@ -1,6 +1,37 @@
 .tickets-display {
-	margin-left: 30px;
-	margin-right: 30px;
+	margin-left: 5em;
+	margin-right: 5em;
 	border-bottom: thin solid #eee;
-	padding-bottom: 1.5em;
+	padding-bottom: 0.5em;
+  padding-top: 1em;
+  border: none;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.ticket-properties-table {
+  border: none;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.ticket-properties-table td {
+  border: none;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  width: 160px;
+}
+
+.ticket-note {
+  margin: 1em 5em;
+}
+
+.ticket-attachements {
+  margin: 1em 5em;
+}
+
+.ticket-searchEngine {
+  margin-top: 0.3em;
 }

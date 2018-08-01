@@ -1,5 +1,10 @@
 <div class="container">
   <br />
+  <script>
+  $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();   
+  });
+  </script>
 
   <% if @ticket.closed? %>
     <div class="ticket-closed-message mb-2 bg-danger text-white">
@@ -12,70 +17,66 @@
       </tr>
     </div>
   <% end %>
-
-  <div class="tickets-display">
-    <table class="table table-borderless">
-      <tbody>
-        <tr>
-          <td class="align-middle" align="center"><%= @ticket.title %></td>
-          <td class="align-middle" align="center"><%= @ticket.user.fullname %></td>
-          <td class="align-middle" align="center"><%= @ticket.created_at.strftime("%Y.%m.%d %H:%M") %></td>
-          <td class="align-middle" align="center"><%= @ticket.status.status %></td>
-          <td class="align-middle" align="right">
-            <% unless @ticket.closed? %>
-              <%= render 'lock_ticket_modal', ticket: @ticket %>
-            <% end %>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <hr />
-            <%= @ticket.note %>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <% if @ticket.uploads.attached? %>
-              <hr />
-              <strong>Attachments: </strong> 
-              <% @ticket.uploads.each_with_index do |upload, i| %>
-                <%= link_to("Document #{i+1}", rails_blob_path(upload, disposition: "attachment")) %>
+  <div class="jumbotron p-2 bg-light">
+    <div class="tickets-display" align="center">
+      <table class="ticket-properties-table">
+        <thead>
+          <tr>
+            <th><b>Title:</b></th>
+            <th><b>User:</b></th>
+            <th><b>Created at:</b></th>
+            <th><b>Status:</b></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= @ticket.title %></td>
+            <td><%= @ticket.user.fullname %></td>
+            <td><%= @ticket.created_at.strftime("%Y.%m.%d %H:%M") %></td>
+            <td><%= @status %></td>
+            <td>
+              <% unless @ticket.closed? %>
+                <%= render 'lock_ticket_modal', ticket: @ticket %>
               <% end %>
+            </td>
+        </tbody>
+      </table>
+    </div>
+    <hr/>
+
+    <div class="ticket-note text-left">
+      <p><%= sanitize(@ticket.note).gsub(/\n/, '<br />').html_safe %></p>
+    </div>
+    <% if @ticket.uploads.attached? %>
+    <hr />
+      <div class="ticket-attachements">
+        <table>
+          <thead>
+            <th>Attachements:</th>
+          </thead>
+          <tbody>
+            <% @ticket.uploads.each_with_index do |upload, i| %>
+              <tr><td><%= link_to("#{upload.filename}", rails_blob_path(upload, disposition: "attachment")) %></td></tr>
             <% end %>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
   </div>
 
   <div class="jumbotron p-2 bg-light">
-    <b>Comments</b>
-    <% @ticket.comments.each do |comment| %>
-      <div>
+  <div class="commentSection" data-ticket-id="<%= @ticket.id %>">
+    <% cache @ticket.comments do %>
+      <% @ticket.comments.each do |comment| %>
         <% if comment.user.id == current_user.id %>
-          <div align="right">
-            <div class="comments-section darker p-2 w-75">
-              <span class="time-right"><%= comment.created_at.strftime("%H:%M") %></span>
-              <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
-              &emsp;
-              <br />          
-              <%= comment.body %>      
-              <br />
-            </div>
-          </div>
+          <%= render 'comments/comment', comment: comment, align: 'right' %>
         <% else %>
-          <div class="comments-section p-2 w-75">
-            <span class="time-left"><%= comment.created_at.strftime("%H:%M") %></span>
-            &emsp;
-            <b class="commenter-name"><%= comment.user.fullname + ' (' + comment.user.role.name + ')' %></b>
-            <br />
-            <%= comment.body %>
-            <br />  
-          </div>
-        <% end %>
-      </div>
+          <%= render 'comments/comment', comment: comment, align: 'left' %> 
+        <% end %> 
+      <% end %>
     <% end %>
-
+  </div>
   <% unless @ticket.closed? %>
     <br />
     <div class="tickets-display">

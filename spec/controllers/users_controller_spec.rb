@@ -31,7 +31,7 @@ RSpec.describe UsersController, type: :controller do
       let!(:user_2) { create(:user) }
 
       it 'should return all users' do
-        expect(assigns(:users)).to match_array([user_1, user_2])
+        expect(assigns(:users)).to match_array([admin, user_1, user_2])
       end
     end
     
@@ -39,9 +39,9 @@ RSpec.describe UsersController, type: :controller do
 
   describe '#update' do
     let(:admin)             { create(:user, :admin) }
-    let(:user)              { create(:user) }
-    let(:none_role)         { create(:role, :none) }
-    let(:valid_params)      { { id: user.id, user: { role_id: none_role.id } } }
+    let(:user)              { create(:user, :it_support) }
+    let(:user_role)         { create(:role) }
+    let(:valid_params)      { { id: user.id, user: { role_id: user_role.id } } }
     let(:invalid_params)    { { id: user.id, user: { role_id: nil } } }
 
     context 'valid params' do
@@ -54,7 +54,7 @@ RSpec.describe UsersController, type: :controller do
 
       it 'should change user role' do
         subject
-        expect(user.reload.role_id).to eq(3)
+        expect(user.reload.role.name).to eq('user')
       end
     end
 
@@ -79,11 +79,10 @@ RSpec.describe UsersController, type: :controller do
   describe '#deactivate_user' do
     let(:admin) { create(:user, :admin) }
     let(:user)  { create(:user) }
-    subject { put :deactivate_account, params: { id: user.id } } 
     before { sign_in admin }
 
     it 'should deactivate user' do
-      subject
+      put :deactivate_account, params: { id: user.id }
       expect(user.reload.access_locked?).to eq(true)
     end
 

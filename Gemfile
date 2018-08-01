@@ -7,6 +7,8 @@ ruby '2.5.1'
 gem 'slack-ruby-client'
 # Recaptcha
 gem 'recaptcha'
+# Redis
+gem 'redis'
 # Boostrap
 gem 'bootstrap', '~> 4.1.1'
 # JQuery for bootstrap
@@ -48,6 +50,10 @@ gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'haml-rails'
 
+gem 'will_paginate', '~> 3.1.0'
+
+gem 'has_scope'
+
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'factory_bot_rails'
@@ -75,6 +81,7 @@ group :test do
   gem 'chromedriver-helper'
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
+  gem 'simplecov', require: false
 end
 
 group :production do

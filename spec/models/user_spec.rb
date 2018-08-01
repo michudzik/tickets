@@ -2,6 +2,18 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
 
+  describe '#filtered' do
+    let(:user_1) { create(:user, locked_at: DateTime.now) }
+    let(:user_2) { create(:user) }
+    it "filter by locked" do
+      expect(user_1.locked_at).to_not eq(nil)
+    end
+
+    it "filter by unlocked" do
+      expect(user_2.locked_at).to eq(nil)
+    end
+  end
+
   describe 'attributes' do
     it 'should have proper attributes' do
       expect(subject.attributes).to include('first_name', 'last_name')
@@ -23,17 +35,28 @@ RSpec.describe User, type: :model do
 
   describe 'callbacks' do
     let(:user) { create(:user) }
-    it 'should set role to none if not given' do
-      expect(user.role.name).to eq('none')
+    it 'should set role to user if not given' do
+      expect(user.role.name).to eq('user')
     end
   end
 
   describe 'methods' do
     let!(:admin_role)        { create(:role, :admin) }
-    let!(:none_role)         { create(:role, :none) }
+    let!(:user_role)         { create(:role) }
     let!(:it_support_role)   { create(:role, :it_support) }
     let!(:om_support_role)   { create(:role, :om_support) }
     let(:user) { create(:user) }
+
+    describe '#same_user?' do
+      it 'should return true' do
+        expect(user.same_user?(user.id)).to eq(true)
+      end
+
+      it 'should return false' do
+        other_user = create(:user)
+        expect(user.same_user?(other_user.id)).to eq(false)
+      end
+    end
 
     describe '#admin?' do
       it 'should return true' do
@@ -91,14 +114,14 @@ RSpec.describe User, type: :model do
       end
 
       it 'should return false' do
-        user.role = none_role
+        user.role = user_role
         expect(user.support?).to eq(false)
       end
     end
 
-    describe '#full_name' do
+    describe '#fullname' do
       it 'should return full name' do
-        expect(user.full_name).to eq("#{user.first_name} #{user.last_name}")
+        expect(user.fullname).to eq("#{user.first_name} #{user.last_name}")
       end
     end
   end

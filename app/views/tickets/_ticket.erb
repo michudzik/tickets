@@ -1,0 +1,10 @@
+<tr>
+  <td><%= ticket.user.fullname %></td>
+  <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
+  <td><%= ticket.department.name %></td>
+  <td>
+    <div class="<%= ticket.status.name %>">
+        <%= ticket.status.name.humanize %>
+    </div>
+  </td>
+</tr>

@@ -1,1 +1,14 @@
-$('[role-user-id="<%= @user.id %>"]').css({color: 'red'}).replaceWith( '<td role-user-id="' + "<%= @user.id %>" + '">' + "<%= @user.role.name.humanize.to_s %>" + "</td>" ).css({color: 'blue'});
+var btn = $('[data-user-btn-id="<%= @user.id %>"]');
+btn.addClass('disabled');
+btn.prop('disabled', 'disabled');
+btn.removeClass('btn-primary');
+btn.addClass('btn-secondary');
+btn.prop('value', 'Saved');
+
+setTimeout(function() {
+      btn.removeClass('disabled');
+      btn.removeClass('btn-secondary');
+      btn.addClass('btn-primary')
+      btn.prop('value', 'Save')
+      btn.prop('disabled', false)
+   }, 500);

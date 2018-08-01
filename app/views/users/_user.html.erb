@@ -1,25 +1,30 @@
 <tr data-user-id="<%= user.id %>">
-  <td full_name-user-id="<%= user.id %>"><%= user.full_name %></td>
+  <td full_name-user-id="<%= user.id %>"><%= user.fullname %></td>
   <td email-user-id="<%= user.id %>"><%= user.email %></td>
   <td>
     <%= form_for(user, url: user_path(user.id), method: :put, remote: true) do |f| %>
       <div class="input-group">
-        <div class="input-group-btn">
-           <%= f.select :role_id, @roles, {}, class: 'custom-select' %>
-        </div>
-        <%= f.submit 'Save', class: 'btn btn-primary' %>
+        <% if current_user.id == user.id %>
+          <div class="input-group-btn">
+            <%= f.select :role_id, ['Admin', 1], {}, class: 'custom-select', disabled: 'disabled' %>
+          </div>
+          <%= f.submit 'Save', class: 'btn btn-secondary disabled', data: { disable_with: false }, disabled: 'disabled' %>
+        <% else %>
+          <div class="input-group-btn">
+              <%= f.select :role_id, @roles, {}, class: 'custom-select', 'data-user-select-id': "#{user.id}" %>
+          </div>
+          <%= f.submit 'Save', class: 'btn btn-primary', data: { disable_with: false }, 'data-user-btn-id': "#{user.id}" %>
+        <% end %>
       </div>
     <% end %>
   </td>
   <% if user.access_locked? %>
-    <td status-user-id="<%= user.id %>">Status: Locked</td>
     <td>
       <%= link_to 'Unlock', activate_account_user_path(user.id), method: :put, class: 'btn btn-primary' %>
     </td>
   <% else %>
-    <td status-user-id="<%= user.id %>">Status: Unlocked</td>
     <td>
-        <%= render 'lock_account_modal', user: user %>
+      <%= render 'lock_account_modal', user: user %>
     </td>
   <% end %>
 </tr>

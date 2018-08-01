@@ -1,2 +1,8 @@
-$('.comments').append('<%= j render 'comment', comment: @comment %>');
-$('.new-comment').find('input[type="text"]').val('');
+<% if @comment.persisted? %>
+   setTimeout(function() {
+      $('#comment_body').val('')
+      $('[data-comment-id="<%= @comment.id %>"]').remove();
+      $('.commentSection').append('<%= j render partial: 'comments/comment', locals: { comment: @comment, align: 'right' } %>');
+   }, 50);
+<% else %>
+<% end %>
