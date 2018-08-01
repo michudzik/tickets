@@ -7,15 +7,14 @@ class SlackService
     @client.auth_test
   end
 
-  def call (email)
+  def call(email)
     begin
-    user_id = find_user(email)
-    request = @client.im_open(user: user_id)
-    channel_id = request.channel
-    @client.chat_postMessage(
-      channel: channel_id,
-      text: 'You have new update on your ticket'
-    )
+      user_id = find_user(email)
+      request = @client.im_open(user: user_id)
+      channel = request.channel
+      @client.chat_postMessage(channel: channel.id, text: 'You have new update on your ticket')
+    rescue ArgumentError
+      false
     end
   end
 
@@ -25,6 +24,6 @@ class SlackService
     user_list = @client.users_list
     users = user_list.members.select { |member| member.profile.email == email}
     raise ArgumentError, "User with that email can't be found" if users.empty?
-    users.first.user_id
+    users.first.id
   end
 end
