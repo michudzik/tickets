@@ -207,4 +207,32 @@ RSpec.describe TicketsController, type: :controller do
     end
 
   end
+
+  describe '#search' do
+    context 'user' do
+      let(:user) { create(:user) }
+      subject { get :search, params: { query: 'a' } }
+      before { sign_in user }
+
+      it 'should redirect to user\'s dashboard' do
+        expect(subject).to redirect_to(user_dashboard_path)
+      end
+
+      it 'should redirect with a notice' do
+        subject
+        expect(flash[:alert]).to be_present
+      end
+    end
+
+    context 'admin' do
+    end
+
+    context 'it_support' do
+    end
+
+    context 'om_support' do
+    end
+  end
+
+
 end
