@@ -23,12 +23,18 @@ class TicketsController < ApplicationController
     end
 
     case params[:sorted_by]
-    when "title"
-      @tickets = @tickets.ordered_by_title
-    when "last_name"
-      @tickets = @tickets.ordered_by_user_name
-    when "department"
+    when "title_asc"
+      @tickets = @tickets.ordered_by_title_asc
+    when "title_desc"
+      @tickets = @tickets.ordered_by_title_desc
+    when "user_name_asc"
+      @tickets = @tickets.ordered_by_user_name_asc
+    when "user_name_desc"
+      @tickets = @tickets.ordered_by_user_name_desc
+    when "department_om"
       @tickets = @tickets.ordered_by_department_om
+    when "department_it"
+      @tickets = @tickets.ordered_by_department_it      
     end
 
     @tickets = @tickets.paginate(page: params[:page], per_page: params[:number])
