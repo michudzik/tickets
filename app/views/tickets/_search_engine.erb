@@ -1,0 +1,4 @@
+<%= form_tag search_tickets_path, method: :get, class: 'input-group' do %>
+  <%= text_field_tag :query, nil, placeholder: 'Search by ticket\'s title / body', 'aria-label': 'Search', class: 'form-control' %>
+  <%= submit_tag 'Search', class: 'btn btn-secondary' %>
+<% end %>

@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get '/show_tickets', to: 'tickets#index'
   get '/user_dashboard', to: 'users#show'
   get '/tickets/:id',   to: 'tickets#show', as: :ticket
+  get '/search', to: 'tickets#search', as: :search_tickets
   resources :comments, only: :create
   resources :users, only: [:index, :update] do
     resources :tickets, except: [:new, :index, :show, :update] do

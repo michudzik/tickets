@@ -22,7 +22,7 @@
 
         <div class="registration-field">
           <%= f.label :email, class: 'registration-label' %><br />
-          <%= f.email_field :email, autofocus: true, class: 'form-control', placeholder: "binarapps@example.com" %>
+          <%= f.email_field :email, autofocus: true, class: 'form-control' %>
         </div>
       </div>
 
@@ -32,12 +32,12 @@
           <% if @minimum_password_length %>
           <em>(<%= @minimum_password_length %> characters minimum)</em>
           <% end %><br />
-          <%= f.password_field :password, class: 'form-control', autocomplete: "off", placeholder: '*'*8 %>
+          <%= f.password_field :password, class: 'form-control', autocomplete: "off"%>
         </div>
         
         <div class="registration-field">
           <%= f.label :password_confirmation, class: 'registration-label' %><br />
-          <%= f.password_field :password_confirmation, class: 'form-control', autocomplete: "off", placeholder: '*'*8 %>
+          <%= f.password_field :password_confirmation, class: 'form-control', autocomplete: "off" %>
         </div>
       </div>
       
@@ -46,7 +46,7 @@
       </div>
       <%= f.submit "Sign up", class: 'btn btn-primary btn-block' %>
     <% end %>
-    <%= link_to 'Back', root_url, role: 'button', class: 'password-button btn btn-primary' %>
+    <%= link_to 'Back', root_url, role: 'button', class: 'password-button btn btn-secondary' %>
     </div>
   </div>
 </div>
