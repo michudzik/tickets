@@ -1,17 +1,9 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-  </head>
-  <body>
-    <h1>Hi, <%= @user.fullname %></h1>
-    <p>
-      Someone responded to the ticket you are watching: <%= @ticket.title %>
-    </p>
-    <p>Current status: <%= @ticket.status.name %></p>
-    <p>
-      <%= link_to 'Show', ticket_url(@ticket.id), role: 'button', class: 'btn btn-primary' %>
-    </p>
-    <p>Have a nice day!</p>
-  </body>
-</html>
+<h1>Hi, <%= @user.fullname %></h1>
+<p>
+ <%= @ticket.comments.last.user.fullname %> responded to the ticket you are watching: <%= @ticket.title %>
+</p>
+<p>Current status: <%= @ticket.status.name.humanize %></p>
+<p>
+  <%= link_to 'Show', ticket_url(@ticket.id), role: 'button', class: 'btn btn-primary' %>
+</p>
+<p>Have a nice day!</p>

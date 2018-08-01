@@ -1,10 +1,31 @@
-<tr data-comment-id="<%= comment.id %>">
-	<td>
-		<p>
-			<strong>Body:</strong>
-			<%= comment.body %>
-			<br />
-			<%= link_to 'Destroy', [comment.user, comment], method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-		</p>
-	</td>
-</tr>
+<div align="<%= align %>" data-comment-id="<%= comment.id %>">
+  <div class="comments-section <% if align == 'right' %>darker<% end %> p-2 w-75">
+    <div class="time-<%= align %>">
+      <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
+        <div class="time-<%= align %>">
+        <%= comment.created_at.strftime("%H:%M") %>
+        </div>
+      </a>
+      &emsp;
+    </div>
+    <div align="left">
+      <b class="commenter-name"><%= "#{comment.user.fullname} (#{comment.user.role.name.humanize})" %></b>
+      &emsp;
+      <br />
+      <%= sanitize comment.body.gsub(/\n/, '<br />').html_safe %>
+    </div>
+     <% if comment.uploads.attached? %>
+     <br />
+      <table>
+        <thead align="left">
+          <tr>
+            <th>Attachements:</th>
+          </tr>
+        </thead>
+        <% comment.uploads.each_with_index do |upload, i| %>
+          <tr><td align="left"><%= link_to("#{upload.filename}", rails_blob_path(upload, disposition: "attachment")) %></td></tr>
+        <% end %>
+      </table>
+    <% end %>
+  </div>
+</div>
