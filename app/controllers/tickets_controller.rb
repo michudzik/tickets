@@ -1,5 +1,4 @@
 class TicketsController < ApplicationController
-  has_scope :ordered_by_title
 
   def index
     redirect_to user_dashboard_path, alert: 'Forbidden access' and return if current_user.user?
