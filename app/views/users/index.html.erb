@@ -53,9 +53,7 @@
     <tbody>
       <% cache @users do %>
         <% @users.each do |user| %>
-          <% cache user do %>
-            <%= render 'user', user: user %>
-          <% end %>
+          <%= render 'user', user: user %>
         <% end %>
       <% end %>
     </tbody>
