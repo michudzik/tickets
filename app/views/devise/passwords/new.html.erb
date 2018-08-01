@@ -8,7 +8,7 @@
 
         <div class="password-field">
           <%= f.label :email, class: 'password-label' %><br />
-          <%= f.email_field :email, autofocus: true, placeholder: 'binarapps@example.com', autocomplete: 'email', class: 'form-control' %>
+          <%= f.email_field :email, autofocus: true, autocomplete: 'email', class: 'form-control' %>
         </div>
 
         <div class="actions">
@@ -16,7 +16,7 @@
         </div>
       <% end %>
       </div>
-      <%= link_to 'Back', root_url, role: 'button', class: 'password-button btn btn-primary' %>
+      <%= link_to 'Back', root_url, role: 'button', class: 'password-button btn btn-secondary' %>
     </div>
   </div>
 </div>

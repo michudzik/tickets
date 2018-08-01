@@ -9,7 +9,7 @@
 
           <div class="confirmation-field">
             <%= f.label :email, class: 'confirmation-label' %><br />
-            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: 'binarapps@example.com', class: 'form-control', value: (resource.pending_reconfirmation? ? resource.unconfirmed_email   : resource.email) %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control', value: (resource.pending_reconfirmation? ? resource.unconfirmed_email   : resource.email) %>
           </div>
 
           <div class="actions">
@@ -18,7 +18,7 @@
         <% end %>
       </div>
 
-      <%= link_to 'Back', root_url, class: 'confirmation-button btn btn-primary' %> 
+      <%= link_to 'Back', root_url, class: 'confirmation-button btn btn-secondary' %> 
 
     </div>
   </div>

@@ -13,12 +13,12 @@
             <% if @minimum_password_length %>
               <em>(<%= @minimum_password_length %> characters minimum)</em><br />
             <% end %>
-            <%= f.password_field :password, autofocus: true, placeholder: '*' * 8, autocomplete: 'off', class: 'form-control' %>
+            <%= f.password_field :password, autofocus: true, autocomplete: 'off', class: 'form-control' %>
           </div>
 
           <div class="password-field">
             <%= f.label :password_confirmation, 'Confirm new password', class: 'password-label' %><br />
-            <%= f.password_field :password_confirmation, placeholder: '*' * 8, autocomplete: 'off', class: 'form-control' %>
+            <%= f.password_field :password_confirmation, autocomplete: 'off', class: 'form-control' %>
           </div>
 
           <div class="actions">
@@ -27,7 +27,7 @@
         <% end %>
       </div>
 
-      <%= link_to 'Back', root_url, role: 'button', class: 'password-button btn btn-primary' %>
+      <%= link_to 'Back', root_url, role: 'button', class: 'password-button btn btn-secondary' %>
     </div>
   </div>
 </div>

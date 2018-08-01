@@ -1,7 +1,7 @@
 class CommentsController < ApplicationController
   def create
     @ticket = Ticket.find(params[:comment][:ticket_id])
-    redirect_to ticket_path(@ticket.id), alert: 'This ticket is closed' and return if @ticket.status.name == 'closed'
+    redirect_to ticket_path(@ticket.id), alert: 'This ticket is closed' and return if @ticket.closed?
     @comment = Comment.new(comment_params)
     respond_to do |format|
       if @comment.save
@@ -19,6 +19,6 @@ class CommentsController < ApplicationController
   private
 
   def comment_params
-    params.require(:comment).permit(:body, :ticket_id).merge(user_id: current_user.id)
+    params.require(:comment).permit(:body, :ticket_id, uploads: []).merge(user_id: current_user.id)
   end
 end
