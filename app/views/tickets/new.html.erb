@@ -39,17 +39,32 @@
 </div>
 
 <script>
-  jQuery(document).on('turbolinks:load', function(){
-     var form = $('#new_ticket'),
-         original = form.serialize()
 
-     form.submit(function(){
-         window.onbeforeunload = null
-     })
+  $(document).on('turbolinks:load', function(){
+    var form = $('#new_ticket'),
+       original = form.serialize()
 
-     window.onbeforeunload = function(){
-         if (form.serialize() != original)
-             return 'Are you sure you want to leave?'
-     }
+    form.submit(function(){
+       window.onbeforeunload = null
+    })
+
+    window.onbeforeunload = function(){
+       if (form.serialize() != original)
+           return 'Are you sure you want to leave?'
+    }
   })
+
+  var turboalert = function(e){
+
+    if(confirm('are u sure?')) {
+      
+    }
+    else {
+      e.preventDefault();
+    }
+    $(document).off('turbolinks:before-visit');
+    $(document).off(turboalert);
+  }
+
+  $(document).on('turbolinks:before-visit', turboalert)
 </script>
