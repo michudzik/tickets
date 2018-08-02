@@ -6,7 +6,7 @@ class Ticket < ActiveRecord::Base
   has_many_attached :uploads
 
   validates :note, presence: true, length: { maximum: 500 }
-  validates :title, presence: true, length: { maximum: 30 }
+  validates :title, presence: true, length: { maximum: 50 }
   validates :department, presence: true
 
   before_validation :default_status, on: :create
