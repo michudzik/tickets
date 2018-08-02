@@ -16,13 +16,15 @@ class UsersController < ApplicationController
       @users = @users.unlocked
     end
 
-    case params[:sorted_by]
-    when 'first_name'
-      @users = @users.ordered_by_first_name
-    when 'last_name'
-      @users = @users.ordered_by_last_name
-    when 'email'
-      @users = @users.ordered_by_email
+    case params[:sorted_by]     
+    when 'last_name_asc'
+      @users = @users.ordered_by_last_name_asc
+    when 'last_name_desc'
+      @users = @users.ordered_by_last_name_desc      
+    when 'email_asc'
+      @users = @users.ordered_by_email_asc
+    when 'email_desc'
+      @users = @users.ordered_by_email_desc      
     end
 
     @users = @users.paginate(page: params[:page], per_page: params[:number])

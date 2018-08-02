@@ -6,15 +6,18 @@ class Ticket < ActiveRecord::Base
   has_many_attached :uploads
 
   validates :note, presence: true, length: { maximum: 500 }
-  validates :title, presence: true, length: { maximum: 30 }
+  validates :title, presence: true, length: { maximum: 50 }
   validates :department, presence: true
 
   before_validation :default_status, on: :create
 
   scope :it_department,                          -> { joins(:department).where(departments: { name: 'IT' }) }
   scope :om_department,                          -> { joins(:department).where(departments: { name: 'OM' }) }
-  scope :ordered_by_title,                       -> { order('lower(title) ASC') }
-  scope :ordered_by_user_name,                   -> { joins(:user).order('lower(users.last_name) ASC') }
+  scope :ordered_by_date,                        -> { order('created_at DESC') }
+  scope :ordered_by_title_asc,                   -> { order('lower(title) ASC') }
+  scope :ordered_by_title_desc,                  -> { order('lower(title) DESC') }
+  scope :ordered_by_user_name_asc,               -> { joins(:user).order('lower(users.last_name) ASC') }
+  scope :ordered_by_user_name_desc,              -> { joins(:user).order('lower(users.last_name) DESC') }
   scope :ordered_by_department_om,               -> { joins(:department).order('departments.name DESC') }
   scope :ordered_by_department_it,               -> { joins(:department).order('departments.name ASC') }
   scope :filtered_by_status_open,                -> { joins(:status).where(statuses: { name: 'open' }) }

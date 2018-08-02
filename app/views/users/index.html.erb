@@ -27,26 +27,14 @@
           </div>
         </div>
       </th>
-      <th>
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Sort
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <%= link_to 'First name', users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "first_name"), class: 'dropdown-item' %>
-            <%= link_to 'Last name', users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "last_name"), class: 'dropdown-item' %>
-            <%= link_to 'Email', users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "email"), class: 'dropdown-item' %>
-          </div>
-        </div>
-      </th>
     </tr>
   </table>
 
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Email</th>
+        <th>Name<%= link_to "<span>&#8593;</span>".html_safe, users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "last_name_desc"), class: 'arrow-up' %> <%= link_to "<span>&#8595;</span>".html_safe, users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "last_name_asc"), class: 'arrow-down' %> </th>
+        <th>Email<%= link_to "<span>&#8593;</span>".html_safe, users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "email_desc"), class: 'arrow-up' %> <%= link_to "<span>&#8595;</span>".html_safe, users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "email_asc"), class: 'arrow-down' %> </th>
         <th colspan="2">Change role</th>
       </tr>
     </thead>
