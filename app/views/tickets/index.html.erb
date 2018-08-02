@@ -51,11 +51,9 @@
       </tr>
     </thead>
     <tbody>
-      <% cache @tickets do %>
-        <% @tickets.each do |ticket| %>
-          <% cache ticket do %>
-            <%= render 'ticket', ticket: ticket %>
-          <% end %>
+      <% @tickets.each do |ticket| %>
+        <% cache ticket do %>
+          <%= render 'ticket', ticket: ticket %>
         <% end %>
       <% end %>
     </tbody>
