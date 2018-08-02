@@ -13,8 +13,9 @@ class CommentsController < ApplicationController
         if !@emails.include?(@ticket.user.email)
           @emails.push(@ticket.user.email)
         end
+        @emails.delete(current_user.email)
         @emails.each do |email|
-          SlackService.new.call(email) 
+          SlackService.new.call(email, @ticket.id) 
         end
         format.html { redirect_to ticket_path(@ticket.id), notice: 'Comment was created' }
         format.js

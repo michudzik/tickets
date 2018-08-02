@@ -57,6 +57,15 @@ class TicketsController < ApplicationController
   def create
     @ticket = current_user.tickets.build(ticket_params)
     if @ticket.save
+      if @ticket.department.name == 'IT'
+        @emails = User.joins(:role).where(roles: {name: 'it_support'}).distinct.pluck(:email)
+      else
+        @emails = User.joins(:role).where(roles: {name: 'om_support'}).distinct.pluck(:email)
+      end
+        @emails.delete(current_user.email)
+        @emails.each do |email|
+          SlackService.new.call(email, @ticket.id) 
+        end
       redirect_to user_dashboard_path, notice: 'New ticket has been reported'
     else
       @departments = Department.all.pluck(:name, :id)
