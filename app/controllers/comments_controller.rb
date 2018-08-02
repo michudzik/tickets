@@ -7,6 +7,7 @@ class CommentsController < ApplicationController
       if @comment.save
         @comment.update_ticket_status!(user: @comment.user, ticket: @ticket)
         user_ids = @comment.ticket.comments.where.not(user_id: current_user.id).pluck(:user_id)
+        user_ids.append(@comment.ticket.user.id) if user_ids.empty?
         @comment.ticket.notify_users(user_ids)
         @emails = @ticket.comments.joins(:user).distinct.pluck(:email)
         if !@emails.include?(@ticket.user.email)
