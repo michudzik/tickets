@@ -7,12 +7,12 @@ class SlackService
     @client.auth_test
   end
 
-  def call(email)
+  def call(email, webpath)
     begin
       user_id = find_user(email)
       request = @client.im_open(user: user_id)
       channel = request.channel
-      @client.chat_postMessage(channel: channel.id, text: 'You have new update on your ticket')
+      @client.chat_postMessage(channel: channel.id, text: 'You have new update on your ticket: ' linked_to ticket.show.url(webpath))
     rescue ArgumentError
       false
     end
