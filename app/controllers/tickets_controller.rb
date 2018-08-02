@@ -34,7 +34,9 @@ class TicketsController < ApplicationController
     when "department_om"
       @tickets = @tickets.ordered_by_department_om
     when "department_it"
-      @tickets = @tickets.ordered_by_department_it      
+      @tickets = @tickets.ordered_by_department_it
+    else
+      @tickets = @tickets.ordered_by_date     
     end
 
     @tickets = @tickets.paginate(page: params[:page], per_page: params[:number])
