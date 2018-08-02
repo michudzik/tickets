@@ -103,7 +103,6 @@ RSpec.describe Ticket, type: :model do
         end
       end
     end
-
   end
 
   describe 'callbacks' do
@@ -125,17 +124,49 @@ RSpec.describe Ticket, type: :model do
   end
 
   describe 'scopes' do
-    let(:ticket_it) { create(:ticket) }
-    let(:ticket_om) { create(:ticket, :om_department) }
 
-    it 'should have it_department scope' do
-      expect(Ticket.it_department).to include(ticket_it)
-      expect(Ticket.it_department).not_to include(ticket_om)
+    context 'department' do
+      let(:ticket_it) { create(:ticket) }
+      let(:ticket_om) { create(:ticket, :om_department) }
+
+      it 'should have it_department scope' do
+        expect(Ticket.it_department).to include(ticket_it)
+        expect(Ticket.it_department).not_to include(ticket_om)
+      end
+
+      it 'should have om_department scope' do
+        expect(Ticket.om_department).to include(ticket_om)
+        expect(Ticket.om_department).not_to include(ticket_it)
+      end
     end
 
-    it 'should have om_department scope' do
-      expect(Ticket.om_department).to include(ticket_om)
-      expect(Ticket.om_department).not_to include(ticket_it)
+    context 'status filters' do
+      let(:ticket_open) { create(:ticket) }
+      let(:ticket_closed) { create(:ticket, :closed) }
+      let(:ticket_user_response) { create(:ticket, :user_response) }
+      let(:ticket_support_response) { create(:ticket, :support_response) }
+
+      it 'should return open ticket' do
+        expect(Ticket.filtered_by_status_open).to include(ticket_open)
+        expect(Ticket.filtered_by_status_open).not_to include(ticket_closed, ticket_support_response, ticket_user_response)
+      end
+
+      it 'should return user_response ticket' do
+        expect(Ticket.filtered_by_status_user_response).to include(ticket_user_response)
+        expect(Ticket.filtered_by_status_user_response).not_to include(ticket_open, ticket_closed, ticket_support_response)
+      end
+
+      it 'should return support_response ticket' do
+        expect(Ticket.filtered_by_status_support_response).to include(ticket_support_response)
+        expect(Ticket.filtered_by_status_support_response).not_to include(ticket_open, ticket_closed, ticket_user_response)
+      end
+
+      it 'should return closed ticket' do
+        expect(Ticket.filtered_by_status_closed).to include(ticket_closed)
+        expect(Ticket.filtered_by_status_closed).not_to include(ticket_open, ticket_support_response, ticket_user_response)
+      end
+
     end
+
   end
 end
