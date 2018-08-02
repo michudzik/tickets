@@ -170,6 +170,8 @@ RSpec.describe Ticket, type: :model do
     context 'ordering' do
       let(:ticket1) { create(:ticket, title: 'abcdef') }
       let(:ticket2) { create(:ticket, :om_department, title: 'bcdefgh') }
+      let(:ticket3) { create(:ticket, created_at: 2.hours.ago) }
+      let(:ticket4) { create(:ticket, created_at: 3.hours.ago) }
 
       it 'should order by title asc' do
         expected_array = [ticket1, ticket2]
@@ -190,6 +192,12 @@ RSpec.describe Ticket, type: :model do
         expected_array = [ticket2, ticket1]
         expect(Ticket.ordered_by_department_om).to eq(expected_array)
       end
+
+      it 'should order by date desc' do
+        expected_array = [ticket3, ticket4]
+        expect(Ticket.ordered_by_date).to eq(expected_array)
+      end
+
     end
   end
 
