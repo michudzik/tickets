@@ -18,7 +18,11 @@ class CommentsController < ApplicationController
         format.html { redirect_to ticket_path(@ticket.id), notice: 'Comment was created' }
         format.js
       else
-        format.html { redirect_to ticket_path(@ticket.id), alert: 'There was an error while creating comment' }
+        if @comment.body.empty?
+          format.html { redirect_to ticket_path(@ticket.id), alert: 'Couldn\'t create comment without any text' }
+        else
+          format.html { redirect_to ticket_path(@ticket.id), alert: 'There was an error while creating comment' }
+        end
       end
     end
   end
