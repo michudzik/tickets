@@ -19,7 +19,7 @@
   <div class="row">
     <div class="col-md-6 offset-md-3">
       <h1><center> Create new ticket </center></h1> 
-      <%= form_for @ticket, id: "myForm", url: user_tickets_path(current_user.id) do |f| %>
+      <%= form_for @ticket, id: 'myForm', url: user_tickets_path(current_user.id) do |f| %>
         <%= f.label :department_id %>
         <%= f.select :department_id, @departments, {}, class: 'custom-select' %>
         <hr />
@@ -37,34 +37,3 @@
     </div>
   </div>
 </div>
-
-<script>
-
-  $(document).on('turbolinks:load', function(){
-    var form = $('#new_ticket'),
-       original = form.serialize()
-
-    form.submit(function(){
-       window.onbeforeunload = null
-    })
-
-    window.onbeforeunload = function(){
-       if (form.serialize() != original)
-           return 'Are you sure you want to leave?'
-    }
-  })
-
-  var turboalert = function(e){
-
-    if(confirm('are u sure?')) {
-      
-    }
-    else {
-      e.preventDefault();
-    }
-    $(document).off('turbolinks:before-visit');
-    $(document).off(turboalert);
-  }
-
-  $(document).on('turbolinks:before-visit', turboalert)
-</script>
