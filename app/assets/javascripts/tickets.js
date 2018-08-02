@@ -13,6 +13,3 @@ jQuery(document).on('turbolinks:load', function() {
     }
   });
 });
-
-
-// rgb(128, 189, 255); border-color:
