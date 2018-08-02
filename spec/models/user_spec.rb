@@ -144,6 +144,30 @@ RSpec.describe User, type: :model do
       end
     end
 
-  end
+    context 'ordering' do
+      let(:user1) { create(:user, last_name: 'abcd', email: 'abcd@example.com') }
+      let(:user2) { create(:user, last_name: 'bcde', email: 'bcdef@example.com') }
 
+      it 'should order by last_name asc' do
+        expected_array = [user1, user2]
+        expect(User.ordered_by_last_name_asc).to eq(expected_array)
+      end
+
+      it 'should order by last_name desc' do
+        expected_array = [user2, user1]
+        expect(User.ordered_by_last_name_desc).to eq(expected_array)
+      end
+
+      it 'should order by email asc' do
+        expected_array = [user1, user2]
+        expect(User.ordered_by_email_asc).to eq(expected_array)
+      end
+
+      it 'should order by email desc' do
+        expected_array = [user2, user1]
+        expect(User.ordered_by_email_desc).to eq(expected_array)
+      end
+
+    end
+  end
 end
