@@ -2,6 +2,18 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
 
+  describe '#filtered' do
+    let(:user_1) { create(:user, locked_at: DateTime.now) }
+    let(:user_2) { create(:user) }
+    it "filter by locked" do
+      expect(user_1.locked_at).to_not eq(nil)
+    end
+
+    it "filter by unlocked" do
+      expect(user_2.locked_at).to eq(nil)
+    end
+  end
+
   describe 'attributes' do
     it 'should have proper attributes' do
       expect(subject.attributes).to include('first_name', 'last_name')
@@ -114,4 +126,49 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'scopes' do
+
+    context 'locked / unlocked' do
+      let(:user1) { create(:user) }
+      let(:user2) { create(:user) }
+      before { user1.lock_access! }
+
+      it 'should return locked user' do
+        expect(User.locked).to include(user1)
+        expect(User.locked).not_to include(user2)
+      end
+
+      it 'should return unlocked user' do
+        expect(User.unlocked).to include(user2)
+        expect(User.unlocked).not_to include(user1)
+      end
+    end
+
+    context 'ordering' do
+      let(:user1) { create(:user, last_name: 'abcd', email: 'abcd@example.com') }
+      let(:user2) { create(:user, last_name: 'bcde', email: 'bcdef@example.com') }
+
+      it 'should order by last_name asc' do
+        expected_array = [user1, user2]
+        expect(User.ordered_by_last_name_asc).to eq(expected_array)
+      end
+
+      it 'should order by last_name desc' do
+        expected_array = [user2, user1]
+        expect(User.ordered_by_last_name_desc).to eq(expected_array)
+      end
+
+      it 'should order by email asc' do
+        expected_array = [user1, user2]
+        expect(User.ordered_by_email_asc).to eq(expected_array)
+      end
+
+      it 'should order by email desc' do
+        expected_array = [user2, user1]
+        expect(User.ordered_by_email_desc).to eq(expected_array)
+      end
+
+    end
+  end
+  
 end

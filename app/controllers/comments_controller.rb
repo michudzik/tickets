@@ -8,6 +8,13 @@ class CommentsController < ApplicationController
         @comment.update_ticket_status!(user: @comment.user, ticket: @ticket)
         user_ids = @comment.ticket.comments.where.not(user_id: current_user.id).pluck(:user_id)
         @comment.ticket.notify_users(user_ids)
+        @emails = @ticket.comments.joins(:user).distinct.pluck(:email)
+        if !@emails.include?(@ticket.user.email)
+          @emails.push(@ticket.user.email)
+        end
+        @emails.each do |email|
+          SlackService.new.call(email) 
+        end
         format.html { redirect_to ticket_path(@ticket.id), notice: 'Comment was created' }
         format.js
       else
@@ -19,6 +26,6 @@ class CommentsController < ApplicationController
   private
 
   def comment_params
-    params.require(:comment).permit(:body, :ticket_id).merge(user_id: current_user.id)
+    params.require(:comment).permit(:body, :ticket_id, uploads: []).merge(user_id: current_user.id)
   end
 end

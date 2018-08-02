@@ -1,21 +1,51 @@
 <div class="container">
-  <h1>All Tickets</h1>
-  <div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Count
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      <%= link_to '10', show_tickets_path(:number => 10), class: 'dropdown-item' %>
-      <%= link_to '30', show_tickets_path(:number => 30), class: 'dropdown-item' %>
-      <%= link_to '50', show_tickets_path(:number => 50), class: 'dropdown-item' %>
+  <div class="row">
+    <div class="col-md-6">
+      <h1>All Tickets</h1>
+    </div>
+    <div class="col-md-4 offset-md-2 ticket-searchEngine">
+      <%= render 'search_engine' %>
     </div>
   </div>
+
+  <table>
+    <tr>
+      <th>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Results
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <%= link_to '10', show_tickets_path(:number => 10, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <%= link_to '30', show_tickets_path(:number => 30, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <%= link_to '50', show_tickets_path(:number => 50, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+          </div>
+        </div>
+      </th>
+      <th>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Filter by status
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <%= link_to 'All', show_tickets_path(:number => params[:number], :filter_param => "all", :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <div class="dropdown-divider"></div>
+            <%= link_to 'Open', show_tickets_path(:number => params[:number], :filter_param => "open", :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <%= link_to 'Support response', show_tickets_path(:number => params[:number], :filter_param => "support_response", :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <%= link_to 'User response', show_tickets_path(:number => params[:number], :filter_param => "user_response", :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>
+            <%= link_to 'Closed', show_tickets_path(:number => params[:number], :filter_param => "closed", :sorted_by => params[:sorted_by]), class: 'dropdown-item' %>                                  
+          </div>
+        </div>
+      </th>
+    </tr>
+  </table>
+
   <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col">Author</th>
-        <th scope="col">Title</th>
-        <th scope="col">Department</th>
+        <th scope="col">Author<%= link_to "<span>&#8593;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "user_name_desc"), class: 'arrow-up' %> <%= link_to "<span>&#8595;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "user_name_asc"), class: 'arrow-down' %> </th>
+        <th scope="col">Title<%= link_to "<span>&#8593;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "title_desc"), class: 'arrow-up' %> <%= link_to "<span>&#8595;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "title_asc"), class: 'arrow-down' %> </th>
+        <th scope="col">Department<%= link_to "<span>&#8593;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "department_it"), class: 'arrow-up' %> <%= link_to "<span>&#8595;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "department_om"), class: 'arrow-down' %> </th>
         <th scope="col">Status</th>
       </tr>
     </thead>

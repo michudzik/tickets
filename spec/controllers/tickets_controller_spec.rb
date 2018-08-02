@@ -123,14 +123,14 @@ RSpec.describe TicketsController, type: :controller do
   end
 
   describe '#close' do
-    before { sign_in user }
     let(:department) { create(:department) }
     let(:ticket) { create(:ticket) }
     let!(:status) { create(:status) }
     let!(:status_closed) { create(:status, :closed) }
     let(:valid_parameters) { { id: ticket.id, user_id: user.id } }
  
-    context 'valid parameters' do
+    context 'user' do
+      before { sign_in user }
       subject { put :close, params: valid_parameters }
 
       it 'should redirect to user dashboard' do
@@ -146,7 +146,153 @@ RSpec.describe TicketsController, type: :controller do
         subject
         expect(ticket.reload.status.name).to eq('closed')
       end
+    end
 
+    context 'support' do
+      let(:it) { create(:user, :it_support) }
+      let(:om) { create(:user, :om_support) }
+      let(:admin) { create(:user, :admin) }
+      subject { put :close, params: valid_parameters }
+
+      context 'it_support' do
+        before { sign_in it }
+        it 'should redirect to tickets index' do
+          expect(subject).to redirect_to(show_tickets_path)
+        end
+
+        it 'should redirect with a notice' do
+          subject
+          expect(flash[:notice]).to be_present
+        end
+
+        it 'should change ticket status to closed' do
+          subject
+          expect(ticket.reload.status.name).to eq('closed')
+        end 
+      end
+
+      context 'om_support' do
+        before { sign_in om }
+        it 'should redirect to tickets index' do
+          expect(subject).to redirect_to(show_tickets_path)
+        end
+
+        it 'should redirect with a notice' do
+          subject
+          expect(flash[:notice]).to be_present
+        end
+
+        it 'should change ticket status to closed' do
+          subject
+          expect(ticket.reload.status.name).to eq('closed')
+        end 
+      end
+
+      context 'admin' do
+        before { sign_in admin }
+        it 'should redirect to tickets index' do
+          expect(subject).to redirect_to(show_tickets_path)
+        end
+
+        it 'should redirect with a notice' do
+          subject
+          expect(flash[:notice]).to be_present
+        end
+
+        it 'should change ticket status to closed' do
+          subject
+          expect(ticket.reload.status.name).to eq('closed')
+        end 
+      end
+    end
+
+  end
+
+  describe '#search' do
+    let(:ticket1) { create(:ticket, title: 'abc', note: 'abc') }
+    let(:ticket2) { create(:ticket, :om_department, title: 'cde', note: 'cde') }
+    let(:ticket3) { create(:ticket, :om_department, title: 'abc', note: 'abc') }
+    let(:ticket4) { create(:ticket, title: 'cde', note: 'cde') }
+    subject { get :search, params: { query: 'a' } }
+    
+    describe 'successful response' do
+      let(:user) { create(:user, :admin) }
+      before do
+       sign_in user
+       subject
+     end
+
+      it 'should get a successful response' do
+        expect(response).to be_successful
+      end
+
+      it 'should render search engine template' do
+        expect(response).to render_template('search')
+      end
+    end
+
+    context 'user' do
+      let(:user) { create(:user) }
+      before { sign_in user }
+
+      it 'should redirect to user\'s dashboard' do
+        expect(subject).to redirect_to(user_dashboard_path)
+      end
+
+      it 'should redirect with a notice' do
+        subject
+        expect(flash[:alert]).to be_present
+      end
+    end
+
+    context 'admin' do
+      let(:admin) { create(:user, :admin) }
+      before do
+        sign_in admin
+        subject
+      end
+
+      it 'should return ticket1 and ticket3' do
+        expect(assigns(:tickets)).to match_array([ticket1, ticket3])
+      end
+
+      it 'should not return ticket2 and ticket4' do
+        expect(assigns(:tickets)).not_to include([ticket2, ticket4])
+      end
+    end
+
+    context 'it_support' do
+      let(:it) { create(:user, :it_support) }
+      before do
+        sign_in it
+        subject
+      end
+
+      it 'should return ticket1' do
+        expect(assigns(:tickets)).to match_array([ticket1])
+      end
+
+      it 'should not return ticket1, ticket2 and ticket4' do
+        expect(assigns(:tickets)).not_to include([ticket2, ticket3, ticket4])
+      end
+    end
+
+    context 'om_support' do
+      let(:om) { create(:user, :om_support) }
+      before do
+        sign_in om
+        subject
+      end
+
+      it 'should return ticket3' do
+        expect(assigns(:tickets)).to match_array([ticket3])
+      end
+
+      it 'should not return ticket2 and ticket4' do
+        expect(assigns(:tickets)).not_to include([ticket1, ticket2, ticket4])
+      end
     end
   end
+
+
 end

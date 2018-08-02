@@ -103,37 +103,6 @@ RSpec.describe Ticket, type: :model do
         end
       end
     end
-
-    describe '::find_related_tickets' do
-      let(:it_department) { create(:department) }
-      let(:om_department) { create(:department, :om) }
-      let!(:ticket_it) { create(:ticket, department_id: it_department.id) }
-      let!(:ticket_om) { create(:ticket, department_id: om_department.id) } 
-
-      context 'it' do
-        it 'should return it ticket' do
-          user = create(:user, :it_support)
-          expect(Ticket.find_related_tickets(user)).to include(ticket_it)
-          expect(Ticket.find_related_tickets(user)).not_to include(ticket_om)
-        end
-      end
-
-      context 'om' do
-        it 'should return om ticket' do
-          user = create(:user, :om_support)
-          expect(Ticket.find_related_tickets(user)).to include(ticket_om)
-          expect(Ticket.find_related_tickets(user)).not_to include(ticket_it)
-        end
-      end
-
-      context 'admin' do
-        it 'should return both tickets' do
-          user = create(:user, :admin)
-          expect(Ticket.find_related_tickets(user)).to include(ticket_it, ticket_om)
-        end
-      end
-    end
-
   end
 
   describe 'callbacks' do
@@ -155,17 +124,73 @@ RSpec.describe Ticket, type: :model do
   end
 
   describe 'scopes' do
-    let(:ticket_it) { create(:ticket) }
-    let(:ticket_om) { create(:ticket, :om_department) }
 
-    it 'should have it_department scope' do
-      expect(Ticket.it_department).to include(ticket_it)
-      expect(Ticket.it_department).not_to include(ticket_om)
+    context 'department' do
+      let(:ticket_it) { create(:ticket) }
+      let(:ticket_om) { create(:ticket, :om_department) }
+
+      it 'should have it_department scope' do
+        expect(Ticket.it_department).to include(ticket_it)
+        expect(Ticket.it_department).not_to include(ticket_om)
+      end
+
+      it 'should have om_department scope' do
+        expect(Ticket.om_department).to include(ticket_om)
+        expect(Ticket.om_department).not_to include(ticket_it)
+      end
     end
 
-    it 'should have om_department scope' do
-      expect(Ticket.om_department).to include(ticket_om)
-      expect(Ticket.om_department).not_to include(ticket_it)
+    context 'status filters' do
+      let(:ticket_open) { create(:ticket) }
+      let(:ticket_closed) { create(:ticket, :closed) }
+      let(:ticket_user_response) { create(:ticket, :user_response) }
+      let(:ticket_support_response) { create(:ticket, :support_response) }
+
+      it 'should return open ticket' do
+        expect(Ticket.filtered_by_status_open).to include(ticket_open)
+        expect(Ticket.filtered_by_status_open).not_to include(ticket_closed, ticket_support_response, ticket_user_response)
+      end
+
+      it 'should return user_response ticket' do
+        expect(Ticket.filtered_by_status_user_response).to include(ticket_user_response)
+        expect(Ticket.filtered_by_status_user_response).not_to include(ticket_open, ticket_closed, ticket_support_response)
+      end
+
+      it 'should return support_response ticket' do
+        expect(Ticket.filtered_by_status_support_response).to include(ticket_support_response)
+        expect(Ticket.filtered_by_status_support_response).not_to include(ticket_open, ticket_closed, ticket_user_response)
+      end
+
+      it 'should return closed ticket' do
+        expect(Ticket.filtered_by_status_closed).to include(ticket_closed)
+        expect(Ticket.filtered_by_status_closed).not_to include(ticket_open, ticket_support_response, ticket_user_response)
+      end
+    end
+
+    context 'ordering' do
+      let(:ticket1) { create(:ticket, title: 'abcdef') }
+      let(:ticket2) { create(:ticket, :om_department, title: 'bcdefgh') }
+
+      it 'should order by title asc' do
+        expected_array = [ticket1, ticket2]
+        expect(Ticket.ordered_by_title_asc).to eq(expected_array)
+      end
+
+      it 'should order by title desc' do
+        expected_array = [ticket2, ticket1]
+        expect(Ticket.ordered_by_title_desc).to eq(expected_array)
+      end
+
+      it 'should order by department_name asc' do
+        expected_array = [ticket1, ticket2]
+        expect(Ticket.ordered_by_department_it).to eq(expected_array)
+      end
+
+      it 'should order by department_name desc' do
+        expected_array = [ticket2, ticket1]
+        expect(Ticket.ordered_by_department_om).to eq(expected_array)
+      end
     end
   end
+
 end
