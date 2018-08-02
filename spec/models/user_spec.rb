@@ -126,4 +126,24 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'scopes' do
+
+    context 'locked / unlocked' do
+      let(:user1) { create(:user) }
+      let(:user2) { create(:user) }
+      before { user1.lock_access! }
+
+      it 'should return locked user' do
+        expect(User.locked).to include(user1)
+        expect(User.locked).not_to include(user2)
+      end
+
+      it 'should return unlocked user' do
+        expect(User.unlocked).to include(user2)
+        expect(User.unlocked).not_to include(user1)
+      end
+    end
+
+  end
+
 end
