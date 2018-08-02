@@ -11,7 +11,7 @@ RSpec.describe Ticket, type: :model do
     it { should validate_presence_of(:note) }
     it { should validate_presence_of(:department) }
     it { should validate_length_of(:note).is_at_most(500) }
-    it { should validate_length_of(:title).is_at_most(30) }
+    it { should validate_length_of(:title).is_at_most(50) }
   end
     
 
