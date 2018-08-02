@@ -165,8 +165,32 @@ RSpec.describe Ticket, type: :model do
         expect(Ticket.filtered_by_status_closed).to include(ticket_closed)
         expect(Ticket.filtered_by_status_closed).not_to include(ticket_open, ticket_support_response, ticket_user_response)
       end
-
     end
 
+    context 'ordering' do
+      let(:ticket1) { create(:ticket, title: 'abcdef') }
+      let(:ticket2) { create(:ticket, :om_department, title: 'bcdefgh') }
+
+      it 'should order by title asc' do
+        expected_array = [ticket1, ticket2]
+        expect(Ticket.ordered_by_title_asc).to eq(expected_array)
+      end
+
+      it 'should order by title desc' do
+        expected_array = [ticket2, ticket1]
+        expect(Ticket.ordered_by_title_desc).to eq(expected_array)
+      end
+
+      it 'should order by department_name asc' do
+        expected_array = [ticket1, ticket2]
+        expect(Ticket.ordered_by_department_it).to eq(expected_array)
+      end
+
+      it 'should order by department_name desc' do
+        expected_array = [ticket2, ticket1]
+        expect(Ticket.ordered_by_department_om).to eq(expected_array)
+      end
+    end
   end
+
 end
