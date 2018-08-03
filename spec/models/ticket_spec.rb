@@ -156,6 +156,43 @@ RSpec.describe Ticket, type: :model do
       end
     end
 
+    describe '::sort_tickets' do
+      let(:ticket1) { create(:ticket, title: 'abc') }
+      let(:ticket2) { create(:ticket, :om_department, title: 'bcd', created_at: 2.hours.ago) }
+      before do
+        Ticket.destroy_all
+        ticket1
+        ticket2
+      end
+      
+      it 'should sort by title_asc' do
+        expect(Ticket.sort_tickets('title_asc')).to eq([ticket1, ticket2])
+      end
+
+      it 'should sort by title_desc' do
+        expect(Ticket.sort_tickets('title_desc')).to eq([ticket2, ticket1])
+      end
+
+      it 'should sort by department_it' do
+        expect(Ticket.sort_tickets('department_it')).to eq([ticket1, ticket2])
+      end
+
+      it 'should sort by department_om' do
+        expect(Ticket.sort_tickets('department_om')).to eq([ticket2, ticket1])
+      end
+
+      it 'should order by user_name_asc' do
+        expected_array = [ticket1, ticket2].sort_by! { |ticket| ticket.user.last_name }
+        expect(Ticket.sort_tickets('user_name_asc')).to eq(expected_array)
+      end
+
+      it 'should order by user_name_desc' do
+        expected_array = [ticket1, ticket2]
+        expected_array.sort_by! { |ticket| ticket.user.last_name }
+        expect(Ticket.sort_tickets('user_name_desc')).to eq([expected_array[1], expected_array[0]])
+      end
+    end
+
   end
 
   describe 'callbacks' do
