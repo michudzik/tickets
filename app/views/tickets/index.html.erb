@@ -46,7 +46,7 @@
         <th scope="col">Author<%= link_to "<span>&#8593;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "user_name_desc"), class: 'arrow-up' %> <%= link_to "<span>&#8595;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "user_name_asc"), class: 'arrow-down' %> </th>
         <th scope="col">Title<%= link_to "<span>&#8593;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "title_desc"), class: 'arrow-up' %> <%= link_to "<span>&#8595;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "title_asc"), class: 'arrow-down' %> </th>
         <th scope="col">Department<%= link_to "<span>&#8593;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "department_it"), class: 'arrow-up' %> <%= link_to "<span>&#8595;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "department_om"), class: 'arrow-down' %> </th>
-        <th scope="col">Last response</th>        
+        <th scope="col">Last response</th>
         <th scope="col">Status</th>
       </tr>
     </thead>
