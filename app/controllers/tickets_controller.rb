@@ -2,12 +2,8 @@ class TicketsController < ApplicationController
   def index
     redirect_to user_dashboard_path, alert: 'Forbidden access' and return if current_user.user?
     @tickets = Ticket.find_related_tickets(current_user)
-    @tickets = @tickets.filter_tickets(params[:filter_param]) if params[:filter_param] && params[:filter_param] != 'all'
-    @tickets = if params[:sorted_by]
-                 @tickets.sort_tickets(params[:sorted_by])
-               else
-                 @tickets.ordered_by_date
-               end
+    @tickets = @tickets.filter_tickets(params[:filter_param]) if params[:filter_param]
+    @tickets = @tickets.sort_tickets(params[:sorted_by]) if params[:sorted_by]
     @tickets = @tickets.paginate(page: params[:page], per_page: params[:number])
   end
 

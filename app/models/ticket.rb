@@ -68,8 +68,10 @@ class Ticket < ActiveRecord::Base
       filtered_by_status_closed
     when 'user_response'
       filtered_by_status_user_response
-    else
+    when 'support_response'
       filtered_by_status_support_response
+    else
+      all
     end
   end
 
@@ -85,8 +87,10 @@ class Ticket < ActiveRecord::Base
       ordered_by_user_name_desc
     when 'department_om'
       ordered_by_department_om
-    else
+    when 'department_it'
       ordered_by_department_it
+    else
+      ordered_by_date
     end
   end
 
