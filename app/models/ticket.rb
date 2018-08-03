@@ -50,6 +50,16 @@ class Ticket < ActiveRecord::Base
     end
   end
 
+  def self.find_related_tickets(current_user)
+    if current_user.admin?
+      all
+    elsif current_user.om_support?
+      om_department
+    elsif current_user.it_support?
+      it_department
+    end
+  end
+
   private
 
   def default_status

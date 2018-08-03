@@ -101,28 +101,28 @@ RSpec.describe TicketsController, type: :controller do
     context 'tickets it support' do
       let(:ticket1) { create(:ticket) }
       let(:ticket2) { create(:ticket) }
-      let(:ticket3) { create(:ticket) }
+      let(:ticket3) { create(:ticket, :om_department) }
       let(:it_support_user) { create(:user, :it_support) }
       before { subject }
 
       it 'should return all tickets' do
         sign_out admin
         sign_in it_support_user
-        expect(assigns(:tickets)).to match_array([ticket1, ticket2, ticket3])
+        expect(assigns(:tickets)).to match_array([ticket1, ticket2])
       end
     end
 
     context 'tickets om support' do
       let(:ticket1) { create(:ticket, :om_department) }
       let(:ticket2) { create(:ticket, :om_department) }
-      let(:ticket3) { create(:ticket, :om_department) }
+      let(:ticket3) { create(:ticket) }
       let(:om_support_user) { create(:user, :om_support) }
       before { subject }
 
       it 'should return all tickets' do
         sign_out admin
         sign_in om_support_user
-        expect(assigns(:tickets)).to match_array([ticket1, ticket2, ticket3])
+        expect(assigns(:tickets)).to match_array([ticket1, ticket2])
       end
     end
   end
