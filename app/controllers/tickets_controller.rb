@@ -1,5 +1,4 @@
 class TicketsController < ApplicationController
-
   def index
     redirect_to user_dashboard_path, alert: 'Forbidden access' and return if current_user.user?
 
@@ -12,31 +11,31 @@ class TicketsController < ApplicationController
     end
 
     case params[:filter_param]
-    when "open"
+    when 'open'
       @tickets = @tickets.filtered_by_status_open
-    when "support_response"
+    when 'support_response'
       @tickets = @tickets.filtered_by_status_support_response
-    when "user_response"
+    when 'user_response'
       @tickets = @tickets.filtered_by_status_user_response
-    when "closed"
-      @tickets = @tickets.filtered_by_status_closed                     
+    when 'closed'
+      @tickets = @tickets.filtered_by_status_closed
     end
 
     case params[:sorted_by]
-    when "title_asc"
+    when 'title_asc'
       @tickets = @tickets.ordered_by_title_asc
-    when "title_desc"
+    when 'title_desc'
       @tickets = @tickets.ordered_by_title_desc
-    when "user_name_asc"
+    when 'user_name_asc'
       @tickets = @tickets.ordered_by_user_name_asc
-    when "user_name_desc"
+    when 'user_name_desc'
       @tickets = @tickets.ordered_by_user_name_desc
-    when "department_om"
+    when 'department_om'
       @tickets = @tickets.ordered_by_department_om
-    when "department_it"
+    when 'department_it'
       @tickets = @tickets.ordered_by_department_it
     else
-      @tickets = @tickets.ordered_by_date     
+      @tickets = @tickets.ordered_by_date
     end
 
     @tickets = @tickets.paginate(page: params[:page], per_page: params[:number])
@@ -59,14 +58,14 @@ class TicketsController < ApplicationController
     @ticket = current_user.tickets.build(ticket_params)
     if @ticket.save
       if @ticket.department.name == 'IT'
-        @emails = User.joins(:role).where(roles: {name: 'it_support'}).distinct.pluck(:email)
+        @emails = User.joins(:role).where(roles: { name: 'it_support' }).distinct.pluck(:email)
       else
-        @emails = User.joins(:role).where(roles: {name: 'om_support'}).distinct.pluck(:email)
+        @emails = User.joins(:role).where(roles: { name: 'om_support' }).distinct.pluck(:email)
       end
-        @emails.delete(current_user.email)
-        @emails.each do |email|
-          SlackService.new.call(email, @ticket.id) 
-        end
+      @emails.delete(current_user.email)
+      @emails.each do |email|
+        SlackService.new.call(email, @ticket.id)
+      end
       redirect_to user_dashboard_path, notice: 'New ticket has been reported'
     else
       @departments = Department.all.pluck(:name, :id)

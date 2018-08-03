@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   def index
     @roles = Role.all.map { |role| [role.name.humanize.to_s, role.id] }
     @users = User.all
-    
+
     case params[:filter_param]
     when 'locked'
       @users = @users.locked
@@ -16,15 +16,15 @@ class UsersController < ApplicationController
       @users = @users.unlocked
     end
 
-    case params[:sorted_by]     
+    case params[:sorted_by]
     when 'last_name_asc'
       @users = @users.ordered_by_last_name_asc
     when 'last_name_desc'
-      @users = @users.ordered_by_last_name_desc      
+      @users = @users.ordered_by_last_name_desc
     when 'email_asc'
       @users = @users.ordered_by_email_asc
     when 'email_desc'
-      @users = @users.ordered_by_email_desc      
+      @users = @users.ordered_by_email_desc
     end
 
     @users = @users.paginate(page: params[:page], per_page: params[:number])
