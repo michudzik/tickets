@@ -16,10 +16,15 @@ RSpec.describe TicketsController, type: :controller do
     end
 
     describe 'filters' do
-      let(:open_ticket) { create(:ticket) }
-      let(:support_response_ticket) { create(:ticket, :support_response) }
-      let(:user_response_ticket) { create(:ticket, :user_response) }
-      let(:closed_ticket) { create(:ticket, :closed) }
+      let!(:open_ticket) { create(:ticket) }
+      let!(:support_response_ticket) { create(:ticket, :support_response) }
+      let!(:user_response_ticket) { create(:ticket, :user_response) }
+      let!(:closed_ticket) { create(:ticket, :closed) }
+
+      it 'should shw all tickets' do
+        get :index, params: { filter_param: 'all' }
+        expect(assigns(:tickets)).to match_array([open_ticket, closed_ticket, support_response_ticket, user_response_ticket])
+      end
 
       it 'should only show open ticket' do
         get :index, params: { filter_param: 'open' }
@@ -43,8 +48,8 @@ RSpec.describe TicketsController, type: :controller do
     end
 
     describe 'sorting' do
-      let(:ticket1) { create(:ticket, title: 'abc') }
-      let(:ticket2) { create(:ticket, :om_department, title: 'bcd') }
+      let!(:ticket1) { create(:ticket, title: 'abc') }
+      let!(:ticket2) { create(:ticket, :om_department, title: 'bcd', created_at: 2.hours.ago) }
 
       it 'should sort by title_asc' do
         get :index, params: { sorted_by: 'title_asc' }
@@ -74,9 +79,9 @@ RSpec.describe TicketsController, type: :controller do
 
       it 'should order by user_name_desc' do
         get :index, params: { sorted_by: 'user_name_desc' }
-        expected_array = [ticket1, ticket2].sort_by! { |ticket| ticket.user.last_name }
-        expected_array = expected_array.reverse
-        expect(assigns(:tickets)).to eq(expected_array)
+        expected_array = [ticket1, ticket2]
+        expected_array.sort_by! { |ticket| ticket.user.last_name }
+        expect(assigns(:tickets)).to eq([expected_array[1], expected_array[0]])
       end
 
       it 'should sort by date_desc in default' do

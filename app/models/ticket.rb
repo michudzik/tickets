@@ -60,15 +60,33 @@ class Ticket < ActiveRecord::Base
     end
   end
 
-  def filter(status)
-    if status == 'open'
+  def self.filter_tickets(status)
+    case status
+    when 'open'
       filtered_by_status_open
-    elsif status == 'closed'
+    when 'closed'
       filtered_by_status_closed
-    elsif status == 'user_response'
-      filtered_by_status_support_response
-    else
+    when 'user_response'
       filtered_by_status_user_response
+    else
+      filtered_by_status_support_response
+    end
+  end
+
+  def self.sort_tickets(by)
+    case by
+    when 'title_asc'
+      ordered_by_title_asc
+    when 'title_desc'
+      ordered_by_title_desc
+    when 'user_name_asc'
+      ordered_by_user_name_asc
+    when 'user_name_desc'
+      ordered_by_user_name_desc
+    when 'department_om'
+      ordered_by_department_om
+    else
+      ordered_by_department_it
     end
   end
 
