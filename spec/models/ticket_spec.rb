@@ -105,10 +105,8 @@ RSpec.describe Ticket, type: :model do
     end
 
     describe '::find_related_tickets' do
-      let(:it_department) { create(:department) }
-      let(:om_department) { create(:department, :om) }
-      let!(:ticket_it) { create(:ticket, department_id: it_department.id) }
-      let!(:ticket_om) { create(:ticket, department_id: om_department.id) } 
+      let!(:ticket_it) { create(:ticket) }
+      let!(:ticket_om) { create(:ticket, :om_department) } 
       context 'it' do
         it 'should return it ticket' do
           user = create(:user, :it_support)
@@ -130,6 +128,34 @@ RSpec.describe Ticket, type: :model do
         end
       end
     end
+
+    describe '::filter_tickets' do
+      let!(:open_ticket) { create(:ticket) }
+      let!(:support_response_ticket) { create(:ticket, :support_response) }
+      let!(:user_response_ticket) { create(:ticket, :user_response) }
+      let!(:closed_ticket) { create(:ticket, :closed) }
+
+      it 'should return open ticket' do
+        expect(Ticket.filter_tickets('open')).to include(open_ticket)
+        expect(Ticket.filter_tickets('open')).not_to include(support_response_ticket, user_response_ticket, closed_ticket)
+      end
+
+      it 'should return closed ticket' do
+        expect(Ticket.filter_tickets('closed')).to include(closed_ticket)
+        expect(Ticket.filter_tickets('closed')).not_to include(support_response_ticket, user_response_ticket, open_ticket)
+      end
+
+      it 'should return user_response ticket' do
+        expect(Ticket.filter_tickets('user_response')).to include(user_response_ticket)
+        expect(Ticket.filter_tickets('user_response')).not_to include(support_response_ticket, open_ticket, closed_ticket)
+      end
+
+      it 'should return support_response ticket' do
+        expect(Ticket.filter_tickets('support_response')).to include(support_response_ticket)
+        expect(Ticket.filter_tickets('support_response')).not_to include(open_ticket, user_response_ticket, closed_ticket)
+      end
+    end
+
   end
 
   describe 'callbacks' do

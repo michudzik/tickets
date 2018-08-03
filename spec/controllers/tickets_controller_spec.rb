@@ -21,7 +21,7 @@ RSpec.describe TicketsController, type: :controller do
       let!(:user_response_ticket) { create(:ticket, :user_response) }
       let!(:closed_ticket) { create(:ticket, :closed) }
 
-      it 'should shw all tickets' do
+      it 'should show all tickets' do
         get :index, params: { filter_param: 'all' }
         expect(assigns(:tickets)).to match_array([open_ticket, closed_ticket, support_response_ticket, user_response_ticket])
       end
