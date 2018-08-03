@@ -14,7 +14,12 @@ class TicketsController < ApplicationController
   def show
     @ticket = Ticket.find(params[:id])
     @comments = @ticket.comments.order(created_at: :asc)
-    redirect_to user_dashboard_path, alert: 'Forbidden access' and return unless @ticket.related_to_ticket?(current_user)
+    unless @ticket.related_to_ticket?(current_user)
+      redirect_to(
+        user_dashboard_path,
+        alert: 'Forbidden access'
+      ) and return
+    end
     @comment = Comment.new(ticket_id: @ticket.id)
     @status = @ticket.status.name.humanize
   end
@@ -27,11 +32,11 @@ class TicketsController < ApplicationController
   def create
     @ticket = current_user.tickets.build(ticket_params)
     if @ticket.save
-      if @ticket.department.name == 'IT'
-        @emails = User.joins(:role).where(roles: { name: 'it_support' }).distinct.pluck(:email)
-      else
-        @emails = User.joins(:role).where(roles: { name: 'om_support' }).distinct.pluck(:email)
-      end
+      @emails = if @ticket.department.name == 'IT'
+                  User.joins(:role).where(roles: { name: 'it_support' }).distinct.pluck(:email)
+                else
+                  User.joins(:role).where(roles: { name: 'om_support' }).distinct.pluck(:email)
+                end
       @emails.delete(current_user.email)
       @emails.each do |email|
         SlackService.new.call(email, @ticket.id)
