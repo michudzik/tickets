@@ -13,7 +13,7 @@ class Ticket < ActiveRecord::Base
 
   scope :it_department,                          -> { joins(:department).where(departments: { name: 'IT' }) }
   scope :om_department,                          -> { joins(:department).where(departments: { name: 'OM' }) }
-  scope :ordered_by_date,                        -> { order('created_at DESC') }
+  scope :ordered_by_date,                        -> { order(created_at: :desc) }
   scope :ordered_by_title_asc,                   -> { order('lower(title) ASC') }
   scope :ordered_by_title_desc,                  -> { order('lower(title) DESC') }
   scope :ordered_by_user_name_asc,               -> { joins(:user).order('lower(users.last_name) ASC') }
