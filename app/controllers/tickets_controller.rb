@@ -44,6 +44,7 @@ class TicketsController < ApplicationController
 
   def show
     @ticket = Ticket.find(params[:id])
+    @comments = @ticket.comments.order(created_at: :asc)
     redirect_to user_dashboard_path, alert: 'Forbidden access' and return unless @ticket.related_to_ticket?(current_user)
     @comment = Comment.new(ticket_id: @ticket.id)
     @status = @ticket.status.name.humanize
