@@ -67,15 +67,13 @@
 
   <div class="jumbotron p-2 bg-light">
   <div class="commentSection" data-ticket-id="<%= @ticket.id %>">
-    <% cache @ticket.comments do %>
-      <% @ticket.comments.each do |comment| %>
-        <% if comment.user.id == current_user.id %>
-          <%= render 'comments/comment', comment: comment, align: 'right' %>
-        <% else %>
-          <%= render 'comments/comment', comment: comment, align: 'left' %> 
-        <% end %> 
-      <% end %>
-    <% end %>
+  <% @ticket.comments.each do |comment| %>
+    <% if comment.user.id == current_user.id %>
+      <%= render 'comments/comment', comment: comment, align: 'right' %>
+    <% else %>
+      <%= render 'comments/comment', comment: comment, align: 'left' %> 
+    <% end %> 
+  <% end %>
   </div>
   <% unless @ticket.closed? %>
     <br />
