@@ -18,5 +18,3 @@ jQuery(document).on 'turbolinks:load', ->
 
       send_comment: (comment, ticket_id) ->
         @perform 'send_comment', comment: comment, ticket_id: ticket_id
-
-    

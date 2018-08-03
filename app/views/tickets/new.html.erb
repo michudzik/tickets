@@ -24,7 +24,7 @@
         <%= f.select :department_id, @departments, {}, class: 'custom-select' %>
         <hr />
         <%= f.label :title %>
-        <%= f.text_field :title, class: 'form-control' %>
+        <%= f.text_field :title, maxlength: '50', class: 'form-control' %>
         <hr />
         <%= f.label :note , 'Body' %>
         <%= f.text_area :note, class: 'form-control', cols: '16', rows: '6' %>

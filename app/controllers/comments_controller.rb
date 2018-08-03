@@ -7,18 +7,24 @@ class CommentsController < ApplicationController
       if @comment.save
         @comment.update_ticket_status!(user: @comment.user, ticket: @ticket)
         user_ids = @comment.ticket.comments.where.not(user_id: current_user.id).pluck(:user_id)
+        user_ids.append(@comment.ticket.user.id) if user_ids.empty?
         @comment.ticket.notify_users(user_ids)
         @emails = @ticket.comments.joins(:user).distinct.pluck(:email)
         if !@emails.include?(@ticket.user.email)
           @emails.push(@ticket.user.email)
         end
+        @emails.delete(current_user.email)
         @emails.each do |email|
-          SlackService.new.call(email) 
+          SlackService.new.call(email, @ticket.id) 
         end
         format.html { redirect_to ticket_path(@ticket.id), notice: 'Comment was created' }
         format.js
       else
-        format.html { redirect_to ticket_path(@ticket.id), alert: 'There was an error while creating comment' }
+        if @comment.body.empty?
+          format.html { redirect_to ticket_path(@ticket.id), alert: 'Couldn\'t create comment without any text' }
+        else
+          format.html { redirect_to ticket_path(@ticket.id), alert: 'There was an error while creating comment' }
+        end
       end
     end
   end
