@@ -2,13 +2,14 @@ class TicketsController < ApplicationController
   def index
     redirect_to user_dashboard_path, alert: 'Forbidden access' and return if current_user.user?
 
-    if current_user.admin?
-      @tickets = Ticket.all
-    elsif current_user.om_support?
-      @tickets = Ticket.om_department
-    elsif current_user.it_support?
-      @tickets = Ticket.it_department
-    end
+    @tickets = Ticket.find_related_tickets(current_user)
+    # if current_user.admin?
+    #   @tickets = Ticket.all
+    # elsif current_user.om_support?
+    #   @tickets = Ticket.om_department
+    # elsif current_user.it_support?
+    #   @tickets = Ticket.it_department
+    # end
 
     case params[:filter_param]
     when 'open'

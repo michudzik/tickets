@@ -60,6 +60,18 @@ class Ticket < ActiveRecord::Base
     end
   end
 
+  def filter(status)
+    if status == 'open'
+      filtered_by_status_open
+    elsif status == 'closed'
+      filtered_by_status_closed
+    elsif status == 'user_response'
+      filtered_by_status_support_response
+    else
+      filtered_by_status_user_response
+    end
+  end
+
   private
 
   def default_status
