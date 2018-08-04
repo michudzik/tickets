@@ -19,7 +19,7 @@
   <div class="row">
     <div class="col-md-6 offset-md-3">
       <h1><center> Create new ticket </center></h1> 
-      <%= form_for @ticket, url: user_tickets_path(current_user.id) do |f| %>
+      <%= form_for @ticket, id: 'myForm', url: user_tickets_path(current_user.id) do |f| %>
         <%= f.label :department_id %>
         <%= f.select :department_id, @departments, {}, class: 'custom-select' %>
         <hr />
