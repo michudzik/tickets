@@ -8,25 +8,8 @@ class UsersController < ApplicationController
   def index
     @roles = Role.all.map { |role| [role.name.humanize.to_s, role.id] }
     @users = User.all
-
-    case params[:filter_param]
-    when 'locked'
-      @users = @users.locked
-    when 'unlocked'
-      @users = @users.unlocked
-    end
-
-    case params[:sorted_by]
-    when 'last_name_asc'
-      @users = @users.ordered_by_last_name_asc
-    when 'last_name_desc'
-      @users = @users.ordered_by_last_name_desc
-    when 'email_asc'
-      @users = @users.ordered_by_email_asc
-    when 'email_desc'
-      @users = @users.ordered_by_email_desc
-    end
-
+    @users = @users.filter_users(params[:filter_param]) if params[:filter_param]
+    @users = @users.sort_users(params[:sorted_by]) if params[:sorted_by]
     @users = @users.paginate(page: params[:page], per_page: params[:number])
   end
 
@@ -43,7 +26,12 @@ class UsersController < ApplicationController
   end
 
   def deactivate_account
-    redirect_to users_path, alert: 'You can not deactivate yourself' and return if current_user.same_user?(params[:id].to_i)
+    if current_user.same_user?(params[:id].to_i)
+      redirect_to(
+        users_path,
+        alert: 'You can not deactivate yourself'
+      ) and return
+    end
     @user = User.find(params[:id])
     respond_to do |format|
       @user.lock_access!(send_instructions: false)
@@ -53,7 +41,12 @@ class UsersController < ApplicationController
   end
 
   def activate_account
-    redirect_to users_path, alert: 'You can not activate yourself' and return if current_user.same_user?(params[:id].to_i)
+    if current_user.same_user?(params[:id].to_i)
+      redirect_to(
+        users_path,
+        alert: 'You can not activate yourself'
+      ) and return
+    end
     @user = User.find(params[:id])
     respond_to do |format|
       @user.unlock_access!
