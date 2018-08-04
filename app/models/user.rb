@@ -45,6 +45,32 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def self.filter_users(status)
+    case status
+    when 'locked'
+      locked
+    when 'unlocked'
+      unlocked
+    else
+      all
+    end
+  end
+
+  def self.sort_users(by)
+    case by
+    when 'last_name_asc'
+      ordered_by_last_name_asc
+    when 'last_name_desc'
+      ordered_by_last_name_desc
+    when 'email_asc'
+      ordered_by_email_asc
+    when 'email_desc'
+      ordered_by_email_desc
+    else
+      all
+    end
+  end
+
   private
 
   def default_role
