@@ -46,7 +46,7 @@
     <hr/>
 
     <div class="ticket-note text-left">
-      <p><%= sanitize(@ticket.note).gsub(/\n/, '<br />').html_safe %></p>
+      <p><%= sanitize @ticket.note.gsub(/\n/, '<br />').html_safe %></p>
     </div>
     <% if @ticket.uploads.attached? %>
     <hr />

@@ -9,7 +9,6 @@ class TicketsController < ApplicationController
 
   def show
     @ticket = Ticket.find(params[:id])
-    @comments = @ticket.comments.order(created_at: :asc)
     unless @ticket.related_to_ticket?(current_user)
       redirect_to(
         user_dashboard_path,
@@ -17,6 +16,7 @@ class TicketsController < ApplicationController
       ) and return
     end
     @comment = Comment.new(ticket_id: @ticket.id)
+    @comments = @ticket.comments.order(created_at: :asc)
     @status = @ticket.status.name.humanize
   end
 
