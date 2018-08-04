@@ -6,20 +6,97 @@ RSpec.describe TicketsController, type: :controller do
   let!(:user) { create(:user) }
 
   describe '#index' do
-    before do 
-      sign_in admin
-      get :index 
-    end
+    before { sign_in admin }
+    subject { get :index }
 
     describe 'successful response' do
+      before { subject }
       it { expect(response).to be_successful }
       it { expect(response).to render_template('index') }
+    end
+
+    describe 'filters' do
+      let!(:open_ticket) { create(:ticket) }
+      let!(:support_response_ticket) { create(:ticket, :support_response) }
+      let!(:user_response_ticket) { create(:ticket, :user_response) }
+      let!(:closed_ticket) { create(:ticket, :closed) }
+
+      it 'should show all tickets' do
+        get :index, params: { filter_param: 'all' }
+        expect(assigns(:tickets)).to match_array([open_ticket, closed_ticket, support_response_ticket, user_response_ticket])
+      end
+
+      it 'should only show open ticket' do
+        get :index, params: { filter_param: 'open' }
+        expect(assigns(:tickets)).to eq([open_ticket])
+      end
+
+      it 'should only show closed ticket' do
+        get :index, params: { filter_param: 'closed' }
+        expect(assigns(:tickets)).to eq([closed_ticket])
+      end
+
+      it 'should only show ticket with support_response' do
+        get :index, params: { filter_param: 'support_response' }
+        expect(assigns(:tickets)).to eq([support_response_ticket])
+      end
+
+      it 'should only show ticket with user response' do
+        get :index, params: { filter_param: 'user_response' }
+        expect(assigns(:tickets)).to eq([user_response_ticket])
+      end
+    end
+
+    describe 'sorting' do
+      let!(:ticket1) { create(:ticket, title: 'abc') }
+      let!(:ticket2) { create(:ticket, :om_department, title: 'bcd', created_at: 2.hours.ago) }
+
+      it 'should sort by title_asc' do
+        get :index, params: { sorted_by: 'title_asc' }
+        expect(assigns(:tickets)).to eq([ticket1, ticket2])
+      end
+
+      it 'should sort by title_desc' do
+        get :index, params: { sorted_by: 'title_desc' }
+        expect(assigns(:tickets)).to eq([ticket2, ticket1])
+      end
+
+      it 'should sort by department_it' do
+        get :index, params: { sorted_by: 'department_it' }
+        expect(assigns(:tickets)).to eq([ticket1, ticket2])
+      end
+
+      it 'should sort by department_om' do
+        get :index, params: { sorted_by: 'department_om' }
+        expect(assigns(:tickets)).to eq([ticket2, ticket1])
+      end
+
+      it 'should order by user_name_asc' do
+        get :index, params: { sorted_by: 'user_name_asc' }
+        expected_array = [ticket1, ticket2].sort_by! { |ticket| ticket.user.last_name }
+        expect(assigns(:tickets)).to eq(expected_array)
+      end
+
+      it 'should order by user_name_desc' do
+        get :index, params: { sorted_by: 'user_name_desc' }
+        expected_array = [ticket1, ticket2]
+        expected_array.sort_by! { |ticket| ticket.user.last_name }
+        expect(assigns(:tickets)).to eq([expected_array[1], expected_array[0]])
+      end
+
+      it 'should sort by date_desc in default' do
+        subject
+        expected_array = [ticket1, ticket2].sort_by! { |ticket| ticket.created_at }
+        expected_array = expected_array.reverse
+        expect(assigns(:tickets)).to eq(expected_array)
+      end
     end
 
     context 'tickets admin' do
       let(:ticket1) { create(:ticket) }
       let(:ticket2) { create(:ticket) }
       let(:ticket3) { create(:ticket) }
+      before { subject }
 
       it 'should return all tickets' do
         expect(assigns(:tickets)).to match_array([ticket1, ticket2, ticket3])
@@ -29,26 +106,28 @@ RSpec.describe TicketsController, type: :controller do
     context 'tickets it support' do
       let(:ticket1) { create(:ticket) }
       let(:ticket2) { create(:ticket) }
-      let(:ticket3) { create(:ticket) }
+      let(:ticket3) { create(:ticket, :om_department) }
       let(:it_support_user) { create(:user, :it_support) }
+      before { subject }
 
       it 'should return all tickets' do
         sign_out admin
         sign_in it_support_user
-        expect(assigns(:tickets)).to match_array([ticket1, ticket2, ticket3])
+        expect(assigns(:tickets)).to match_array([ticket1, ticket2])
       end
     end
 
     context 'tickets om support' do
       let(:ticket1) { create(:ticket, :om_department) }
       let(:ticket2) { create(:ticket, :om_department) }
-      let(:ticket3) { create(:ticket, :om_department) }
+      let(:ticket3) { create(:ticket) }
       let(:om_support_user) { create(:user, :om_support) }
+      before { subject }
 
       it 'should return all tickets' do
         sign_out admin
         sign_in om_support_user
-        expect(assigns(:tickets)).to match_array([ticket1, ticket2, ticket3])
+        expect(assigns(:tickets)).to match_array([ticket1, ticket2])
       end
     end
   end
@@ -119,7 +198,6 @@ RSpec.describe TicketsController, type: :controller do
         expect(assigns(:ticket).errors).to be_present
       end
     end
-
   end
 
   describe '#close' do
@@ -205,7 +283,6 @@ RSpec.describe TicketsController, type: :controller do
         end 
       end
     end
-
   end
 
   describe '#search' do
@@ -293,6 +370,5 @@ RSpec.describe TicketsController, type: :controller do
       end
     end
   end
-
 
 end

@@ -50,6 +50,50 @@ class Ticket < ActiveRecord::Base
     end
   end
 
+  def self.find_related_tickets(current_user)
+    if current_user.admin?
+      all
+    elsif current_user.om_support?
+      om_department
+    elsif current_user.it_support?
+      it_department
+    end
+  end
+
+  def self.filter_tickets(status)
+    case status
+    when 'open'
+      filtered_by_status_open
+    when 'closed'
+      filtered_by_status_closed
+    when 'user_response'
+      filtered_by_status_user_response
+    when 'support_response'
+      filtered_by_status_support_response
+    else
+      all
+    end
+  end
+
+  def self.sort_tickets(by)
+    case by
+    when 'title_asc'
+      ordered_by_title_asc
+    when 'title_desc'
+      ordered_by_title_desc
+    when 'user_name_asc'
+      ordered_by_user_name_asc
+    when 'user_name_desc'
+      ordered_by_user_name_desc
+    when 'department_om'
+      ordered_by_department_om
+    when 'department_it'
+      ordered_by_department_it
+    else
+      ordered_by_date
+    end
+  end
+
   private
 
   def default_status
