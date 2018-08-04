@@ -43,7 +43,12 @@ class UsersController < ApplicationController
   end
 
   def deactivate_account
-    redirect_to users_path, alert: 'You can not deactivate yourself' and return if current_user.same_user?(params[:id].to_i)
+    if current_user.same_user?(params[:id].to_i)
+      redirect_to(
+        users_path,
+        alert: 'You can not deactivate yourself'
+      ) and return
+    end
     @user = User.find(params[:id])
     respond_to do |format|
       @user.lock_access!(send_instructions: false)
@@ -53,7 +58,12 @@ class UsersController < ApplicationController
   end
 
   def activate_account
-    redirect_to users_path, alert: 'You can not activate yourself' and return if current_user.same_user?(params[:id].to_i)
+    if current_user.same_user?(params[:id].to_i)
+      redirect_to(
+        users_path,
+        alert: 'You can not activate yourself'
+      ) and return
+    end
     @user = User.find(params[:id])
     respond_to do |format|
       @user.unlock_access!
