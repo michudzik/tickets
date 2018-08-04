@@ -4,11 +4,10 @@ class RegistrationsController < Devise::RegistrationsController
   private
 
   def check_captcha
-    unless verify_recaptcha
-      self.resource = resource_class.new sign_up_params
-      resource.validate
-      set_minimum_password_length
-      respond_with resource
-    end
+    return unless verify_recaptcha
+    self.resource = resource_class.new sign_up_params
+    resource.validate
+    set_minimum_password_length
+    respond_with resource
   end
 end
