@@ -86,7 +86,8 @@ RSpec.describe TicketsController, type: :controller do
 
       it 'should sort by date_desc in default' do
         subject
-        expected_array = [ticket1, ticket2].sort_by! { |ticket| ticket.created_at }
+        expected_array = [ticket1, ticket2]
+        expected_array.sort_by! { |ticket| ticket.created_at }
         expected_array = expected_array.reverse
         expect(assigns(:tickets)).to eq(expected_array)
       end
