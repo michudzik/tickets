@@ -10,12 +10,12 @@ class User < ApplicationRecord
 
   before_validation :default_role, on: :create
 
-  scope :unlocked,                     -> { where(:locked_at => nil) }
-  scope :locked,                       -> { where.not(:locked_at => nil) }
-  scope :ordered_by_last_name_asc,     -> { order('lower(last_name) ASC') }
-  scope :ordered_by_last_name_desc,    -> { order('lower(last_name) DESC') }
-  scope :ordered_by_email_asc,         -> { order('lower(email) ASC') }
-  scope :ordered_by_email_desc,        -> { order('lower(email) DESC') }
+  scope :unlocked,                     -> { where(locked_at: nil) }
+  scope :locked,                       -> { where.not(locked_at: nil) }
+  scope :ordered_by_last_name_asc,     -> { order(Arel.sql('lower(last_name) ASC')) }
+  scope :ordered_by_last_name_desc,    -> { order(Arel.sql('lower(last_name) DESC')) }
+  scope :ordered_by_email_asc,         -> { order(Arel.sql('lower(email) ASC')) }
+  scope :ordered_by_email_desc,        -> { order(Arel.sql('lower(email) DESC')) }
 
   def admin?
     role.name == 'admin'
@@ -43,6 +43,32 @@ class User < ApplicationRecord
 
   def fullname
     "#{first_name} #{last_name}"
+  end
+
+  def self.filter_users(status)
+    case status
+    when 'locked'
+      locked
+    when 'unlocked'
+      unlocked
+    else
+      all
+    end
+  end
+
+  def self.sort_users(by)
+    case by
+    when 'last_name_asc'
+      ordered_by_last_name_asc
+    when 'last_name_desc'
+      ordered_by_last_name_desc
+    when 'email_asc'
+      ordered_by_email_asc
+    when 'email_desc'
+      ordered_by_email_desc
+    else
+      all
+    end
   end
 
   private

@@ -46,7 +46,7 @@
     <hr/>
 
     <div class="ticket-note text-left">
-      <p><%= sanitize(@ticket.note).gsub(/\n/, '<br />').html_safe %></p>
+      <p><%= sanitize @ticket.note.gsub(/\n/, '<br />').html_safe %></p>
     </div>
     <% if @ticket.uploads.attached? %>
     <hr />
@@ -67,15 +67,13 @@
 
   <div class="jumbotron p-2 bg-light">
   <div class="commentSection" data-ticket-id="<%= @ticket.id %>">
-    <% cache @ticket.comments do %>
-      <% @ticket.comments.each do |comment| %>
-        <% if comment.user.id == current_user.id %>
-          <%= render 'comments/comment', comment: comment, align: 'right' %>
-        <% else %>
-          <%= render 'comments/comment', comment: comment, align: 'left' %> 
-        <% end %> 
-      <% end %>
-    <% end %>
+  <% @comments.each do |comment| %>
+    <% if comment.user.id == current_user.id %>
+      <%= render 'comments/comment', comment: comment, align: 'right' %>
+    <% else %>
+      <%= render 'comments/comment', comment: comment, align: 'left' %> 
+    <% end %> 
+  <% end %>
   </div>
   <% unless @ticket.closed? %>
     <br />

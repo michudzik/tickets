@@ -51,3 +51,7 @@ Rails/ApplicationRecord:
   Enabled:                             false
 Style/AndOr:
   Enabled:                             false
+Metrics/CyclomaticComplexity:
+  Max:                                 7
+Rails/LexicallyScopedActionFilter:
+  Enabled:                             false

@@ -103,6 +103,96 @@ RSpec.describe Ticket, type: :model do
         end
       end
     end
+
+    describe '::find_related_tickets' do
+      let!(:ticket_it) { create(:ticket) }
+      let!(:ticket_om) { create(:ticket, :om_department) } 
+      context 'it' do
+        it 'should return it ticket' do
+          user = create(:user, :it_support)
+          expect(Ticket.find_related_tickets(user)).to include(ticket_it)
+          expect(Ticket.find_related_tickets(user)).not_to include(ticket_om)
+        end
+      end
+      context 'om' do
+        it 'should return om ticket' do
+          user = create(:user, :om_support)
+          expect(Ticket.find_related_tickets(user)).to include(ticket_om)
+          expect(Ticket.find_related_tickets(user)).not_to include(ticket_it)
+        end
+      end
+      context 'admin' do
+        it 'should return both tickets' do
+          user = create(:user, :admin)
+          expect(Ticket.find_related_tickets(user)).to include(ticket_it, ticket_om)
+        end
+      end
+    end
+
+    describe '::filter_tickets' do
+      let!(:open_ticket) { create(:ticket) }
+      let!(:support_response_ticket) { create(:ticket, :support_response) }
+      let!(:user_response_ticket) { create(:ticket, :user_response) }
+      let!(:closed_ticket) { create(:ticket, :closed) }
+
+      it 'should return open ticket' do
+        expect(Ticket.filter_tickets('open')).to include(open_ticket)
+        expect(Ticket.filter_tickets('open')).not_to include(support_response_ticket, user_response_ticket, closed_ticket)
+      end
+
+      it 'should return closed ticket' do
+        expect(Ticket.filter_tickets('closed')).to include(closed_ticket)
+        expect(Ticket.filter_tickets('closed')).not_to include(support_response_ticket, user_response_ticket, open_ticket)
+      end
+
+      it 'should return user_response ticket' do
+        expect(Ticket.filter_tickets('user_response')).to include(user_response_ticket)
+        expect(Ticket.filter_tickets('user_response')).not_to include(support_response_ticket, open_ticket, closed_ticket)
+      end
+
+      it 'should return support_response ticket' do
+        expect(Ticket.filter_tickets('support_response')).to include(support_response_ticket)
+        expect(Ticket.filter_tickets('support_response')).not_to include(open_ticket, user_response_ticket, closed_ticket)
+      end
+    end
+
+    describe '::sort_tickets' do
+      let(:ticket1) { create(:ticket, title: 'abc') }
+      let(:ticket2) { create(:ticket, :om_department, title: 'bcd', created_at: 2.hours.ago) }
+      before do
+        Ticket.destroy_all
+        ticket1
+        ticket2
+      end
+      
+      it 'should sort by title_asc' do
+        expect(Ticket.sort_tickets('title_asc')).to eq([ticket1, ticket2])
+      end
+
+      it 'should sort by title_desc' do
+        expect(Ticket.sort_tickets('title_desc')).to eq([ticket2, ticket1])
+      end
+
+      it 'should sort by department_it' do
+        expect(Ticket.sort_tickets('department_it')).to eq([ticket1, ticket2])
+      end
+
+      it 'should sort by department_om' do
+        expect(Ticket.sort_tickets('department_om')).to eq([ticket2, ticket1])
+      end
+
+      it 'should order by user_name_asc' do
+        expected_array = [ticket1, ticket2].sort_by! { |ticket| ticket.user.last_name }
+        expect(Ticket.sort_tickets('user_name_asc')).to eq(expected_array)
+      end
+
+      it 'should order by user_name_desc' do
+        expected_array = [ticket1, ticket2]
+        expected_array.sort_by! { |ticket| ticket.user.last_name }
+        expect(Ticket.sort_tickets('user_name_desc')).to eq([expected_array[1], expected_array[0]])
+      end
+    end
+
   end
 
   describe 'callbacks' do
