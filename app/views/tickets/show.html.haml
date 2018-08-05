@@ -1,0 +1,61 @@
+.container
+  :javascript
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();   
+    });
+  - if @ticket.closed?
+    .ticket-closed-message.mb-2.bg-danger.text-white
+      %tr
+        %td.align-text-bottom
+          %h2.text-center
+            THIS TICKET IS CLOSED
+
+  .jumbotron.p-2.bg-light
+    .tickets-display{ align: 'center' }
+      %table.ticket-properties-table
+        %thead
+          %tr
+            %th
+              %b Title:
+            %th
+              %b User:
+            %th
+              %b Created at:
+            %th
+              %b Status:
+            %th
+        %tbody
+          %tr
+            %td= @ticket.title
+            %td= @ticket.user.fullname
+            %td= @ticket.created_at.strftime("%Y.%m.%d %H:%M")
+            %td= @status
+            %td
+              - unless @ticket.closed?
+                = render 'lock_ticket_modal', ticket: @ticket
+    %hr/
+    .ticket-note.text-left
+      %p= sanitize @ticket.note.gsub(/\n/, '<br />').html_safe
+    - if @ticket.uploads.attached?
+      %hr/
+      .ticket-attachements
+        %table
+          %thead
+            %tr
+              %th Attachements:
+          %tbody
+            - @ticket.uploads.each do |upload|
+              %tr
+                %td= link_to("#{upload.filename}", rails_blob_path(upload, disposition: "attachment"))
+
+  .jumbotron.p-2.bg-light
+    .commentSection{ 'data-ticket-id': "#{@ticket.id}" }
+      - @comments.each do |comment|
+        - if comment.user.id == current_user.id
+          = render 'comments/comment', comment: comment, align: 'right'
+        - else
+          = render 'comments/comment', comment: comment, align: 'left'
+    - unless @ticket.closed?
+      %br/
+      .tickets-display
+        = render 'comments/form'
