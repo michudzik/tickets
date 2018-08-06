@@ -7,17 +7,17 @@
           %button.btn.btn-secondary.dropdown-toggle#dropdownMenuButton{ type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' }
             Results
           .dropdown-menu{ 'aria-labelledby': 'dropdownMenuButton' }
-            = link_to '10', users_path(:number => 10, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), class: 'dropdown-item'
-            = link_to '30', users_path(:number => 30, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), class: 'dropdown-item'
-            = link_to '50', users_path(:number => 50, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), class: 'dropdown-item'
+            = link_to '10', users_path(:number => 10, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), remote: true, class: 'dropdown-item'
+            = link_to '30', users_path(:number => 30, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), remote: true, class: 'dropdown-item'
+            = link_to '50', users_path(:number => 50, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), remote: true, class: 'dropdown-item'
       %th
         .dropdown
           %button.btn.btn-secondary.dropdown-toggle#dropdownMenuButton{ type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' }
             Filter
           .dropdown-menu{ 'aria-labelledby': 'dropdownMenuButton' }
-            = link_to 'All', users_path(:number => params[:number], :filter_param => "all", :sorted_by => params[:sorted_by]), class: 'dropdown-item'
-            = link_to 'Locked', users_path(:number => params[:number], :filter_param => "locked", :sorted_by => params[:sorted_by]), class: 'dropdown-item'
-            = link_to 'Unlocked', users_path(:number => params[:number], :filter_param => "unlocked", :sorted_by => params[:sorted_by]), class: 'dropdown-item'
+            = link_to 'All', users_path(:number => params[:number], :filter_param => "all", :sorted_by => params[:sorted_by]), remote: true, class: 'dropdown-item'
+            = link_to 'Locked', users_path(:number => params[:number], :filter_param => "locked", :sorted_by => params[:sorted_by]), remote: true, class: 'dropdown-item'
+            = link_to 'Unlocked', users_path(:number => params[:number], :filter_param => "unlocked", :sorted_by => params[:sorted_by]), remote: true, class: 'dropdown-item'
 
   %table.table.table-striped
     %thead
@@ -25,10 +25,8 @@
         %th Name#{link_to "<span>&#8593;</span>".html_safe, users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "last_name_desc"), class: 'arrow-up'} #{link_to "<span>&#8595;</span>".html_safe, users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "last_name_asc"), class: 'arrow-down' }
         %th Email#{link_to "<span>&#8593;</span>".html_safe, users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "email_desc"), class: 'arrow-up'} #{link_to "<span>&#8595;</span>".html_safe, users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "email_asc"), class: 'arrow-down' }
         %th{ colspan: '2' } Change role
-    %tbody
-      - cache @users do
-        - @users.each do |user|
-          = render 'user', user: user
+    %tbody#users
+      = render partial: 'user', collection: @users, as: :user
   - if @users.any?
     %div
       = will_paginate @users, :container => false 
