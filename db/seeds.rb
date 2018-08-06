@@ -23,3 +23,8 @@ status_open = Status.find_or_create_by({ name: 'open' })
 status_closed = Status.find_or_create_by({ name: 'closed' })
 status_user_response = Status.find_or_create_by({ name: 'user_response' })
 status_support_response = Status.find_or_create_by({ name: 'support_response' })
+
+Ticket.create(title: Faker::Name.name, note: Faker::Lorem.sentences(3).join(''), user_id: admin.id, department_id: it_department.id, status_id: status_open.id)
+Ticket.create(title: Faker::Name.name, note: Faker::Lorem.sentences(3).join(''), user_id: it_support.id, department_id: om_department.id, status_id: status_user_response.id)
+Ticket.create(title: Faker::Name.name, note: Faker::Lorem.sentences(3).join(''), user_id: om_support.id, department_id: it_department.id, status_id: status_closed.id)
+Ticket.create(title: Faker::Name.name, note: Faker::Lorem.sentences(3).join(''), user_id: user.id, department_id: it_department.id, status_id: status_support_response.id)
