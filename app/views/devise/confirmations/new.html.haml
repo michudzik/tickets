@@ -1,0 +1,15 @@
+.container
+  .row
+    .col-md-6.offset-md-3
+      %h2.confirmation-header
+        Resend confirmation instructions
+      .confirmation-form
+        = form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f|
+          = devise_error_messages!
+          .confirmation-field
+            = f.label :email, class: 'confirmation-label'
+            %br/
+            = f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control', value: (resource.pending_reconfirmation? ? resource.unconfirmed_email   : resource.email)
+          .actions
+            = f.submit 'Resend confirmation instructions', class: 'btn btn-primary btn-block' 
+      = link_to 'Back', root_url, class: 'confirmation-button btn btn-secondary'

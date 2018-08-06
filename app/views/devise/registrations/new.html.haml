@@ -1,0 +1,40 @@
+.container
+  .row
+    .col-md-6.offset-md-3
+      %h2.registration-header
+        Sign up
+      = form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+        - if flash[:recaptcha_error]
+          = flash[:recaptcha_error]
+        - else
+          = devise_error_messages!
+        .registration-personalData
+          .registration-field
+            = f.label :first_name, class: 'registration-label'
+            %br/
+            = f.text_field :first_name, autofocus: true, class: 'form-control', placeholder: 'John'
+          .registration-field
+            = f.label :last_name, class: 'registration-label'
+            %br/
+            = f.text_field :last_name, autofocus: true, class: 'form-control', placeholder: 'Kovalsky'
+          .registration-field
+            = f.label :email, class: 'registration-label'
+            %br/
+            = f.email_field :email, autofocus: true, class: 'form-control'
+
+        .registration-password
+          .registration-field
+            = f.label :password, class: 'registration-label'
+            - if @minimum_password_length
+              %em 
+                (#{@minimum_password_length} characters minimum)
+            %br/
+            = f.password_field :password, class: 'form-control', autocomplete: 'off'
+          .registration-field
+            = f.label :password_confirmation, class: 'registration-label'
+            %br/
+            = f.password_field :password_confirmation, class: 'form-control', autocomplete: 'off'
+        .registration-captcha
+          = recaptcha_tags
+        = f.submit 'Sign up', class: 'btn btn-primary btn-block'
+      = link_to 'Back', root_url, role: 'button', class: 'password-button btn btn-secondary'
