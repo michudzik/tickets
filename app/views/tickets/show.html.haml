@@ -32,7 +32,7 @@
             %td= @status
             %td
               - unless @ticket.closed?
-                = render 'lock_ticket_modal', ticket: @ticket
+                = render 'tickets/partials/lock_ticket_modal', ticket: @ticket
     %hr/
     .ticket-note.text-left
       %p= sanitize @ticket.note.gsub(/\n/, '<br />').html_safe

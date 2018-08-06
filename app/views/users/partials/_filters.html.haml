@@ -1,0 +1,3 @@
+= link_to 'All', users_path(number: params[:number], filter_param: "all", sorted_by: params[:sorted_by]), remote: true, class: 'dropdown-item'
+= link_to 'Locked', users_path(number: params[:number], filter_param: "locked", sorted_by: params[:sorted_by]), remote: true, class: 'dropdown-item'
+= link_to 'Unlocked', users_path(number: params[:number], filter_param: "unlocked", sorted_by: params[:sorted_by]), remote: true, class: 'dropdown-item'

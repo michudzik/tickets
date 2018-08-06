@@ -1,0 +1,6 @@
+= link_to 'All', show_tickets_path(number: params[:number], filter_param: "all", sorted_by: params[:sorted_by]), remote: true, class: 'dropdown-item'
+.dropdown-divider
+= link_to 'Open', show_tickets_path(number: params[:number], filter_param: "open", sorted_by: params[:sorted_by]), remote: true, class: 'dropdown-item'
+= link_to 'Support response', show_tickets_path(number: params[:number], filter_param: "support_response", sorted_by: params[:sorted_by]), remote: true, class: 'dropdown-item'
+= link_to 'User response', show_tickets_path(number: params[:number], filter_param: "user_response", sorted_by: params[:sorted_by]), remote: true, class: 'dropdown-item'
+= link_to 'Closed', show_tickets_path(number: params[:number], filter_param: "closed", sorted_by: params[:sorted_by]), remote: true, class: 'dropdown-item'

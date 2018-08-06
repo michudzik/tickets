@@ -1,0 +1,5 @@
+%th 
+  Name#{link_to "<span>&#8593;</span>".html_safe, users_path(number: params[:number], filter_param: params[:filter_param], sorted_by: "last_name_desc"), remote: true, class: 'arrow-up'} #{link_to "<span>&#8595;</span>".html_safe, users_path(number: params[:number], filter_param: params[:filter_param], sorted_by: "last_name_asc"), remote: true, class: 'arrow-down' }
+%th 
+  Email#{link_to "<span>&#8593;</span>".html_safe, users_path(number: params[:number], filter_param: params[:filter_param], sorted_by: "email_desc"), remote: true, class: 'arrow-up'} #{link_to "<span>&#8595;</span>".html_safe, users_path(number: params[:number], filter_param: params[:filter_param], sorted_by: "email_asc"), remote: true, class: 'arrow-down' }
+%th{ colspan: '2' } Change role

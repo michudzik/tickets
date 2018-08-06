@@ -17,4 +17,4 @@
       = link_to 'Unlock', activate_account_user_path(user.id), method: :put, class: 'btn btn-primary'
   - else
     %td
-      = render 'lock_account_modal', user: user
+      = render 'users/partials/lock_account_modal', user: user
