@@ -1,5 +1,5 @@
 Recaptcha.configure do |config|
-  if Rails.env.production?
+  if Rails.env.production? || Rails.env.development?
     config.site_key   = Rails.application.credentials[Rails.env.to_sym][:RECAPTCHA_SITE_KEY]
     config.secret_key = Rails.application.credentials[Rails.env.to_sym][:RECAPTCHA_SECRET_KEY]
   else
