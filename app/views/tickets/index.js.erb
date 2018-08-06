@@ -1,0 +1,4 @@
+$('#tickets').html('<%= j render partial: 'tickets/partials/ticket', collection: @tickets, as: :ticket %>');
+$('#filters').html('<%= j render 'tickets/partials/filters' %>');
+$('#results').html('<%= j render 'tickets/partials/results' %>');
+$('#tableHeader').html('<%= j render 'tickets/partials/table_header' %>');

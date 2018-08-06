@@ -3,42 +3,28 @@
     .col-md-6
       %h1 All Tickets
     .col-md-4.offset-md-2.ticket-searchEngine
-      = render 'search_engine'
+      = render 'tickets/partials/search_engine'
 
   %table
     %tr
       %th
         .dropdown
-          %button.btn.btn-secondary.dropdown-toggle{ type: 'button', id: 'dropdownMenuButton', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' }
+          %button.btn.btn-secondary.dropdown-toggle#resultsDropdown{ type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' }
             Results
-          .dropdown-menu{ 'aria-labelledby': 'dropdownMenuButton' }
-            = link_to '10', show_tickets_path(:number => 10, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), class: 'dropdown-item'
-            = link_to '30', show_tickets_path(:number => 30, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), class: 'dropdown-item'
-            = link_to '50', show_tickets_path(:number => 50, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), class: 'dropdown-item'
+          .dropdown-menu#results{ 'aria-labelledby': 'dropdownMenuButton' }
+            = render 'tickets/partials/results'
       %th
         .dropdown
-          %button.btn.btn-secondary.dropdown-toggle#dropdownMenuButton{ type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' }
+          %button.btn.btn-secondary.dropdown-toggle#filterDropdown{ type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' }
             Filter by status
-          .dropdown-menu{ 'aria-labelledby': 'dropdownMenuButton' }
-            = link_to 'All', show_tickets_path(:number => params[:number], :filter_param => "all", :sorted_by => params[:sorted_by]), class: 'dropdown-item'
-            .dropdown-divider
-            = link_to 'Open', show_tickets_path(:number => params[:number], :filter_param => "open", :sorted_by => params[:sorted_by]), class: 'dropdown-item'
-            = link_to 'Support response', show_tickets_path(:number => params[:number], :filter_param => "support_response", :sorted_by => params[:sorted_by]), class: 'dropdown-item'
-            = link_to 'User response', show_tickets_path(:number => params[:number], :filter_param => "user_response", :sorted_by => params[:sorted_by]), class: 'dropdown-item'
-            = link_to 'Closed', show_tickets_path(:number => params[:number], :filter_param => "closed", :sorted_by => params[:sorted_by]), class: 'dropdown-item'
+          .dropdown-menu#filters{ 'aria-labelledby': 'dropdownMenuButton' }
+            = render 'tickets/partials/filters'
 
   %table.table.table-striped
-    %thead
-      %tr
-        %th{ scope: 'col'} Author #{link_to "<span>&#8593;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "user_name_desc"), class: 'arrow-up'} #{link_to "<span>&#8595;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "user_name_asc"), class: 'arrow-down'}
-        %th{ scope: 'col'} Title #{link_to "<span>&#8593;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "title_desc"), class: 'arrow-up'} #{link_to "<span>&#8595;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "title_asc"), class: 'arrow-down'}
-        %th{ scope: 'col'}Department#{link_to "<span>&#8593;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "department_it"), class: 'arrow-up'} #{link_to "<span>&#8595;</span>".html_safe, show_tickets_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "department_om"), class: 'arrow-down'}
-        %th{ scope: 'col'} Last response
-        %th{ scope: 'col'} Status
-    %tbody
-      - @tickets.each do |ticket|
-        - cache ticket do
-          = render 'ticket', ticket: ticket
+    %thead#tableHeader
+      = render 'tickets/partials/table_header'
+    %tbody#tickets
+      = render partial: 'tickets/partials/ticket', collection: @tickets, as: :ticket
   - if @tickets.any?
     %div
       = will_paginate @tickets, :container => false

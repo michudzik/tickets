@@ -4,23 +4,23 @@
     %tr
       %th
         .dropdown
-          %button.btn.btn-secondary.dropdown-toggle#dropdownMenuButton{ type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' }
+          %button.btn.btn-secondary.dropdown-toggle#resultsDropdown{ type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' }
             Results
           .dropdown-menu#results{ 'aria-labelledby': 'dropdownMenuButton' }
-            = render 'results'
+            = render 'users/partials/results'
       %th
         .dropdown
-          %button.btn.btn-secondary.dropdown-toggle#dropdownMenuButton{ type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' }
+          %button.btn.btn-secondary.dropdown-toggle#filterDropdown{ type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' }
             Filter
           .dropdown-menu#filters{ 'aria-labelledby': 'dropdownMenuButton' }
-            = render 'filters'
+            = render 'users/partials/filters'
 
   %table.table.table-striped
     %thead
       %tr#table_header
-        = render 'table_header'
+        = render 'users/partials/table_header'
     %tbody#users
-      = render partial: 'user', collection: @users, as: :user
+      = render partial: 'users/partials/user', collection: @users, as: :user
   - if @users.any?
     %div
       = will_paginate @users, :container => false 
