@@ -6,25 +6,19 @@
         .dropdown
           %button.btn.btn-secondary.dropdown-toggle#dropdownMenuButton{ type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' }
             Results
-          .dropdown-menu{ 'aria-labelledby': 'dropdownMenuButton' }
-            = link_to '10', users_path(:number => 10, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), remote: true, class: 'dropdown-item'
-            = link_to '30', users_path(:number => 30, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), remote: true, class: 'dropdown-item'
-            = link_to '50', users_path(:number => 50, :filter_param => params[:filter_param], :sorted_by => params[:sorted_by]), remote: true, class: 'dropdown-item'
+          .dropdown-menu#results{ 'aria-labelledby': 'dropdownMenuButton' }
+            = render 'results'
       %th
         .dropdown
           %button.btn.btn-secondary.dropdown-toggle#dropdownMenuButton{ type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' }
             Filter
-          .dropdown-menu{ 'aria-labelledby': 'dropdownMenuButton' }
-            = link_to 'All', users_path(:number => params[:number], :filter_param => "all", :sorted_by => params[:sorted_by]), remote: true, class: 'dropdown-item'
-            = link_to 'Locked', users_path(:number => params[:number], :filter_param => "locked", :sorted_by => params[:sorted_by]), remote: true, class: 'dropdown-item'
-            = link_to 'Unlocked', users_path(:number => params[:number], :filter_param => "unlocked", :sorted_by => params[:sorted_by]), remote: true, class: 'dropdown-item'
+          .dropdown-menu#filters{ 'aria-labelledby': 'dropdownMenuButton' }
+            = render 'filters'
 
   %table.table.table-striped
     %thead
-      %tr
-        %th Name#{link_to "<span>&#8593;</span>".html_safe, users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "last_name_desc"), remote: true, class: 'arrow-up'} #{link_to "<span>&#8595;</span>".html_safe, users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "last_name_asc"), remote: true, class: 'arrow-down' }
-        %th Email#{link_to "<span>&#8593;</span>".html_safe, users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "email_desc"), remote: true, class: 'arrow-up'} #{link_to "<span>&#8595;</span>".html_safe, users_path(:number => params[:number], :filter_param => params[:filter_param], :sorted_by => "email_asc"), remote: true, class: 'arrow-down' }
-        %th{ colspan: '2' } Change role
+      %tr#table_header
+        = render 'table_header'
     %tbody#users
       = render partial: 'user', collection: @users, as: :user
   - if @users.any?

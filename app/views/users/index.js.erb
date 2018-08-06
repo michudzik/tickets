@@ -1,1 +1,4 @@
 $('#users').html('<%= j render partial: 'user', collection: @users, as: :user %>');
+$('#table_header').html('<%= j render 'table_header' %>');
+$('#filters').html('<%= j render 'filters' %>');
+$('#results').html('<%= j render 'results' %>');
