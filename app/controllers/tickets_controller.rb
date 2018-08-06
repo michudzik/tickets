@@ -26,7 +26,9 @@ class TicketsController < ApplicationController
 
   def new
     @ticket = current_user.tickets.build
-    @departments = Department.all.pluck(:name, :id)
+    it_id = Department.where(name: 'IT').pluck(:id)[0]
+    om_id = Department.where(name: 'OM').pluck(:id)[0]
+    @departments = [['Informatonal Technology', it_id], ['Office Management', om_id]]
   end
 
   def create
