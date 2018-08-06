@@ -49,7 +49,6 @@ gem 'jbuilder', '~> 2.5'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'haml-rails'
-
 gem 'will_paginate', '~> 3.1.0'
 
 gem 'has_scope'

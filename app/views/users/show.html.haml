@@ -1,0 +1,49 @@
+.container
+  :javascript
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();   
+    });
+  %h1 
+    My tickets
+  .dropdown
+    %button.btn.btn-secondary.dropdown-toggle#dropdownMenuButton{ type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' }
+      Results
+    .dropdown-menu{ 'aria-labelledby': 'dropdownMenuButton' }
+      = link_to '10', user_dashboard_path(:number => 10), class: 'dropdown-item'
+      = link_to '30', user_dashboard_path(:number => 30), class: 'dropdown-item'
+      = link_to '50', user_dashboard_path(:number => 50), class: 'dropdown-item'
+
+    %table.table.table-striped
+      %thead
+        %tr>
+          %th{ scope: 'col' } Title
+          %th{ scope: 'col' } Status
+          %th{ scope: 'col' } Last response
+          %th{ scope: 'col' } Recent comments
+      %tbody 
+        - if @tickets.any?
+          - @tickets.each do |ticket|
+            %tr>
+              %td= link_to ticket.title, ticket_path(id: ticket.id)
+              %td
+                %div{ class: "#{ticket.status.name}" }
+                  = ticket.status.name.humanize.to_s
+              %td
+                - if ticket.comments.any?
+                  = ticket.comments.last.updated_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y")                
+                - else
+                  = ticket.created_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y")
+              %td
+                - if ticket.comments.any?
+                  .dropdown
+                    %button.btn.btn-secondary.dropdown-toggle#dropdownMenuButton{ type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' }
+                      See comments
+                    .dropdown-menu{ 'aria-labelledby': 'dropdownMenuButton' }
+                      - ticket.comments.last(6).reverse_each do |comment|
+                        %a.dropdown-item-text{ 'data-toggle': 'tooltip', title: "#{comment.body}" }
+                          %b
+                            #{comment.user.fullname}(#{comment.user.role.name})" %>
+                          (#{comment.created_at.in_time_zone("Warsaw").strftime("%k:%M")}): #{comment.body.truncate(40, omission: '... (continued)')}
+    - if @tickets.any?
+      %div
+        = will_paginate @tickets, :container => false

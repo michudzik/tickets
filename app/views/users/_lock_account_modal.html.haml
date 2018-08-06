@@ -1,0 +1,15 @@
+%button{ class: "btn #{"btn-secondary" if current_user.id == user.id}#{"btn-danger" if current_user.id !=  user.id }", type: 'button', 'data-toggle': 'modal', 'data-target': "#exampleModalCenter#{user.id}", disabled: current_user.id == user.id ? "disabled" : nil }
+  Lock
+
+.modal.fade{ id: "exampleModalCenter#{user.id}", tabindex: '-1', role: 'dialog', 'aria-labelledby': 'exampleModalCenterTitle', 'aria-hidden': 'true' }
+  .modal-dialog.modal-dialog-centered{ role: 'document' }
+    .modal-content
+      .modal-header
+        %h5.modal-title#exampleModalCenterTitle Confirmation
+        %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
+          %span{ 'aria-hidden': 'true'} &times;
+      .modal-body
+        Do you really want to deactivate #{user.fullname} ?
+      .modal-footer
+        %button.btn.btn-secondary{ type: 'button', 'data-dismiss': 'modal' } Close
+        = button_to 'Lock', deactivate_account_user_path(user.id), method: :put, user: user, class: 'btn btn-danger'

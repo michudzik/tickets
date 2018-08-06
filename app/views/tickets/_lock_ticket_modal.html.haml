@@ -1,0 +1,17 @@
+%button.btn.btn-danger{ type: 'button', 'data-toggle': 'modal', 'data-target': "#exampleModalCenter#{ticket.id}" }
+  Close this ticket
+
+.modal.fade{ id: "exampleModalCenter#{ticket.id}", tabindex: '-1', role: 'dialog', 'aria-labelledby': 'exampleModalCenterTitle', 'aria-hidden': 'true' }
+  .modal-dialog.modal-dialog-centered{ role: 'document' }
+    .modal-content
+      .modal-header
+        %h5.modal-title#exampleModalCenterTitle Confirmation
+        %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
+          %span{ 'aria-hidden': 'true' } &times;
+      .modal-body{ align: 'left' }
+        Do you really want to PERMANENTLY close this ticket?
+        %br/
+        This operation is irreversible!
+      .modal-footer
+        %button.btn.btn-secondary{ type: 'button', 'data-dismiss': 'modal' } Back
+        = button_to 'Close ticket', close_user_ticket_path(@ticket.id), method: :put, class: 'btn btn-danger'

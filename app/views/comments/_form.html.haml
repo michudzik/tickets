@@ -1,0 +1,11 @@
+= form_for @comment, url: comments_path, remote: true do |f|
+  = f.text_area :body, :rows => 3, style: 'width:100%;', class: 'jumbotron p-1 bg-white rounded', placeholder: 'Add new comment...'
+  = f.hidden_field(:user_id, value: current_user.id)
+  = f.hidden_field(:ticket_id, value: @ticket.id)
+  .box
+    %p.item{ align: 'left' }
+      = f.label :uploads, 'Attachments'
+      %br/
+      = f.file_field :uploads, multiple: true
+    %p.item{ align: 'right' }
+      = f.submit 'Add comment', class: 'btn btn-secondary'
