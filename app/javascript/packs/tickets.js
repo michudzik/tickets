@@ -1,4 +1,4 @@
-jQuery(document).on('turbolinks:load', function() {
+$(document).on('turbolinks:load', function() {
   var inputColorChanged = false;
   $("#ticket_title").on('keyup', function() {
     if($(this).val().length >= 50){

@@ -37,6 +37,10 @@ class Ticket < ActiveRecord::Base
     status.name == 'closed'
   end
 
+  def open?
+    !closed?
+  end
+
   def related_to_ticket?(current_user)
     user == current_user || current_user.admin? ||
       (current_user.it_support? && department.name == 'IT') ||
