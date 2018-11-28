@@ -8,7 +8,7 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = 'e4f04fedc54ecdfea970df298fa168e0f06411c18f09b51c9ce71e591f17b34ca20bacaf120f0a3a11282704fea6345d43f1a9a60459f361b3fc57c0f29aa553'
+  config.secret_key = Rails.application.credentials[:devise][:secret_key]
   
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -281,6 +281,17 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
 
-
-  config.secret_key = 'ee6cc387df403b56c072c97983b962cb5f6cb470237a4ff5f0691b23aa478978549b3c1c9a0afb80764f56e8f9d3b6a7f9d6e418b1471dc5786dd4f6af8896ba'
+  config.jwt do |jwt|
+    jwt.secret = Rails.application.credentials[:jwt][:secret_key]
+    jwt.request_formats = {
+      user: [:json]
+    }
+    jwt.dispatch_requests = [
+      ['POST', %r{^/users$}],
+      ['POST', %r{^/users/sign_in$}],
+    ]
+    jwt.revocation_requests = [
+      ['DELETE', %r{^/users/sign_out$}],
+    ]
+  end
 end

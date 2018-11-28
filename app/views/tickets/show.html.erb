@@ -1,9 +1,9 @@
 <div class="container">
   <br />
   <script>
-  $(document).ready(function(){
-      $('[data-toggle="tooltip"]').tooltip();   
-  });
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();   
+    });
   </script>
 
   <% if @ticket.closed? %>
@@ -32,9 +32,9 @@
         <tbody>
           <tr>
             <td><%= @ticket.title %></td>
-            <td><%= @ticket.user.fullname %></td>
-            <td><%= @ticket.created_at.strftime("%Y.%m.%d %H:%M") %></td>
-            <td><%= @status %></td>
+            <td><%= @ticket_presenter.author %></td>
+            <td><%= @ticket_presenter.created_at %></td>
+            <td><%= @ticket_presenter.status %></td>
             <td>
               <% unless @ticket.closed? %>
                 <%= render 'lock_ticket_modal', ticket: @ticket %>
@@ -46,7 +46,7 @@
     <hr/>
 
     <div class="ticket-note text-left">
-      <p><%= sanitize @ticket.note.gsub(/\n/, '<br />').html_safe %></p>
+      <p><%= sanitize @ticket_presenter.note %></p>
     </div>
     <% if @ticket.uploads.attached? %>
     <hr />
@@ -67,11 +67,11 @@
 
   <div class="jumbotron p-2 bg-light">
   <div class="commentSection" data-ticket-id="<%= @ticket.id %>">
-  <% @comments.each do |comment| %>
+  <% @comments.zip(@comment_presenters).each do |comment, comment_presenter| %>
     <% if comment.user.id == current_user.id %>
-      <%= render 'comments/comment', comment: comment, align: 'right' %>
+      <%= render 'comments/comment', comment_presenter: comment_presenter, comment: comment, align: 'right' %>
     <% else %>
-      <%= render 'comments/comment', comment: comment, align: 'left' %> 
+      <%= render 'comments/comment', comment_presenter: comment_presenter, comment: comment, align: 'left' %> 
     <% end %> 
   <% end %>
   </div>

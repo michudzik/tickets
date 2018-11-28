@@ -1,165 +1,145 @@
 require 'rails_helper'
 
 RSpec.describe TicketsController, type: :controller do
-
   let(:admin) { create(:user, :admin) }
   let!(:user) { create(:user) }
 
   describe '#index' do
-    before { sign_in admin }
-    subject { get :index }
+    context 'when admin is signed in' do
+      before { sign_in admin }
+      subject { get :index }
+  
+      describe 'successful response' do
+        before { subject }
+        it { expect(response).to be_successful }
+        it { expect(response).to render_template('index') }
+      end
 
-    describe 'successful response' do
-      before { subject }
-      it { expect(response).to be_successful }
-      it { expect(response).to render_template('index') }
+      context 'when database connection is lost during extraction' do
+        before { allow(Ticket).to receive(:find_related_tickets).and_raise ActiveRecord::ActiveRecordError }
+
+        it 'redirects to user dashboard' do
+          expect(subject).to redirect_to user_dashboard_path
+        end
+
+        it 'redirects with an alert' do
+          subject
+          expect(flash[:alert]).to eq 'Lost connection to the database'
+        end
+      end
+
+      context 'when database connection is lost during filtering' do
+        before { allow(Ticket).to receive(:filter_tickets).and_raise ActiveRecord::ActiveRecordError }
+
+        it 'redirects to user dashboard' do
+          expect(subject).to redirect_to user_dashboard_path
+        end
+
+        it 'redirects with an alert' do
+          subject
+          expect(flash[:alert]).to eq 'Lost connection to the database'
+        end
+      end
+
+      context 'when database connection is lost during sorting' do
+        before { allow(Ticket).to receive(:sort_tickets).and_raise ActiveRecord::ActiveRecordError }
+
+        it 'redirects to user dashboard' do
+          expect(subject).to redirect_to user_dashboard_path
+        end
+
+        it 'redirects with an alert' do
+          subject
+          expect(flash[:alert]).to eq 'Lost connection to the database'
+        end
+      end
     end
 
-    describe 'filters' do
-      let!(:open_ticket) { create(:ticket) }
-      let!(:support_response_ticket) { create(:ticket, :support_response) }
-      let!(:user_response_ticket) { create(:ticket, :user_response) }
-      let!(:closed_ticket) { create(:ticket, :closed) }
+    context 'when user is signed in' do
+      before { sign_in user }
+      subject { get :index }
 
-      it 'should show all tickets' do
-        get :index, params: { filter_param: 'all' }
-        expect(assigns(:tickets)).to match_array([open_ticket, closed_ticket, support_response_ticket, user_response_ticket])
+      it 'redirect to user dashboard path' do
+        expect(subject).to redirect_to user_dashboard_path
       end
 
-      it 'should only show open ticket' do
-        get :index, params: { filter_param: 'open' }
-        expect(assigns(:tickets)).to eq([open_ticket])
-      end
-
-      it 'should only show closed ticket' do
-        get :index, params: { filter_param: 'closed' }
-        expect(assigns(:tickets)).to eq([closed_ticket])
-      end
-
-      it 'should only show ticket with support_response' do
-        get :index, params: { filter_param: 'support_response' }
-        expect(assigns(:tickets)).to eq([support_response_ticket])
-      end
-
-      it 'should only show ticket with user response' do
-        get :index, params: { filter_param: 'user_response' }
-        expect(assigns(:tickets)).to eq([user_response_ticket])
-      end
-    end
-
-    describe 'sorting' do
-      let!(:ticket1) { create(:ticket, title: 'abc') }
-      let!(:ticket2) { create(:ticket, :om_department, title: 'bcd', created_at: 2.hours.ago) }
-
-      it 'should sort by title_asc' do
-        get :index, params: { sorted_by: 'title_asc' }
-        expect(assigns(:tickets)).to eq([ticket1, ticket2])
-      end
-
-      it 'should sort by title_desc' do
-        get :index, params: { sorted_by: 'title_desc' }
-        expect(assigns(:tickets)).to eq([ticket2, ticket1])
-      end
-
-      it 'should sort by department_it' do
-        get :index, params: { sorted_by: 'department_it' }
-        expect(assigns(:tickets)).to eq([ticket1, ticket2])
-      end
-
-      it 'should sort by department_om' do
-        get :index, params: { sorted_by: 'department_om' }
-        expect(assigns(:tickets)).to eq([ticket2, ticket1])
-      end
-
-      it 'should order by user_name_asc' do
-        get :index, params: { sorted_by: 'user_name_asc' }
-        expected_array = [ticket1, ticket2].sort_by! { |ticket| ticket.user.last_name }
-        expect(assigns(:tickets)).to eq(expected_array)
-      end
-
-      it 'should order by user_name_desc' do
-        get :index, params: { sorted_by: 'user_name_desc' }
-        expected_array = [ticket1, ticket2]
-        expected_array.sort_by! { |ticket| ticket.user.last_name }
-        expect(assigns(:tickets)).to eq([expected_array[1], expected_array[0]])
-      end
-
-      it 'should sort by date_desc in default' do
+      it 'redirects with an alert' do
         subject
-        expected_array = [ticket1, ticket2]
-        expected_array.sort_by! { |ticket| ticket.created_at }
-        expected_array = expected_array.reverse
-        expect(assigns(:tickets)).to eq(expected_array)
-      end
-    end
-
-    context 'tickets admin' do
-      let(:ticket1) { create(:ticket) }
-      let(:ticket2) { create(:ticket) }
-      let(:ticket3) { create(:ticket) }
-      before { subject }
-
-      it 'should return all tickets' do
-        expect(assigns(:tickets)).to match_array([ticket1, ticket2, ticket3])
-      end
-    end
-
-    context 'tickets it support' do
-      let(:ticket1) { create(:ticket) }
-      let(:ticket2) { create(:ticket) }
-      let(:ticket3) { create(:ticket, :om_department) }
-      let(:it_support_user) { create(:user, :it_support) }
-      before { subject }
-
-      it 'should return all tickets' do
-        sign_out admin
-        sign_in it_support_user
-        expect(assigns(:tickets)).to match_array([ticket1, ticket2])
-      end
-    end
-
-    context 'tickets om support' do
-      let(:ticket1) { create(:ticket, :om_department) }
-      let(:ticket2) { create(:ticket, :om_department) }
-      let(:ticket3) { create(:ticket) }
-      let(:om_support_user) { create(:user, :om_support) }
-      before { subject }
-
-      it 'should return all tickets' do
-        sign_out admin
-        sign_in om_support_user
-        expect(assigns(:tickets)).to match_array([ticket1, ticket2])
+        expect(flash[:alert]).to eq 'Forbidden access'
       end
     end
   end
 
   describe '#show' do
     let(:ticket) { create(:ticket, user_id: user.id) }
-    before do
-      sign_in user
-      get :show, params: { id: ticket.id } 
+    subject { get :show, params: { id: ticket.id } }
+    
+    describe 'successful response' do
+      before { sign_in user }
+
+      it 'is successful' do
+        expect(response).to be_successful
+      end
+
+      it { expect(subject).to render_template('show') }
     end
 
-    describe 'successful response' do
-      it { expect(response).to be_successful }
-      it { expect(response).to render_template('show') }
+    context 'when database connection is lost while fetching comments' do
+      before { sign_in user }
+      
+      it 'redirects to user dashboard' do
+        allow_any_instance_of(Ticket).to receive(:comments).and_raise ActiveRecord::ActiveRecordError
+        expect(subject).to redirect_to user_dashboard_path
+      end
+
+      it 'redirects with an alert' do
+        allow_any_instance_of(Ticket).to receive(:comments).and_raise ActiveRecord::ActiveRecordError
+        subject
+        expect(flash[:alert]).to eq 'Lost connection to the database'
+      end
+    end
+
+    context 'when user is not related to ticket' do
+      let(:user_2) { create(:user) }
+      before { sign_in user_2 }
+      
+      it 'redirect to user dashboard' do
+        expect(subject).to redirect_to user_dashboard_path
+      end
+
+      it 'redirects with an alert' do
+        subject
+        expect(flash[:alert]).to eq 'Forbidden access'
+      end
     end
   end
 
   describe '#new' do
-    before do
-      sign_in user
-      get :new
-    end
+    subject { get :new }
+    before { sign_in user }
 
     describe 'successful response' do
-      it { expect(response).to be_successful }
-      it { expect(response).to render_template('new') }
+      it 'is successful' do
+        subject
+        expect(response).to be_successful
+      end
+
+      it 'renders correct template' do
+        expect(subject).to render_template('new')
+      end
     end
 
-    context 'ticket' do
-      it { expect(assigns(:ticket)).to be_a(Ticket) }
-      it { expect(assigns(:ticket).persisted?).to eq(false) }
+    context 'when connection to the database was lost while fetching departments' do
+      before { allow(Department).to receive(:all).and_raise ActiveRecord::ActiveRecordError }
+
+      it 'redirects to user dashboard' do
+        expect(subject).to redirect_to user_dashboard_path
+      end
+
+      it 'redirects with an alert' do
+        subject
+        expect(flash[:alert]).to eq 'Lost connection to the database'
+      end
     end
   end
 
@@ -179,24 +159,30 @@ RSpec.describe TicketsController, type: :controller do
 
       it 'should redirect with a notice' do
         subject
-        expect(flash[:notice]).to be_present
-      end
-
-      it 'should create new ticket' do
-        expect{ subject }.to change{ Ticket.count }.by(1)
+        expect(flash[:notice]).to match 'New ticket has been reported'
       end
     end
 
-    context 'invalid parameters' do 
-      subject { post :create, params: invalid_parameters }
+    context 'when ticket failed to validate' do
+      subject { post :create, params: valid_parameters }
+      before { allow_any_instance_of(Dry::Validation::Result).to receive(:success?).and_return false }
+      
+      it 'renders new template' do
+        expect(subject).to render_template :new
+      end
+    end
 
-      it 'should render new template' do
-        expect(subject).to render_template('new')
+    context 'when database problems occured' do
+      subject { post :create, params: valid_parameters }
+      before { allow_any_instance_of(Tickets::Create).to receive(:create_ticket).and_raise ActiveRecord::ActiveRecordError }
+
+      it 'redirects to user dashboard' do
+        expect(subject).to redirect_to user_dashboard_path
       end
 
-      it 'should have errors' do
+      it 'redirects with an alert' do
         subject
-        expect(assigns(:ticket).errors).to be_present
+        expect(flash[:alert]).to eq 'Lost connection to the database'
       end
     end
   end
@@ -208,6 +194,36 @@ RSpec.describe TicketsController, type: :controller do
     let!(:status_closed) { create(:status, :closed) }
     let(:valid_parameters) { { id: ticket.id, user_id: user.id } }
  
+    context 'when ticket is not found' do
+      before { sign_in user }
+      subject { put :close, params: { id: -5, user_id: user.id } }
+
+      it 'redirects to users dashboard' do
+        expect(subject).to redirect_to user_dashboard_path
+      end
+
+      it 'redirects with an alert' do
+        subject
+        expect(flash[:alert]).to eq 'Ticket not found'
+      end
+    end
+
+    context 'when database problems occured while updating the status' do
+      before { sign_in user }
+      subject { put :close, params: { id: ticket.id, user_id: user.id } }
+
+      it 'redirects to user dashboard' do
+        allow_any_instance_of(Ticket).to receive(:update).and_raise ActiveRecord::ActiveRecordError
+        expect(subject).to redirect_to user_dashboard_path
+      end
+
+      it 'redirects with an alert' do
+        allow_any_instance_of(Ticket).to receive(:update).and_raise ActiveRecord::ActiveRecordError
+        subject
+        expect(flash[:alert]).to eq 'Lost connection to the database'        
+      end
+    end
+
     context 'user' do
       before { sign_in user }
       subject { put :close, params: valid_parameters }
@@ -218,12 +234,7 @@ RSpec.describe TicketsController, type: :controller do
 
       it 'should redirect with a notice' do
         subject
-        expect(flash[:notice]).to be_present
-      end
-
-      it 'should change ticket status to closed' do
-        subject
-        expect(ticket.reload.status.name).to eq('closed')
+        expect(flash[:notice]).to eq 'Ticket closed'
       end
     end
 
@@ -235,36 +246,28 @@ RSpec.describe TicketsController, type: :controller do
 
       context 'it_support' do
         before { sign_in it }
+
         it 'should redirect to tickets index' do
           expect(subject).to redirect_to(show_tickets_path)
         end
 
         it 'should redirect with a notice' do
           subject
-          expect(flash[:notice]).to be_present
+          expect(flash[:notice]).to eq 'Ticket closed'
         end
-
-        it 'should change ticket status to closed' do
-          subject
-          expect(ticket.reload.status.name).to eq('closed')
-        end 
       end
 
       context 'om_support' do
         before { sign_in om }
-        it 'should redirect to tickets index' do
+
+        it 'redirects to tickets index' do
           expect(subject).to redirect_to(show_tickets_path)
         end
 
-        it 'should redirect with a notice' do
+        it 'redirects with a notice' do
           subject
-          expect(flash[:notice]).to be_present
+          expect(flash[:notice]).to eq 'Ticket closed'
         end
-
-        it 'should change ticket status to closed' do
-          subject
-          expect(ticket.reload.status.name).to eq('closed')
-        end 
       end
 
       context 'admin' do
@@ -293,6 +296,20 @@ RSpec.describe TicketsController, type: :controller do
     let(:ticket4) { create(:ticket, title: 'cde', note: 'cde') }
     subject { get :search, params: { query: 'a' } }
     
+    context 'when normal user tries to access search tool' do
+      let(:user) { create(:user) }
+      before { sign_in user }
+
+      it 'redirects to user dashboard' do
+        expect(subject).to redirect_to user_dashboard_path
+      end
+
+      it 'redrects with an alert' do
+        subject
+        expect(flash[:alert]).to eq 'Forbidden access'
+      end
+    end
+
     describe 'successful response' do
       let(:user) { create(:user, :admin) }
       before do
@@ -308,68 +325,5 @@ RSpec.describe TicketsController, type: :controller do
         expect(response).to render_template('search')
       end
     end
-
-    context 'user' do
-      let(:user) { create(:user) }
-      before { sign_in user }
-
-      it 'should redirect to user\'s dashboard' do
-        expect(subject).to redirect_to(user_dashboard_path)
-      end
-
-      it 'should redirect with a notice' do
-        subject
-        expect(flash[:alert]).to be_present
-      end
-    end
-
-    context 'admin' do
-      let(:admin) { create(:user, :admin) }
-      before do
-        sign_in admin
-        subject
-      end
-
-      it 'should return ticket1 and ticket3' do
-        expect(assigns(:tickets)).to match_array([ticket1, ticket3])
-      end
-
-      it 'should not return ticket2 and ticket4' do
-        expect(assigns(:tickets)).not_to include([ticket2, ticket4])
-      end
-    end
-
-    context 'it_support' do
-      let(:it) { create(:user, :it_support) }
-      before do
-        sign_in it
-        subject
-      end
-
-      it 'should return ticket1' do
-        expect(assigns(:tickets)).to match_array([ticket1])
-      end
-
-      it 'should not return ticket1, ticket2 and ticket4' do
-        expect(assigns(:tickets)).not_to include([ticket2, ticket3, ticket4])
-      end
-    end
-
-    context 'om_support' do
-      let(:om) { create(:user, :om_support) }
-      before do
-        sign_in om
-        subject
-      end
-
-      it 'should return ticket3' do
-        expect(assigns(:tickets)).to match_array([ticket3])
-      end
-
-      it 'should not return ticket2 and ticket4' do
-        expect(assigns(:tickets)).not_to include([ticket1, ticket2, ticket4])
-      end
-    end
   end
-
 end

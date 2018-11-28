@@ -6,15 +6,6 @@ RSpec.describe Ticket, type: :model do
   let!(:user) { create(:user) }
   let!(:ticket) { Ticket.create() }
 
-  describe 'validations' do
-    it { should validate_presence_of(:title) }
-    it { should validate_presence_of(:note) }
-    it { should validate_presence_of(:department) }
-    it { should validate_length_of(:note).is_at_most(500) }
-    it { should validate_length_of(:title).is_at_most(50) }
-  end
-    
-
   describe 'attributes' do
     it 'should have proper attributes' do
       expect(subject.attributes).to include('title', 'note', 'status_id', 'user_id', 'department_id') 
@@ -31,6 +22,19 @@ RSpec.describe Ticket, type: :model do
   describe 'methods' do
 
     let(:ticket) { create(:ticket) }
+
+    describe '#open?' do
+       let(:status) { create(:status, :closed) }
+
+      it 'should return true' do
+        expect(ticket.open?).to eq(true)
+      end
+
+      it 'should return false' do
+        ticket.status = status
+        expect(ticket.open?).to eq(false)
+      end
+    end
 
     describe '#closed?' do
       let(:status) { create(:status, :closed) }

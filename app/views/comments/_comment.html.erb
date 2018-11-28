@@ -1,21 +1,21 @@
 <div align="<%= align %>" data-comment-id="<%= comment.id %>">
   <div class="comments-section <% if align == 'right' %>darker<% end %> p-2 w-75">
     <div class="time-<%= align %>">
-      <a data-toggle="tooltip" title="<%= comment.created_at.strftime("%A, %Y.%m.%d, %H:%M") %>">
+      <a data-toggle="tooltip" title="<%= comment_presenter.created_at_tooltip %>">
         <div class="time-<%= align %>">
-        <%= comment.created_at.strftime("%H:%M") %>
+          <%= comment_presenter.created_at %>
         </div>
       </a>
       &emsp;
     </div>
     <div align="left">
-      <b class="commenter-name"><%= "#{comment.user.fullname} (#{comment.user.role.name.humanize})" %></b>
+      <b class="commenter-name"><%= comment_presenter.author %></b>
       &emsp;
       <br />
-      <%= sanitize comment.body.gsub(/\n/, '<br />').html_safe %>
+      <%= sanitize comment_presenter.body %>
     </div>
-     <% if comment.uploads.attached? %>
-     <br />
+    <% if comment.uploads.attached? %>
+    <br />
       <table>
         <thead align="left">
           <tr>
