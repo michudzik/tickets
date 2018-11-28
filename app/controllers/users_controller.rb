@@ -2,56 +2,74 @@ class UsersController < ApplicationController
   before_action :ensure_admin, only: %i[index update deactivate_account activate_account]
 
   def show
-    @tickets = current_user.tickets.paginate(page: params[:page], per_page: params[:number])
+    Users::Show.new(params: params, current_user: current_user).call do |r|
+      r.success do |tickets|
+        @tickets = tickets
+        @ticket_presenters = @tickets.map { |ticket| TicketPresenter.new(ticket) }
+      end
+      r.failure(:extract_tickets) { redirect_to user_path(current_user.id), alert: 'Lost connection to the database' }
+    end
   end
 
   def index
-    @roles = Role.all.map { |role| [role.name.humanize.to_s, role.id] }
-    @users = User.all
-    @users = @users.filter_users(params[:filter_param]) if params[:filter_param]
-    @users = @users.sort_users(params[:sorted_by]) if params[:sorted_by]
-    @users = @users.paginate(page: params[:page], per_page: params[:number])
+    Users::Index.new(params: params).call do |r|
+      r.success do |users|
+        @users = users
+      end
+
+      r.failure(:users) { |_| return redirect_to users_path, alert: 'Lost connection to the database' }
+      r.failure(:filter) { |_| return redirect_to users_path, alert: 'Lost connection to the database' }
+      r.failure(:sort) { |_| return redirect_to users_path, alert: 'Lost connection to the database' }
+    end
+
+    Roles::List.new.call do |r|
+      r.success { |roles| @roles = roles }
+      r.failure(:extract_values) { redirect_to users_path, alert: 'Lost connection to the database' }
+    end
   end
 
   def update
-    @user = User.find(params[:id])
-    respond_to do |format|
-      if @user.update(user_params)
-        format.html { redirect_to users_path, notice: "You have successfully changed the role of #{@user.fullname}" }
-        format.js
-      else
-        format.html { render :index }
+    Users::Update.new(params: user_params).call(params[:id]) do |r|
+      r.success do |user|
+        @user = user
+        respond_to do |format|
+          format.html { redirect_to users_path, notice: "You have successfully changed the role of #{@user.fullname}" }
+          format.js
+        end
       end
+      r.failure(:assign_object) { |_| redirect_to users_path, alert: 'User not found' }
+      r.failure(:validate) { |_| render :index }
+      r.failure(:persist) { |_| redirect_to users_path, alert: 'Lost connection to database' }
     end
   end
 
   def deactivate_account
-    if current_user.same_user?(params[:id].to_i)
-      redirect_to(
-        users_path,
-        alert: 'You can not deactivate yourself'
-      ) and return
-    end
-    @user = User.find(params[:id])
-    respond_to do |format|
-      @user.lock_access!(send_instructions: false)
-      format.html { redirect_to users_path }
-      format.js
+    Users::DeactivateAccount.new(current_user: current_user).call(params[:id]) do |r|
+      r.success do |user|
+        @user = user
+        respond_to do |format|
+          format.html { redirect_to users_path }
+          format.js
+        end
+      end
+
+      r.failure(:assign_object) { |_| redirect_to users_path, alert: 'User not found' }
+      r.failure(:same_user) { |_| redirect_to users_path, alert: 'You can not deactivate yourself' }
     end
   end
 
   def activate_account
-    if current_user.same_user?(params[:id].to_i)
-      redirect_to(
-        users_path,
-        alert: 'You can not activate yourself'
-      ) and return
-    end
-    @user = User.find(params[:id])
-    respond_to do |format|
-      @user.unlock_access!
-      format.html { redirect_to users_path }
-      format.js
+    Users::ActivateAccount.new(current_user: current_user).call(params[:id]) do |r|
+      r.success do |user|
+        @user = user
+        respond_to do |format|
+          format.html { redirect_to users_path }
+          format.js
+        end
+      end
+
+      r.failure(:assign_object) { |_| redirect_to users_path, alert: 'User not found' }
+      r.failure(:same_user) { |_| redirect_to users_path, alert: 'You can not activate yourself' }
     end
   end
 

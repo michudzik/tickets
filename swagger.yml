@@ -1,0 +1,816 @@
+openapi: 3.0.0
+info:
+  title: Example Api
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/
+    description: Localhost
+tags:
+  - name: user
+    description: Operations on users
+  - name: ticket
+    description: Operations on tickets
+  - name: comment
+    description: Operations on comments
+  - name: department
+    description: Operations on departments
+  - name: role
+    description: Operations on roles
+paths:
+  /users:
+    post:
+      tags:
+        - user
+      summary: Register a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    email:
+                      type: string
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
+      responses:
+        '200':
+          description: Successful operation
+        '422':
+          description: Unprocessable entity
+  /v1/users:
+    get:
+      tags:
+        - user
+      summary: List of users
+      description: Requires authentication
+      security: 
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: filter_param
+          schema:
+            type: string
+            enum:
+              - locked
+              - unlocked
+        - in: query
+          name: sorted_by
+          schema:
+            type: string
+            enum: 
+              - last_name_asc
+              - last_name_desc
+              - email_asc
+              - email_desc
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        email:
+                          type: string
+                        fullname:
+                          type: string
+                        role:
+                          type: string
+                        locked_at:
+                          type: string
+        '401':
+          description: Unauthorized user
+          content:
+            text/plain:
+                schema:
+                  type: string
+        '500':
+          description: Lost connection to the database
+          content:
+            application/json:
+              schema:
+                properties:
+                  errors:
+                    type: string
+  /users/sign_in:
+    post:
+      tags:
+        - user
+      summary: Authenticate user
+      description: Returns JWT token if authorization was successful
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json: {}
+          headers:
+            Authorization:
+              schema:
+                type: string
+              description: Bearer <token>
+  /v1/user_dashboard:
+    get:
+      tags:
+        - user
+      summary: Get user dashboard data
+      description: Returns data of currently logged in user
+      security: 
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                properties:
+                  email:
+                    type: string
+                  role:
+                    type: string
+                  fullname:
+                    type: string
+                  tickets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        status:
+                          type: string
+                        department:
+                          type: string
+                        title:
+                          type: string
+        '401':
+          description: 'Unauthorized user'
+          content:
+            text/plain:
+                schema:
+                  type: string
+        '500':
+          description: Lost connection to the database
+          content:
+            application/json:
+              schema:
+                properties:
+                  errors:
+                    type: string
+  /v1/users/{userId}:
+    put:
+      tags:
+        - user
+      summary: Change user's role
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    role_id:
+                      type: string
+      responses:
+        '200':
+          description: Role changed
+          content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    user:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        email:
+                          type: string
+                        role:
+                          type: string
+                        fullname:
+                          type: string
+                        locked_at:
+                          type: string
+        '401':
+          description: Unauthorized access
+          content:
+              text/plain:
+                  schema:
+                    type: string
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                properties:
+                  errors:
+                    type: string
+        '422':
+          description: Something went wrong with validating data
+          content:
+            application/json:
+              schema:
+                properties:
+                  errors:
+                    type: string
+  /v1/users/{userId}/deactivate:
+    put:
+      tags:
+        - user
+      summary: Deactivate user's account
+      security: 
+        - bearerAuth: []
+      parameters: 
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Account deactivated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      fullname:
+                        type: string
+                      locked_at:
+                        type: string
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+                schema:
+                  type: string
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                properties:
+                  errors:
+                    type: string
+        '422':
+          description: You can not deactivate yourself
+          content:
+            application/json:
+              schema:
+                properties:
+                  errors:
+                    type: string
+  /v1/users/{userId}/activate:
+    put:
+        tags:
+          - user
+        summary: Activate user's account
+        security: 
+          - bearerAuth: []
+        parameters: 
+          - in: path
+            name: userId
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Account activated
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    user:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        email:
+                          type: string
+                        role:
+                          type: string
+                        fullname:
+                          type: string
+                        locked_at:
+                          type: string
+          '401':
+            description: Unauthorized
+            content:
+              text/plain:
+                  schema:
+                    type: string
+          '404':
+            description: User not found
+            content:
+              application/json:
+                schema:
+                  properties:
+                    errors:
+                      type: string
+          '422':
+            description: You can not activate yourself
+            content:
+              application/json:
+                schema:
+                  properties:
+                    errors:
+                      type: string
+  /users/sign_out:
+    delete:
+      tags:
+        - user
+      summary: Log out user
+      description: Changes JTI token of a user so as not to allow him with the same token
+      security: 
+        - bearerAuth: []
+      responses:
+        '204':
+          description: ok
+  /v1/tickets:
+    get:
+      tags:
+        - ticket
+      security: 
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: filter_param
+          schema:
+            type: string
+            enum:
+              - open
+              - closed
+              - support_response
+              - user_response
+        - in: query
+          name: sorted_by
+          schema:
+            type: string
+            enum: 
+              - title_asc
+              - title_desc
+              - user_name_asc
+              - user_name_desc
+              - department_om
+              - department_it
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  tickets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        author:
+                          type: string
+                        title:
+                          type: string
+                        status:
+                          type: string
+                        department:
+                          type: string
+                        updated_at:
+                          type: string
+        '401':
+          description: Unauthorized access
+          content:
+              text/plain:
+                  schema:
+                    type: string
+        '403':
+          description: Forbidden access
+          content:
+            application/json:
+              schema:
+                properties:
+                  errors:
+                    type: string
+        '500':
+          description: Lost connection to the database
+          content:
+            application/json:
+              schema:
+                properties:
+                  errors:
+                    type: string
+    post:
+      tags:
+        - ticket
+      security: 
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ticket:
+                  type: object
+                  properties:
+                    department_id:
+                      type: string
+                    title:
+                      type: string
+                    note:
+                      type: string
+      responses:
+        '200':
+          description: Ticket created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ticket:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      title:
+                        type: string
+                      author:
+                        type: string
+                      department:
+                        type: string
+                      status:
+                        type: string
+        '401':
+          description: Unauthorized access
+          content:
+              text/plain:
+                  schema:
+                    type: string
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+                schema:
+                  properties:
+                    errors:
+                      type: string
+        '500':
+          description: Lost connection to the database
+          content:
+            application/json:
+                schema:
+                  properties:
+                    errors:
+                      type: string
+  /v1/tickets/{ticketId}:
+    get:
+      tags:
+        - ticket
+      security: 
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: ticketId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  note:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  department:
+                    type: string
+                  status:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      author:
+                        type: string
+                      role:
+                        type: string
+                  comments:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: integer
+                        body:
+                          type: string
+                        created_at:
+                          type: string
+                        user:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            author:
+                              type: string
+                      
+        '401':
+          description: Unauthorized access
+          content:
+              text/plain:
+                  schema:
+                    type: string
+        '403':
+          description: Forbidden access
+          content:
+              application/json:
+                schema:
+                  properties:
+                    errors:
+                      type: string
+        '404':
+          description: Ticket not found
+          content:
+              application/json:
+                schema:
+                  properties:
+                    errors:
+                      type: string
+  /v1/search:
+    get:
+      tags:
+        - ticket
+      description: Returns set of tickets which match the query param
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+        - in: query
+          name: filter_param
+          schema:
+            type: string
+            enum:
+              - open
+              - closed
+              - support_response
+              - user_response
+        - in: query
+          name: sorted_by
+          schema:
+            type: string
+            enum: 
+              - title_asc
+              - title_desc
+              - user_name_asc
+              - user_name_desc
+              - department_om
+              - department_it
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  tickets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        author:
+                          type: string
+                        title:
+                          type: string
+                        status:
+                          type: string
+                        department:
+                          type: string
+                        updated_at:
+                          type: string
+        '401':
+          description: Unauthorized access
+          content:
+            text/plain:
+                schema:
+                  type: string
+        '403':
+          description: Forbidden access
+          content:
+              application/json:
+                schema:
+                  properties:
+                    errors:
+                      type: string
+        '500':
+          description: Lost connection to the database
+          content:
+              application/json:
+                schema:
+                  properties:
+                    errors:
+                      type: string
+  /v1/departments:
+    get:
+      tags:
+        - department
+      summary: Returns list of departments
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  departments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+        '401':
+          description: Unauthorized access
+          content:
+            text/plain:
+                schema:
+                  type: string
+        '500':
+          description: Lost connection to the database
+          content:
+            application/json:
+              schema:
+                properties:
+                  errors:
+                    type: string
+  /v1/roles:
+    get:
+      tags:
+        - role
+      summary: Returns list of roles
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  roles:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+        '401':
+          description: Unauthorized access
+          content:
+            text/plain:
+                schema:
+                  type: string
+        '500':
+          description: Lost connection to the database
+          content:
+            application/json:
+              schema:
+                properties:
+                  errors:
+                    type: string
+  /v1/comments:
+    post:
+      tags:
+        - comment
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Comment created
+          content:
+            application/json:
+              schema:
+                properties:
+                  comment:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      message:
+                        type: string
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          author:
+                            type: string
+                          email:
+                            type: string
+                      ticket:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+        '401':
+          description: Unauthorized access
+          content:
+              text/plain:
+                  schema:
+                    type: string
+        '422':
+          description: Ticket is closed or validations failed
+          content:
+            application/json:
+                schema:
+                  properties:
+                    errors:
+                      type: string
+        '500':
+          description: Lost connection to the database
+          content:
+            application/json:
+              schema:
+                properties:
+                  errors:
+                    type: string
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      
+security:
+  - bearerAuth: []

@@ -1,6 +1,4 @@
 class Comment < ActiveRecord::Base
-  validates :body, presence: true
-
   belongs_to :user
   belongs_to :ticket
   has_many_attached :uploads

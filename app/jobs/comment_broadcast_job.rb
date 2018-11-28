@@ -8,6 +8,10 @@ class CommentBroadcastJob < ApplicationJob
   private
 
   def render_comment(comment)
-    CommentsController.render partial: 'comments/comment', locals: { comment: comment, align: 'left' }
+    CommentsController.render partial: 'comments/comment', locals: {
+      comment_presenter: CommentPresenter.new(comment),
+      comment: comment,
+      align: 'left'
+    }
   end
 end

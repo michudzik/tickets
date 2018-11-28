@@ -18,5 +18,9 @@ FactoryBot.define do
     trait :om_support do
       association :role, :om_support
     end
+
+    trait :locked do
+      locked_at { DateTime.now }
+    end
   end
 end

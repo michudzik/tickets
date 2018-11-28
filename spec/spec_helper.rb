@@ -15,6 +15,23 @@ SimpleCov.start
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
+def decoded_jwt_token_from_response
+  token = response.headers['Authorization'].split(' ').last
+  hmac_secret = '18b4a138d1b28a5c9caa88b2a49880db55f4f835b1fd729f540856c788c538739dca34ce122bbb1ce53dd854390ac1915b64f2438a27598d194c64da514a1fa8'
+  JWT.decode token, hmac_secret, true
+end
+
+def parsed_response_body
+  MultiJson.load(response.body).deep_symbolize_keys!
+end
+
+def auth_headers(user)
+  login_params = { user: { email: user.email, password: user.password } }
+  post '/users/sign_in', params: login_params, headers: { 'Accept' => 'application/json' }
+  { 'Authorization' => response.headers['Authorization'] }
+end
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

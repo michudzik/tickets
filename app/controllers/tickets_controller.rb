@@ -1,72 +1,102 @@
 class TicketsController < ApplicationController
   def index
-    redirect_to user_dashboard_path, alert: 'Forbidden access' and return if current_user.user?
-    @tickets = Ticket.find_related_tickets(current_user)
-    @tickets = @tickets.filter_tickets(params[:filter_param]) if params[:filter_param]
-    @tickets = if params[:sorted_by]
-                 @tickets.sort_tickets(params[:sorted_by])
-               else
-                 @tickets.ordered_by_date
-               end
-    @tickets = @tickets.paginate(page: params[:page], per_page: params[:number])
+    Tickets::Index.new(current_user: current_user, params: params).call do |r|
+      r.success do |tickets|
+        @tickets = tickets
+        @ticket_presenters = @tickets.map { |ticket| TicketPresenter.new(ticket) }
+      end
+
+      r.failure(:permission) { |_| redirect_to user_dashboard_path, alert: 'Forbidden access' }
+      r.failure(:extract_tickets) { |_| redirect_to user_dashboard_path, alert: 'Lost connection to the database' }
+      r.failure(:filter) { |_| redirect_to user_dashboard_path, alert: 'Lost connection to the database' }
+      r.failure(:sort) { |_| redirect_to user_dashboard_path, alert: 'Lost connection to the database' }
+    end
   end
 
   def show
-    @ticket = Ticket.find(params[:id])
-    unless @ticket.related_to_ticket?(current_user)
-      redirect_to(
-        user_dashboard_path,
-        alert: 'Forbidden access'
-      ) and return
+    Tickets::Show.new(current_user: current_user).call(params[:id]) do |r|
+      r.success do |ticket|
+        @ticket = ticket
+        @ticket_presenter = TicketPresenter.new(@ticket)
+      end
+      r.failure(:related_to_ticket) { |_| return redirect_to user_dashboard_path, alert: 'Forbidden access' }
     end
-    @comment = Comment.new(ticket_id: @ticket.id)
-    @comments = @ticket.comments.order(created_at: :asc)
-    @status = @ticket.status.name.humanize
+
+    Comments::List.new.call(@ticket) do |r|
+      r.success do |comments|
+        @comments = comments
+        @comment_presenters = @comments.map { |comment| CommentPresenter.new(comment) }
+      end
+      r.failure(:extract_comments) { redirect_to user_dashboard_path, alert: 'Lost connection to the database' }
+    end
+
+    Comments::New.new.call(@ticket.id) do |r|
+      r.success { |comment| @comment = comment }
+      r.failure(:assign_object) { |comment| @comment = comment }
+    end
   end
 
   def new
-    @ticket = current_user.tickets.build
-    @departments = Department.all.pluck(:name, :id)
+    Tickets::New.new.call(current_user) do |r|
+      r.success do |ticket|
+        @ticket = ticket
+      end
+
+      r.failure(:assign_object) { |ticket| @ticket = ticket }
+    end
+
+    Departments::List.new.call do |r|
+      r.success { |departments| @departments = departments }
+      r.failure(:extract_values) { |_| redirect_to user_dashboard_path, alert: 'Lost connection to the database' }
+    end
   end
 
   def create
-    @ticket = current_user.tickets.build(ticket_params)
-    if @ticket.save
-      @emails = if @ticket.department.name == 'IT'
-                  User.joins(:role).where(roles: { name: 'it_support' }).distinct.pluck(:email)
-                else
-                  User.joins(:role).where(roles: { name: 'om_support' }).distinct.pluck(:email)
-                end
-      @emails.delete(current_user.email)
-      @emails.each do |email|
-        SlackService.new.call(email, @ticket.id)
+    Tickets::Create.new(current_user: current_user).call(ticket_params) do |r|
+      r.success do |ticket|
+        @ticket = ticket
+        redirect_to user_dashboard_path, notice: 'New ticket has been reported'
       end
-      redirect_to user_dashboard_path, notice: 'New ticket has been reported'
-    else
-      @departments = Department.all.pluck(:name, :id)
-      render :new
+
+      r.failure(:validate) do |schema|
+        @schema = schema
+        Departments::List.new.call do |re|
+          re.success do |departments|
+            @departments = departments
+            render :new
+          end
+          re.failure(:extract_values) do |_|
+            redirect_to user_dashboard_path, alert: 'Lost connection to the database'
+          end
+        end
+      end
+
+      r.failure(:create_ticket) { |_| redirect_to user_dashboard_path, alert: 'Lost connection to the database' }
+      r.failure(:notify_users_via_slack) do |ticket|
+        @ticket = ticket
+        redirect_to user_dashboard_path, notice: 'New ticket has been reported but slack failed to notify appropriate users'
+      end
     end
   end
 
   def close
-    @ticket = Ticket.find(params[:id])
-    status_closed = Status.find_by(name: 'closed')
-    @ticket.update(status_id: status_closed.id)
-    if current_user.support?
-      redirect_to show_tickets_path, notice: 'Ticket closed'
-    else
-      redirect_to user_dashboard_path, notice: 'Ticket closed'
+    Tickets::Close.new.call(params[:id]) do |r|
+      r.success do |_|
+        redirect_path = current_user.support? ? show_tickets_path : user_dashboard_path
+        redirect_to redirect_path, notice: 'Ticket closed'
+      end
+      r.failure(:find_object) { |_| redirect_to user_dashboard_path, alert: 'Ticket not found' }
+      r.failure(:change_status) { |_| redirect_to user_dashboard_path, alert: 'Lost connection to the database' }
     end
   end
 
   def search
-    redirect_to user_dashboard_path, alert: 'Forbidden access' and return if current_user.user?
-    query = params[:query]
-    @tickets = Ticket.where('title LIKE ? OR note LIKE ?', "%#{query}%", "%#{query}%")
-    if current_user.it_support?
-      @tickets = @tickets.it_department
-    elsif current_user.om_support?
-      @tickets = @tickets.om_department
+    Tickets::Search.new(current_user: current_user, params: params[:query]).call do |r|
+      r.success do |tickets|
+        @tickets = tickets
+        @ticket_presenters = @tickets.map { |ticket| TicketPresenter.new(ticket) }
+      end
+      r.failure { |_| redirect_to user_dashboard_path, alert: 'Forbidden access' }
     end
   end
 

@@ -1,17 +1,7 @@
 Rails.application.routes.draw do
   mount ActionCable.server, at: '/cable'
   root 'home#home'
-  devise_for :users, skip: :registrations, controllers: {  registrations: "registrations" }
-  devise_scope :user do
-    resource :registration,
-      only: [:new, :create, :edit, :update],
-      path: 'users',
-      path_names: { new: 'sign_up' },
-      controller: 'devise/registrations',
-      as: :user_registration do
-        get :cancel
-      end
-  end
+  devise_for :users, controllers: {  registrations: 'registrations', sessions: 'sessions' }
   get '/new_ticket', to: 'tickets#new'
   get '/show_tickets', to: 'tickets#index'
   get '/user_dashboard', to: 'users#show'
@@ -27,6 +17,29 @@ Rails.application.routes.draw do
     member do
       put :deactivate_account
       put :activate_account
+    end
+  end
+
+  namespace :api, path: '', defaults: { format: :json } do
+    namespace :v1 do
+      get '/user_dashboard', to: 'users#show'
+      resources :users, only: [:index, :update] do
+        member do
+          put :deactivate_account
+          put :activate_account
+        end
+      end
+
+      get '/search', to: 'tickets#search', as: :search_tickets
+      resources :tickets, only: [:index, :show, :create] do
+        member do 
+          put :close
+        end
+      end
+
+      resources :comments, only: :create
+      resources :roles, only: :index
+      resources :departments, only: :index
     end
   end
 end
