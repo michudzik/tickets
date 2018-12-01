@@ -11,6 +11,7 @@ class TicketPresenter < BasePresenter
 
   def last_response
     return ticket.comments.last.updated_at.strftime('%Y.%m.%d %H:%M') if ticket.comments.any?
+
     created_at
   end
 

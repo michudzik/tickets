@@ -74,7 +74,8 @@ class TicketsController < ApplicationController
       r.failure(:create_ticket) { |_| redirect_to user_dashboard_path, alert: 'Lost connection to the database' }
       r.failure(:notify_users_via_slack) do |ticket|
         @ticket = ticket
-        redirect_to user_dashboard_path, notice: 'New ticket has been reported but slack failed to notify appropriate users'
+        redirect_to user_dashboard_path,
+          notice: 'New ticket has been reported but slack failed to notify appropriate users'
       end
     end
   end

@@ -28,7 +28,7 @@ module Comments
     map :extract_ticket
     try :notify_users_via_email, catch: SMTP_ERRORS
     step :notify_users_via_slack
-  
+
     private
 
     def assign_ticket
@@ -43,6 +43,7 @@ module Comments
       attr = { ticket_id: ticket.id, user_id: current_params[:user_id], body: current_params[:body] }
       schema = Validator.new.schema.call(attr)
       return Success(attr) if schema.success?
+
       Failure(schema)
     end
 

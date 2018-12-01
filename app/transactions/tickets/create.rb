@@ -21,6 +21,7 @@ module Tickets
     def validate(ticket_params)
       schema = Validator.new.schema.call(ticket_params)
       return Success(ticket_params) if schema.success?
+
       Failure(schema)
     end
 

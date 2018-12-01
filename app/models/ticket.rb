@@ -62,6 +62,7 @@ class Ticket < ActiveRecord::Base
 
   def self.filter_tickets(status)
     return all unless status
+
     case status
     when 'open'
       filtered_by_status_open
@@ -77,6 +78,7 @@ class Ticket < ActiveRecord::Base
   # rubocop:disable Metrics/CyclomaticComplexity
   def self.sort_tickets(by)
     return ordered_by_date unless by
+
     case by
     when 'title_asc'
       ordered_by_title_asc

@@ -18,7 +18,7 @@ SimpleCov.start
 
 def decoded_jwt_token_from_response
   token = response.headers['Authorization'].split(' ').last
-  hmac_secret = '18b4a138d1b28a5c9caa88b2a49880db55f4f835b1fd729f540856c788c538739dca34ce122bbb1ce53dd854390ac1915b64f2438a27598d194c64da514a1fa8'
+  hmac_secret = 'test_secret_key'
   JWT.decode token, hmac_secret, true
 end
 

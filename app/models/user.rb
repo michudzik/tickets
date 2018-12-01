@@ -50,6 +50,7 @@ class User < ApplicationRecord
 
   def self.filter_users(status)
     return all unless status
+
     case status
     when 'locked'
       locked
@@ -60,6 +61,7 @@ class User < ApplicationRecord
 
   def self.sort_users(by)
     return all unless by
+
     case by
     when 'last_name_asc'
       ordered_by_last_name_asc

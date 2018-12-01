@@ -16,7 +16,9 @@ module Tickets
 
     def filter(tickets)
       return tickets.it_department if current_user.it_support?
+
       return tickets.om_department if current_user.om_support?
+
       tickets
     end
   end

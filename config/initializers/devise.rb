@@ -8,7 +8,11 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  config.secret_key = Rails.application.credentials[:devise][:secret_key]
+  config.secret_key = unless Rails.env.test?
+                        Rails.application.credentials[:devise][:secret_key]
+                      else
+                        'test_secret_key'
+                      end
   
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -282,7 +286,11 @@ Devise.setup do |config|
   # config.omniauth_path_prefix = '/my_engine/users/auth'
 
   config.jwt do |jwt|
-    jwt.secret = Rails.application.credentials[:jwt][:secret_key]
+    jwt.secret = unless Rails.env.test?
+                  Rails.application.credentials[:jwt][:secret_key]
+                 else
+                  'test_secret_key'
+                 end
     jwt.request_formats = {
       user: [:json]
     }

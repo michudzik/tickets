@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :department do
-    name 'IT'
+    name { 'IT' }
 
     trait :om do
-      name 'OM'
+      name { 'OM' }
     end
 
   end

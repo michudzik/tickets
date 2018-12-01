@@ -24,6 +24,7 @@ class SlackService
     user_list = @client.users_list
     users = user_list.members.select { |member| member.profile.email == email }
     raise ArgumentError, "User with that email can't be found" if users.empty?
+
     users.first.id
   end
 
