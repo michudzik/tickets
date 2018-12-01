@@ -17,8 +17,8 @@
       </tr>
     </thead>
     <tbody>
-      <% @tickets.each do |ticket| %>
-          <%= render 'ticket', ticket: ticket %>
+      <% @tickets.zip(@ticket_presenters).each do |ticket, ticket_presenter| %>
+          <%= render 'ticket', ticket_presenter: ticket_presenter, ticket: ticket %>
       <% end %>
       <% unless @tickets.any? %>
         <tr><td colspan="4">Your query did not match any results</td></tr>

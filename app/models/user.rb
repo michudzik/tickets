@@ -1,7 +1,8 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :trackable,
-    :validatable, :confirmable, :lockable
+    :validatable, :confirmable, :lockable,
+    :jwt_authenticatable, jwt_revocation_strategy: JWTBlacklist
 
   validates :first_name, :last_name, presence: true
   belongs_to :role
@@ -16,6 +17,8 @@ class User < ApplicationRecord
   scope :ordered_by_last_name_desc,    -> { order(Arel.sql('lower(last_name) DESC')) }
   scope :ordered_by_email_asc,         -> { order(Arel.sql('lower(email) ASC')) }
   scope :ordered_by_email_desc,        -> { order(Arel.sql('lower(email) DESC')) }
+
+  delegate :username, to: :user
 
   def admin?
     role.name == 'admin'
@@ -46,17 +49,19 @@ class User < ApplicationRecord
   end
 
   def self.filter_users(status)
+    return all unless status
+
     case status
     when 'locked'
       locked
     when 'unlocked'
       unlocked
-    else
-      all
     end
   end
 
   def self.sort_users(by)
+    return all unless by
+
     case by
     when 'last_name_asc'
       ordered_by_last_name_asc
@@ -66,8 +71,6 @@ class User < ApplicationRecord
       ordered_by_email_asc
     when 'email_desc'
       ordered_by_email_desc
-    else
-      all
     end
   end
 

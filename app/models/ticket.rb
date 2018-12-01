@@ -5,10 +5,6 @@ class Ticket < ActiveRecord::Base
   belongs_to :status
   has_many_attached :uploads
 
-  validates :note, presence: true, length: { maximum: 500 }
-  validates :title, presence: true, length: { maximum: 50 }
-  validates :department, presence: true
-
   before_validation :default_status, on: :create
 
   scope :it_department,                          -> { joins(:department).where(departments: { name: 'IT' }) }
@@ -37,6 +33,10 @@ class Ticket < ActiveRecord::Base
     status.name == 'closed'
   end
 
+  def open?
+    !closed?
+  end
+
   def related_to_ticket?(current_user)
     user == current_user || current_user.admin? ||
       (current_user.it_support? && department.name == 'IT') ||
@@ -61,6 +61,8 @@ class Ticket < ActiveRecord::Base
   end
 
   def self.filter_tickets(status)
+    return all unless status
+
     case status
     when 'open'
       filtered_by_status_open
@@ -70,12 +72,13 @@ class Ticket < ActiveRecord::Base
       filtered_by_status_user_response
     when 'support_response'
       filtered_by_status_support_response
-    else
-      all
     end
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def self.sort_tickets(by)
+    return ordered_by_date unless by
+
     case by
     when 'title_asc'
       ordered_by_title_asc
@@ -89,10 +92,9 @@ class Ticket < ActiveRecord::Base
       ordered_by_department_om
     when 'department_it'
       ordered_by_department_it
-    else
-      ordered_by_date
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   private
 

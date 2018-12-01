@@ -10,9 +10,9 @@
         Results
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <%= link_to '10', user_dashboard_path(:number => 10), class: 'dropdown-item' %>
-        <%= link_to '30', user_dashboard_path(:number => 30), class: 'dropdown-item' %>
-        <%= link_to '50', user_dashboard_path(:number => 50), class: 'dropdown-item' %>
+        <%= link_to '10', user_dashboard_path(number: 10), class: 'dropdown-item' %>
+        <%= link_to '30', user_dashboard_path(number: 30), class: 'dropdown-item' %>
+        <%= link_to '50', user_dashboard_path(number: 50), class: 'dropdown-item' %>
       </div>
     </div>
       <table class="table table-striped">
@@ -25,40 +25,34 @@
           </tr>
         </thead>
         <tbody> 
-          <% if @tickets.any? %>
-            <% @tickets.each do |ticket| %>
-              <tr>
-                <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
-                <td>
-                  <div class="<%= ticket.status.name %>">
-                    <%= ticket.status.name.humanize.to_s %>
-                  </div>
-                </td>
-                <td>
-                  <% if ticket.comments.any? %>
-                    <%= ticket.comments.last.updated_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y") %>                
-                  <% else %>
-                    <%= ticket.created_at.in_time_zone("Warsaw").strftime("%k:%M %d-%m-%Y") %>
-                  <% end %>
-                </td>
-                <td>
-                  <% if ticket.comments.any? %>
-                    <div class="dropdown">
-                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        See comments
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <% ticket.comments.last(6).reverse_each do |comment| %>
-                          <a class="dropdown-item-text" data-toggle="tooltip" title="<%= comment.body %>">
-                            <b><%= "#{comment.user.fullname}(#{comment.user.role.name})" %></b><%= "(#{comment.created_at.in_time_zone("Warsaw").strftime("%k:%M")}): #{comment.body.truncate(40, omission: '... (continued)')}" %>
-                          </a>
-                        <% end %>
-                      </div>
+          <% @tickets.zip(@ticket_presenters).each do |ticket, ticket_presenter| %>
+            <tr>
+              <td><%= link_to ticket.title, ticket_path(id: ticket.id) %></td>
+              <td>
+                <div class="<%= ticket.status.name %>">
+                  <%= ticket_presenter.status %>
+                </div>
+              </td>
+              <td><%= ticket_presenter.last_response %></td>
+              <td>
+                <% if ticket.comments.any? %>
+                  <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      See comments
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <% ticket.comments.last(6).reverse_each do |comment| %>
+                        <a class="dropdown-item-text" data-toggle="tooltip">
+                          <b><%= "#{comment.user.fullname} (#{comment.user.role.name.humanize})" %></b>
+                          <br/>
+                          <%= "(#{comment.created_at}): #{comment.body.truncate(40, omission: '... (continued)')}" %>
+                        </a>
+                      <% end %>
                     </div>
-                  <% end %>
-                </td>
-              </tr>
-            <% end %>
+                  </div>
+                <% end %>
+              </td>
+            </tr>
           <% end %>
         </tbody>
       </table>
